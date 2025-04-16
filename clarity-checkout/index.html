@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.5">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Courier; color: #870581}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Courier; color: #97007e}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Courier; color: #b50013}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Courier; color: #000000}
+    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Courier; color: #000000; min-height: 17.0px}
+    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Courier; color: #0d6401}
+    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Courier; color: #6f5a1e}
+    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Courier; color: #885d30}
+    span.s1 {color: #97007e}
+    span.s2 {color: #6f5a1e}
+    span.s3 {color: #b50013}
+    span.s4 {color: #000000}
+    span.s5 {color: #1400c4}
+    span.s6 {color: #885d30}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE <span class="s1">html</span>&gt;</p>
+<p class="p2">&lt;html <span class="s2">lang</span>=<span class="s3">"en"</span>&gt;</p>
+<p class="p2">&lt;head&gt;</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;meta <span class="s2">charset</span>=<span class="s3">"utf-8"</span>/&gt;</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;meta </span><span class="s2">name</span><span class="s1">=</span>"viewport"<span class="s1"> </span><span class="s2">content</span><span class="s1">=</span>"width=device-width,initial-scale=1"<span class="s1">/&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">  </span><span class="s1">&lt;title&gt;</span>Secure Checkout — The Clarity Circle<span class="s1">&lt;/title&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;meta </span><span class="s2">name</span><span class="s1">=</span>"description"<span class="s1"> </span><span class="s2">content</span><span class="s1">=</span>"Join The Clarity Circle — 14‑day free trial, $97/year after."<span class="s1">&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;!-- Bootstrap CSS --&gt;</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;link </span><span class="s2">href</span><span class="s1">=</span>"https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"<span class="s1"> </span><span class="s2">rel</span><span class="s1">=</span>"stylesheet"<span class="s1">/&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;!-- FontAwesome for icons --&gt;</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;script </span><span class="s2">src</span><span class="s1">=</span>"https://kit.fontawesome.com/a076d05399.js"<span class="s1"> </span><span class="s2">crossorigin</span><span class="s1">=</span>"anonymous"<span class="s1">&gt;&lt;/script&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;!-- Google Font --&gt;</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;link </span><span class="s2">href</span><span class="s1">=</span>"https://fonts.googleapis.com/css2?family=Lato:wght@400;700&amp;display=swap"<span class="s1"> </span><span class="s2">rel</span><span class="s1">=</span>"stylesheet"<span class="s1">/&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;!-- Stripe.js --&gt;</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;script </span><span class="s2">src</span><span class="s1">=</span>"https://js.stripe.com/v3"<span class="s1">&gt;&lt;/script&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;style&gt;</p>
+<p class="p4"><span class="Apple-converted-space">    </span>:root {</p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">      </span></span>--brand-primary<span class="s4">: </span><span class="s5">#800f2f</span><span class="s4">;</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">      </span></span>--brand-accent<span class="s4">: </span><span class="s5">#c9184a</span><span class="s4">;</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">      </span></span>--bg-summary<span class="s4">: </span><span class="s5">#f4e8de</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s2">--radius</span>: .<span class="s5">75rem</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s2">--transition</span>: .<span class="s5">3s</span> ease;</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p4"><span class="Apple-converted-space">    </span><span class="s1">body</span> {</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">margin</span>: <span class="s5">0</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">font-family</span>: <span class="s3">'Lato'</span>, sans-serif;</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>background<span class="s4">: </span><span class="s5">#fdf8f5</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">padding</span>: <span class="s5">2rem</span> <span class="s5">0</span>;</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.checkout-wrapper<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">max-width</span>: <span class="s5">1000px</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">margin</span>: auto;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">display</span>: flex;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">flex-wrap</span>: wrap;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">box-shadow</span>: <span class="s5">0</span> <span class="s5">8px</span> <span class="s5">24px</span> rgba(<span class="s5">0</span>,<span class="s5">0</span>,<span class="s5">0</span>,<span class="s5">0.1</span>);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border-radius</span>: var(--radius);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">overflow</span>: hidden;</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>background<span class="s4">: </span><span class="s5">#fff</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>/*=== Form Column ===*/</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.checkout-form<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">flex</span>: <span class="s5">1</span> <span class="s5">1</span> <span class="s5">60%</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">padding</span>: <span class="s5">2rem</span>;</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.checkout-form<span class="s4"> </span><span class="s1">h2</span><span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">color</span>: var(--brand-primary);</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-bottom<span class="s4">: </span><span class="s5">1rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>/* Payment plan cards */</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.payment-plan-container<span class="s4"> {</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-bottom<span class="s4">: </span><span class="s5">2rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.plan-option<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border</span>: <span class="s5">1px</span> solid <span class="s5">#ddd</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border-radius</span>: var(--radius);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">padding</span>: <span class="s5">1rem</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">cursor</span>: pointer;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">transition</span>: border-color var(--transition), box-shadow var(--transition);</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.plan-option<span class="s4">:hover,</span></p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.plan-option<span class="s4"> </span><span class="s1">input</span><span class="s4">:checked + </span>.plan-option<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border-color</span>: var(--brand-primary);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">box-shadow</span>: <span class="s5">0</span> <span class="s5">4px</span> <span class="s5">12px</span> rgba(<span class="s5">0</span>,<span class="s5">0</span>,<span class="s5">0</span>,<span class="s5">0.05</span>);</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.plan-badge<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">display</span>: inline-block;</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-bottom<span class="s4">: .</span><span class="s5">5rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>/* Contact info */</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.checkout-form<span class="s4"> </span><span class="s1">label</span><span class="s4"> {</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>font-weight<span class="s4">: </span><span class="s5">700</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.checkout-form<span class="s4"> </span>.form-control<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border-radius</span>: var(--radius);</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-bottom<span class="s4">: </span><span class="s5">1rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>/* Card section */</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>#card-element<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">padding</span>: .<span class="s5">75rem</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border</span>: <span class="s5">1px</span> solid <span class="s5">#ccc</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border-radius</span>: var(--radius);</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>background<span class="s4">: </span><span class="s5">#fafafa</span><span class="s4">;</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-bottom<span class="s4">: </span><span class="s5">1rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">transition</span>: border-color var(--transition), box-shadow var(--transition);</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>#card-element.StripeElement--focus<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border-color</span>: var(--brand-accent);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">box-shadow</span>: <span class="s5">0</span> <span class="s5">0</span> <span class="s5">0</span> <span class="s5">3px</span> rgba(<span class="s5">201</span>,<span class="s5">24</span>,<span class="s5">74</span>,<span class="s5">0.2</span>);</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.payment-icons<span class="s4"> </span><span class="s1">svg</span><span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">width</span>: <span class="s5">36px</span>;</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-right<span class="s4">: .</span><span class="s5">5rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">vertical-align</span>: middle;</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.secure-note<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">font-size</span>: .<span class="s5">875rem</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">color</span>: <span class="s5">#666</span>;</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-bottom<span class="s4">: </span><span class="s5">1.5rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>/* Terms checkbox */</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.checkout-form<span class="s4"> </span>.form-check-label<span class="s4"> </span><span class="s1">a</span><span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">color</span>: var(--brand-primary);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">text-decoration</span>: underline;</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>/* Submit */</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>#submit<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">width</span>: <span class="s5">100%</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">padding</span>: <span class="s5">1rem</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">font-size</span>: <span class="s5">1.1rem</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">background</span>: var(--brand-primary);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border</span>: none;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border-radius</span>: var(--radius);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">color</span>: <span class="s5">#fff</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">cursor</span>: pointer;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">transition</span>: background var(--transition), transform var(--transition);</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p4"><span class="Apple-converted-space">    </span><span class="s6">#submit</span>:hover {</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">background</span>: var(--brand-accent);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">transform</span>: translateY(-<span class="s5">2px</span>);</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p4"><span class="Apple-converted-space">    </span><span class="s6">#submit</span>:disabled {</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>background<span class="s4">: </span><span class="s5">#ccc</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">cursor</span>: not-allowed;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">transform</span>: none;</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p5"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>/*=== Summary Column ===*/</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.checkout-summary<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">flex</span>: <span class="s5">1</span> <span class="s5">1</span> <span class="s5">40%</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">background</span>: var(--bg-summary);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">padding</span>: <span class="s5">2rem</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border-left</span>: <span class="s5">4px</span> solid var(--brand-primary);</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.checkout-summary<span class="s4"> </span><span class="s1">h2</span><span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">color</span>: var(--brand-primary);</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-bottom<span class="s4">: </span><span class="s5">1rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.features<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">list-style</span>: none;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">padding</span>: <span class="s5">0</span>;</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-bottom<span class="s4">: </span><span class="s5">1.5rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.features<span class="s4"> </span><span class="s1">li</span><span class="s4"> {</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-bottom<span class="s4">: .</span><span class="s5">75rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p4"><span class="Apple-converted-space">    </span><span class="s6">.features</span> <span class="s1">li</span>::before {</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">content</span>: <span class="s3">"✔️"</span>;</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>margin-right<span class="s4">: .</span><span class="s5">5rem</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">color</span>: var(--brand-primary);</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.order-summary<span class="s4"> {</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>background<span class="s4">: </span><span class="s5">#fff</span><span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border-radius</span>: var(--radius);</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">padding</span>: <span class="s5">1rem</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">box-shadow</span>: <span class="s5">0</span> <span class="s5">4px</span> <span class="s5">12px</span> rgba(<span class="s5">0</span>,<span class="s5">0</span>,<span class="s5">0</span>,<span class="s5">0.05</span>);</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.order-summary<span class="s4"> </span>.list-group-item<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border</span>: none;</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">padding</span>: .<span class="s5">75rem</span> <span class="s5">1rem</span>;</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p8"><span class="s4"><span class="Apple-converted-space">    </span></span>.order-summary<span class="s4"> </span>.list-group-item<span class="s4"> + </span>.list-group-item<span class="s4"> {</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">border-top</span>: <span class="s5">1px</span> solid <span class="s5">#eee</span>;</p>
+<p class="p4"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;/style&gt;</p>
+<p class="p2">&lt;/head&gt;</p>
+<p class="p2">&lt;body&gt;</p>
+<p class="p5"><br></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"checkout-wrapper"<span class="s1">&gt;</span></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>&lt;!-- Form --&gt;</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"checkout-form order-2 order-md-1"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;h2&gt;</span>Select Your Plan<span class="s1">&lt;/h2&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">&lt;fieldset </span><span class="s2">class</span><span class="s1">=</span>"payment-plan-container"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span><span class="s3">"row"</span><span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"col-sm-6 mb-3"<span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">&lt;input </span><span class="s2">type</span><span class="s1">=</span>"radio"<span class="s1"> </span><span class="s2">id</span><span class="s1">=</span>"plan-annual"<span class="s1"> </span><span class="s2">name</span><span class="s1">=</span>"plan"<span class="s1"> </span><span class="s2">value</span><span class="s1">=</span>"annual"<span class="s1"> </span><span class="s2">hidden</span><span class="s1"> </span><span class="s2">checked</span><span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">&lt;label </span><span class="s2">for</span><span class="s1">=</span>"plan-annual"<span class="s1"> </span><span class="s2">class</span><span class="s1">=</span>"plan-option d-block"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">              </span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span><span class="s3">"plan-badge badge badge-warning"</span><span class="s1">&gt;</span>Just $41/mo — Billed Annually<span class="s1">&lt;/div&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">              </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"plan-badge badge badge-info ml-1"<span class="s1">&gt;</span><span class="s4">14‑day trial</span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">              </span><span class="s1">&lt;h5 </span><span class="s2">class</span><span class="s1">=</span><span class="s3">"mt-2 mb-1"</span><span class="s1">&gt;</span>The Clarity Circle — Annual Pass<span class="s1">&lt;/h5&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">              </span></span><span class="s1">&lt;h4 </span><span class="s2">class</span><span class="s1">=</span>"text-success"<span class="s1">&gt;</span><span class="s4">$497 </span><span class="s1">&lt;small </span><span class="s2">class</span><span class="s1">=</span>"text-muted d-block"<span class="s1">&gt;</span><span class="s4">yearly</span><span class="s1">&lt;/small&gt;&lt;/h4&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">            </span><span class="s1">&lt;/label&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">          </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"col-sm-6 mb-3"<span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">&lt;input </span><span class="s2">type</span><span class="s1">=</span>"radio"<span class="s1"> </span><span class="s2">id</span><span class="s1">=</span>"plan-monthly"<span class="s1"> </span><span class="s2">name</span><span class="s1">=</span>"plan"<span class="s1"> </span><span class="s2">value</span><span class="s1">=</span>"monthly"<span class="s1"> </span><span class="s2">hidden</span><span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">&lt;label </span><span class="s2">for</span><span class="s1">=</span>"plan-monthly"<span class="s1"> </span><span class="s2">class</span><span class="s1">=</span>"plan-option d-block"<span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">              </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"plan-badge badge badge-info"<span class="s1">&gt;</span><span class="s4">14‑day trial</span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">              </span><span class="s1">&lt;h5 </span><span class="s2">class</span><span class="s1">=</span><span class="s3">"mt-2 mb-1"</span><span class="s1">&gt;</span>The Clarity Circle — Monthly<span class="s1">&lt;/h5&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">              </span></span><span class="s1">&lt;h4 </span><span class="s2">class</span><span class="s1">=</span>"text-success"<span class="s1">&gt;</span><span class="s4">$69.95 </span><span class="s1">&lt;small </span><span class="s2">class</span><span class="s1">=</span>"text-muted d-block"<span class="s1">&gt;</span><span class="s4">monthly</span><span class="s1">&lt;/small&gt;&lt;/h4&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">            </span><span class="s1">&lt;/label&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">          </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">      </span></span>&lt;/fieldset&gt;</p>
+<p class="p5"><br></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;h2&gt;</span>Contact Information<span class="s1">&lt;/h2&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"form-row"<span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"form-group col-md-6"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">          </span><span class="s1">&lt;label </span><span class="s2">for</span><span class="s1">=</span><span class="s3">"firstName"</span><span class="s1">&gt;</span>First Name<span class="s1">&lt;/label&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">&lt;input </span><span class="s2">id</span><span class="s1">=</span>"firstName"<span class="s1"> </span><span class="s2">type</span><span class="s1">=</span>"text"<span class="s1"> </span><span class="s2">class</span><span class="s1">=</span>"form-control"<span class="s1"> </span><span class="s2">placeholder</span><span class="s1">=</span>"First Name"<span class="s1"> </span><span class="s2">required</span><span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"form-group col-md-6"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">          </span><span class="s1">&lt;label </span><span class="s2">for</span><span class="s1">=</span><span class="s3">"lastName"</span><span class="s1">&gt;</span>Last Name<span class="s1">&lt;/label&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">&lt;input </span><span class="s2">id</span><span class="s1">=</span>"lastName"<span class="s1"> </span><span class="s2">type</span><span class="s1">=</span>"text"<span class="s1"> </span><span class="s2">class</span><span class="s1">=</span>"form-control"<span class="s1"> </span><span class="s2">placeholder</span><span class="s1">=</span>"Last Name"<span class="s1"> </span><span class="s2">required</span><span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"form-group col-12"<span class="s1">&gt;</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">          </span></span>&lt;label <span class="s2">for</span>=<span class="s3">"email"</span>&gt;<span class="s4">Email</span>&lt;/label&gt;</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">&lt;input </span><span class="s2">id</span><span class="s1">=</span>"email"<span class="s1"> </span><span class="s2">type</span><span class="s1">=</span>"email"<span class="s1"> </span><span class="s2">class</span><span class="s1">=</span>"form-control"<span class="s1"> </span><span class="s2">placeholder</span><span class="s1">=</span>"you@example.com"<span class="s1"> </span><span class="s2">required</span><span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;h2&gt;</span>Payment Details<span class="s1">&lt;/h2&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"payment-icons mb-2"<span class="s1">&gt;</span></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">        </span></span>&lt;!-- sample CC icons --&gt;</p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;svg&gt;</span>&lt;!-- visa svg --&gt;<span class="s1">&lt;/svg&gt;</span></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;svg&gt;</span>&lt;!-- mastercard svg --&gt;<span class="s1">&lt;/svg&gt;</span></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;svg&gt;</span>&lt;!-- amex svg --&gt;<span class="s1">&lt;/svg&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">&lt;div </span><span class="s2">id</span><span class="s1">=</span>"card-element"<span class="s1">&gt;&lt;/div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;p </span><span class="s2">class</span><span class="s1">=</span><span class="s3">"secure-note"</span><span class="s1">&gt;&lt;i </span><span class="s2">class</span><span class="s1">=</span><span class="s3">"fas fa-lock"</span><span class="s1">&gt;&lt;/i&gt;</span> All payments are secured by 256‑bit encryption<span class="s1">&lt;/p&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"form-check mb-4"<span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;input </span><span class="s2">type</span><span class="s1">=</span>"checkbox"<span class="s1"> </span><span class="s2">id</span><span class="s1">=</span>"agreeTerms"<span class="s1"> </span><span class="s2">class</span><span class="s1">=</span>"form-check-input"<span class="s1"> </span><span class="s2">required</span><span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;label </span><span class="s2">for</span><span class="s1">=</span>"agreeTerms"<span class="s1"> </span><span class="s2">class</span><span class="s1">=</span>"form-check-label"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">          </span>I agree to the <span class="s1">&lt;a </span><span class="s2">href</span><span class="s1">=</span><span class="s3">"/terms"</span><span class="s1"> </span><span class="s2">target</span><span class="s1">=</span><span class="s3">"_blank"</span><span class="s1">&gt;</span>terms and conditions<span class="s1">&lt;/a&gt;</span>.</p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;/label&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;button </span><span class="s2">id</span><span class="s1">=</span><span class="s3">"submit"</span><span class="s1"> </span><span class="s2">type</span><span class="s1">=</span><span class="s3">"submit"</span><span class="s1">&gt;</span>Start My Free Trial<span class="s1">&lt;/button&gt;</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">    </span></span>&lt;/div&gt;</p>
+<p class="p5"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>&lt;!-- Summary --&gt;</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"checkout-summary order-1 order-md-2"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;h2&gt;</span>Your Order<span class="s1">&lt;/h2&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">&lt;ul </span><span class="s2">class</span><span class="s1">=</span>"features"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;li&gt;</span>Live coaching sessions<span class="s1">&lt;/li&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;li&gt;</span>Full course library access<span class="s1">&lt;/li&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;li&gt;</span>Research‑backed tools &amp; frameworks<span class="s1">&lt;/li&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;li&gt;</span>Bold, confident, scientific community<span class="s1">&lt;/li&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;li&gt;</span>Cancel anytime<span class="s1">&lt;/li&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;/ul&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"order-summary"<span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"list-group mb-3"<span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"list-group-item d-flex justify-content-between align-items-center"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">            </span><span class="s1">&lt;div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">              </span><span class="s1">&lt;strong </span><span class="s2">id</span><span class="s1">=</span><span class="s3">"selected-plan-name"</span><span class="s1">&gt;</span>Annual Pass<span class="s1">&lt;/strong&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">              </span></span><span class="s1">&lt;span </span><span class="s2">class</span><span class="s1">=</span>"badge badge-info badge-pill ml-2"<span class="s1"> </span><span class="s2">id</span><span class="s1">=</span>"selected-plan-trial"<span class="s1">&gt;</span><span class="s4">14‑day trial</span><span class="s1">&lt;/span&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">            </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">&lt;span </span><span class="s2">id</span><span class="s1">=</span>"selected-plan-price"<span class="s1">&gt;</span><span class="s4">$497/yr</span><span class="s1">&lt;/span&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">          </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"list-group"<span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"list-group-item d-flex justify-content-between"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">            </span><span class="s1">&lt;span&gt;</span>Due Today:<span class="s1">&lt;/span&gt;</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span>&lt;strong&gt;<span class="s4">$0</span>&lt;/strong&gt;</p>
+<p class="p4"><span class="Apple-converted-space">          </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"list-group-item d-flex justify-content-between align-items-center"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">            </span><span class="s1">&lt;span&gt;</span>Then<span class="s1">&lt;/span&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">            </span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span><span class="s3">"dropdown"</span><span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">              </span></span><span class="s1">&lt;button </span><span class="s2">class</span><span class="s1">=</span>"btn btn-secondary btn-sm dropdown-toggle"<span class="s1"> </span><span class="s2">id</span><span class="s1">=</span>"scheduleDropdown"<span class="s1"> </span><span class="s2">data-toggle</span><span class="s1">=</span>"dropdown"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">                </span>$497/yr</p>
+<p class="p4"><span class="Apple-converted-space">              </span><span class="s1">&lt;/button&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">              </span></span><span class="s1">&lt;div </span><span class="s2">class</span><span class="s1">=</span>"dropdown-menu dropdown-menu-right"<span class="s1">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">&lt;a </span><span class="s2">class</span><span class="s1">=</span>"dropdown-item"<span class="s1"> </span><span class="s2">href</span><span class="s1">=</span>"#"<span class="s1">&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">                  </span>Apr 30, 2025 — Trial Ends</p>
+<p class="p4"><span class="Apple-converted-space">                </span><span class="s1">&lt;/a&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">              </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">            </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">          </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">&lt;/div&gt;</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">    </span></span>&lt;/div&gt;</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;/div&gt;</p>
+<p class="p5"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;!-- jQuery, Popper &amp; Bootstrap JS for dropdown --&gt;</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;script </span><span class="s2">src</span><span class="s1">=</span>"https://code.jquery.com/jquery-3.5.1.slim.min.js"<span class="s1">&gt;&lt;/script&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;script </span><span class="s2">src</span><span class="s1">=</span>"https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"<span class="s1">&gt;&lt;/script&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;script </span><span class="s2">src</span><span class="s1">=</span>"https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"<span class="s1">&gt;&lt;/script&gt;</span></p>
+<p class="p5"><br></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;script&gt;</p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>// Stripe setup (publishable key updated)</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s4"> stripe = Stripe(</span>"pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev"<span class="s4">);</span></p>
+<p class="p4"><span class="Apple-converted-space">    </span><span class="s1">const</span> elements = stripe.elements();</p>
+<p class="p4"><span class="Apple-converted-space">    </span><span class="s1">const</span> card = elements.create(<span class="s3">"card"</span>, {</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s2">style</span>: {</p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s2">base</span>: {</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s2">fontFamily</span><span class="s4">: </span>'Lato, sans-serif'<span class="s4">,</span></p>
+<p class="p4"><span class="Apple-converted-space">          </span><span class="s2">fontSize</span>: <span class="s3">'16px'</span>,</p>
+<p class="p4"><span class="Apple-converted-space">          </span><span class="s2">color</span>: <span class="s3">'#333'</span>,</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span></span>'::placeholder'<span class="s4">: { </span><span class="s2">color</span><span class="s4">: </span>'#aaa'<span class="s4"> }</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span>},</p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s2">invalid</span>: { <span class="s2">color</span>: <span class="s3">'#e63946'</span> }</p>
+<p class="p4"><span class="Apple-converted-space">      </span>}</p>
+<p class="p4"><span class="Apple-converted-space">    </span>});</p>
+<p class="p4"><span class="Apple-converted-space">    </span>card.mount(<span class="s3">"#card-element"</span>);</p>
+<p class="p5"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>// Plan switcher logic</p>
+<p class="p4"><span class="Apple-converted-space">    </span>document.querySelectorAll(<span class="s3">'input[name="plan"]'</span>).forEach(radio =&gt; {</p>
+<p class="p4"><span class="Apple-converted-space">      </span>radio.addEventListener(<span class="s3">'change'</span>, e =&gt; {</p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">const</span> annual = e.target.value === <span class="s3">'annual'</span>;</p>
+<p class="p4"><span class="Apple-converted-space">        </span>document.getElementById(<span class="s3">'selected-plan-name'</span>).textContent = annual</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span>? </span>'Annual Pass'<span class="s4"> : </span>'Monthly Plan'<span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span>document.getElementById(<span class="s3">'selected-plan-price'</span>).textContent = annual</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span>? </span>'$497/yr'<span class="s4"> : </span>'$69.95/mo'<span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">        </span>document.getElementById(<span class="s3">'scheduleDropdown'</span>).textContent = annual</p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">          </span>? </span>'$497/yr'<span class="s4"> : </span>'$69.95/mo'<span class="s4">;</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span>});</p>
+<p class="p4"><span class="Apple-converted-space">    </span>});</p>
+<p class="p5"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">    </span></span>// Form submit</p>
+<p class="p4"><span class="Apple-converted-space">    </span>document.getElementById(<span class="s3">'submit'</span>).addEventListener(<span class="s3">'click'</span>, <span class="s1">async</span> e =&gt; {</p>
+<p class="p4"><span class="Apple-converted-space">      </span>e.preventDefault();</p>
+<p class="p4"><span class="Apple-converted-space">      </span>document.getElementById(<span class="s3">'submit'</span>).disabled = <span class="s1">true</span>;</p>
+<p class="p5"><br></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">const</span><span class="s4"> res = </span><span class="s1">await</span><span class="s4"> fetch(</span>'/.netlify/functions/create-payment-intent'<span class="s4">, { </span><span class="s2">method</span><span class="s4">: </span>'POST'<span class="s4"> });</span></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">const</span> { clientSecret, <span class="s2">error</span>: backendError } = <span class="s1">await</span> res.json();</p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">if</span> (backendError) {</p>
+<p class="p4"><span class="Apple-converted-space">        </span>alert(backendError);</p>
+<p class="p4"><span class="Apple-converted-space">        </span>document.getElementById(<span class="s3">'submit'</span>).disabled = <span class="s1">false</span>;</p>
+<p class="p4"><span class="Apple-converted-space">        </span><span class="s1">return</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span>}</p>
+<p class="p5"><br></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">const</span> { error } = <span class="s1">await</span> stripe.confirmCardPayment(clientSecret, {</p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span>payment_method<span class="s4">: {</span></p>
+<p class="p4"><span class="Apple-converted-space">          </span>card,</p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">          </span></span>billing_details<span class="s4">: {</span></p>
+<p class="p4"><span class="Apple-converted-space">            </span><span class="s2">name</span>: document.getElementById(<span class="s3">'firstName'</span>).value + <span class="s3">' '</span> +</p>
+<p class="p4"><span class="Apple-converted-space">                  </span>document.getElementById(<span class="s3">'lastName'</span>).value,</p>
+<p class="p4"><span class="Apple-converted-space">            </span><span class="s2">email</span>: document.getElementById(<span class="s3">'email'</span>).value</p>
+<p class="p4"><span class="Apple-converted-space">          </span>}</p>
+<p class="p4"><span class="Apple-converted-space">        </span>}</p>
+<p class="p4"><span class="Apple-converted-space">      </span>});</p>
+<p class="p5"><br></p>
+<p class="p4"><span class="Apple-converted-space">      </span><span class="s1">if</span> (error) {</p>
+<p class="p4"><span class="Apple-converted-space">        </span>alert(error.message);</p>
+<p class="p4"><span class="Apple-converted-space">        </span>document.getElementById(<span class="s3">'submit'</span>).disabled = <span class="s1">false</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span>} <span class="s1">else</span> {</p>
+<p class="p4"><span class="Apple-converted-space">        </span>window.location.href = <span class="s3">'/thank-you'</span>;</p>
+<p class="p4"><span class="Apple-converted-space">      </span>}</p>
+<p class="p4"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span>&lt;/script&gt;</p>
+<p class="p2">&lt;/body&gt;</p>
+<p class="p2">&lt;/html&gt;</p>
+</body>
+</html>
