@@ -1,0 +1,14 @@
+# netlify.toml
+
+[build]
+  # No build command (static site only)
+  command = ""
+  # Serve index.html from the clarity-checkout folder
+  publish = "clarity-checkout"
+  # Look for functions here:
+  functions = "clarity-checkout/netlify/functions"
+
+[dev]
+  command = ""  # For local netlify dev, not needed now
+  publish = "clarity-checkout"
+  functions = "clarity-checkout/netlify/functions"
