@@ -236,8 +236,6 @@
 .program-mockups img {
   max-width: 100%;
   height: auto;
-  border-radius: var(--radius);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   margin: 0.5rem;
 }
   </style>
@@ -245,24 +243,21 @@
 <body>
   <div class="checkout-wrapper">
     <div class="checkout-form">
-      <h2>Select Your Plan</h2>
       <fieldset class="payment-plan-container">
         <div class="row">
           <div class="col-sm-6 mb-3">
             <input type="radio" id="plan-annual" name="plan" value="annual" hidden checked>
             <label for="plan-annual" class="plan-option d-block">
-              <div class="plan-badge badge badge-warning">Just $41/mo — Billed Annually</div>
-              <div class="plan-badge badge badge-info ml-1">14‑day trial</div>
-              <h5 class="mt-2 mb-1">The Clarity Circle — Annual Pass</h5>
-              <h4 class="text-success">$497 <small class="text-muted d-block">yearly</small></h4>
+              <div class="plan-badge badge badge-warning">Just $97 for Lifetime Access</div>
+              <h5 class="mt-2 mb-1">The Clarity Circle — Founding Member Plan</h5>
+              <h4 class="text-success">$97 <small class="text-muted d-block">one-time payment</small></h4>
             </label>
           </div>
           <div class="col-sm-6 mb-3">
             <input type="radio" id="plan-monthly" name="plan" value="monthly" hidden>
             <label for="plan-monthly" class="plan-option d-block">
-              <div class="plan-badge badge badge-info">14‑day trial</div>
-              <h5 class="mt-2 mb-1">The Clarity Circle — Monthly</h5>
-              <h4 class="text-success">$69.95 <small class="text-muted d-block">monthly</small></h4>
+              <h5 class="mt-2 mb-1">The Clarity Circle — Monthly Plan </h5>
+              <h4 class="text-success">$17 <small class="text-muted d-block">monthly</small></h4>
             </label>
           </div>
         </div>
@@ -290,41 +285,42 @@
           I agree to the <a href="/terms" target="_blank">terms and conditions</a>.
         </label>
       </div>
-      <button id="submit" type="submit">Start My Free Trial</button>
+      <button id="submit" type="submit">Secure My Spot</button>
     </div>
     <div class="checkout-summary">
       <!-- Program Mock‑ups -->
 <div class="program-mockups">
   <img src="img/mockup1.png" alt="Course dashboard mock‑up">
 </div>
-      <h2>Your Order</h2>
+      <h2>Join the Clarity Circle</h2>
       <ul class="features">
-        <li>Live coaching sessions</li>
-        <li>Full course library access</li>
-        <li>Research‑backed tools & frameworks</li>
-        <li>Bold, confident, scientific community</li>
+
+        <li>Research‑Backed Tools & Frameworks <em>($997+ value)</em></li>
+<li>Unlimited Relationship Wellness Checkups <em>($30+ value)</em> </li>
+        <li>Access to Our Private, Kind Community <em>($497 value)</em></li>
+                <li>Live Q&As with Dr. Merideth <em>($997+ value)</em></li>
+                <li>Lifetime Access as a Founding Member <em>(priceless)</em></li>
+        <li>30-Day "No Questions Asked" Refund Policy</li>
         <li>Cancel anytime</li>
       </ul>
       <div class="order-summary">
         <div class="list-group mb-3">
           <div class="list-group-item d-flex justify-content-between align-items-center">
             <div>
-              <strong id="selected-plan-name">Annual Pass</strong>
-              <span class="badge badge-info badge-pill ml-2" id="selected-plan-trial">14‑day trial</span>
+              <h3>Your Order Summary</h3>
+              <strong id="selected-plan-name">Clarity Circle - Founding Member Plan</strong>
+              <span class="badge badge-info badge-pill ml-2" id="selected-plan-trial">one-time payment</span>
             </div>
-            <span id="selected-plan-price">$497/yr</span>
+            <span id="selected-plan-price">$97</span>
           </div>
         </div>
         <div class="list-group">
           <div class="list-group-item d-flex justify-content-between">
-            <span>Due Today:</span>
-            <strong>$0</strong></div>
+            <span>Your Order Total</span>
+            <strong>$97</strong></div>
           <div class="list-group-item d-flex justify-content-between align-items-center">
-            <span>Then</span>
-            <div class="dropdown">
-              <button class="btn btn-secondary btn-sm dropdown-toggle" id="scheduleDropdown" data-toggle="dropdown">
-                $497/yr
-              </button>
+            <span><em>Total Value</em></span>
+            <em>+$2500</em></div>
               <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="#">Apr 30, 2025 — Trial Ends</a>
               </div>
