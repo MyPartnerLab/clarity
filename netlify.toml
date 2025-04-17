@@ -1,14 +1,14 @@
 # netlify.toml
 
 [build]
-  # No build command (static site only)
-  command = ""
-  # Serve index.html from the clarity-checkout folder
+  # First install dependencies (so stripe gets pulled in)
+  command = "npm install"
+  # Then publish your static files
   publish = "clarity-checkout"
-  # Look for functions here:
+  # And bundle your functions from here
   functions = "clarity-checkout/netlify/functions"
 
 [dev]
-  command = ""  # For local netlify dev, not needed now
+  command = "npm install"
   publish = "clarity-checkout"
   functions = "clarity-checkout/netlify/functions"
