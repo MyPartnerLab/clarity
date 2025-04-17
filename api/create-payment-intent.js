@@ -1,19 +1,15 @@
-// api/create-payment-intent.js   (Node 18 on Netlify)
-
+// api/create-payment-intent.js   (Node 18 on Netlify)
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-// 🔧 ENV‑controlled mapping:
-//   STRIPE_PRICE_LIFETIME = price_1XXX_lifetime
-//   STRIPE_PRICE_MONTHLY  = price_1YYY_monthly
-//   STRIPE_PRICE_ANNUAL   = price_1ZZZ_annual
+// 🔧 ENV‑controlled mapping
 const priceMap = {
-  lifetime: process.env.STRIPE_PRICE_LIFETIME,
-  monthly:  process.env.STRIPE_PRICE_MONTHLY,
-  annual:   process.env.STRIPE_PRICE_ANNUAL,
+  lifetime: process.env.STRIPE_PRICE_LIFETIME, // one‑time $97
+  monthly:  process.env.STRIPE_PRICE_MONTHLY,  // $17 / mo
+  annual:   process.env.STRIPE_PRICE_ANNUAL,   // (optional) annual price
 };
 
-// Plans that should create a recurring Subscription instead of a one‑time charge
+// Plans treated as recurring subscriptions
 const subscriptionPlans = new Set(['monthly', 'annual']);
 
 exports.handler = async (event) => {
@@ -28,32 +24,42 @@ exports.handler = async (event) => {
       return { statusCode: 400, body: `Unknown plan "${plan}".` };
 
     // --------------------------------------------------
-    // 1.  Subscriptions (monthly / annual)
+    // 1.  Recurring subscription (monthly / annual)
     // --------------------------------------------------
     if (subscriptionPlans.has(plan)) {
-      const session = await stripe.checkout.sessions.create({
-        mode: 'subscription',
-        payment_method_types: ['card'],
-        customer_email: email,
-        line_items: [{ price: priceId, quantity: 1 }],
-        success_url: 'https://mypartnerlab.co/checkout-thank-you?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url:  'https://mypartnerlab.co/checkout-cancelled',
+      // a) Create (or find) a customer
+      const customer = await stripe.customers.create({ email });
+
+      // b) Draft subscription in incomplete state
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: priceId, quantity: 1 }],
+        payment_behavior: 'default_incomplete',
+        expand: ['latest_invoice.payment_intent'],
+        metadata: { plan },
       });
+
+      const clientSecret =
+        subscription.latest_invoice.payment_intent.client_secret;
 
       return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ checkoutUrl: session.url }),
+        body: JSON.stringify({
+          mode: 'subscription',
+          clientSecret,
+          subscriptionId: subscription.id,
+        }),
       };
     }
 
     // --------------------------------------------------
-    // 2.  One‑time PaymentIntent (lifetime)
+    // 2.  One‑time lifetime payment
     // --------------------------------------------------
     const price = await stripe.prices.retrieve(priceId, { expand: ['product'] });
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount:   price.unit_amount,
+      amount: price.unit_amount,
       currency: price.currency,
       automatic_payment_methods: { enabled: true },
       metadata: { plan },
@@ -63,7 +69,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clientSecret: paymentIntent.client_secret }),
+      body: JSON.stringify({ mode: 'one‑time', clientSecret: paymentIntent.client_secret }),
     };
   } catch (err) {
     console.error(err);
