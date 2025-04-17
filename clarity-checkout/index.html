@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Secure Checkout — The Clarity Circle</title>
+  <meta name="description" content="Join The Clarity Circle — 14‑day free trial, $97/year after.">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <!-- FontAwesome for icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3"></script>
+
+  <style>
+    :root {
+      --brand-primary: #800f2f;
+      --brand-accent: #c9184a;
+      --bg-summary: #f4e8de;
+      --radius: .75rem;
+      --transition: .3s ease;
+    }
+    body {
+      margin: 0;
+      font-family: 'Lato', sans-serif;
+      background: #fdf8f5;
+      padding: 2rem 0;
+    }
+    .checkout-wrapper {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fff;
+    }
+    .checkout-form {
+      flex: 1 1 60%;
+      padding: 2rem;
+    }
+    .checkout-form h2 {
+      color: var(--brand-primary);
+      margin-bottom: 1rem;
+    }
+    .payment-plan-container {
+      margin-bottom: 2rem;
+    }
+    .plan-option {
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      padding: 1rem;
+      cursor: pointer;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .plan-option:hover,
+    .plan-option input:checked + .plan-option {
+      border-color: var(--brand-primary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .plan-badge {
+      display: inline-block;
+      margin-bottom: .5rem;
+    }
+    .checkout-form label {
+      font-weight: 700;
+    }
+    .checkout-form .form-control {
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+    }
+    #card-element {
+      padding: .75rem;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      background: #fafafa;
+      margin-bottom: 1rem;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    #card-element.StripeElement--focus {
+      border-color: var(--brand-accent);
+      box-shadow: 0 0 0 3px rgba(201,24,74,0.2);
+    }
+    .secure-note {
+      font-size: .875rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+    .checkout-form .form-check-label a {
+      color: var(--brand-primary);
+      text-decoration: underline;
+    }
+    #submit {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.1rem;
+      background: var(--brand-primary);
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+    #submit:hover {
+      background: var(--brand-accent);
+      transform: translateY(-2px);
+    }
+    #submit:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .checkout-summary {
+      flex: 1 1 40%;
+      background: var(--bg-summary);
+      padding: 2rem;
+      border-left: 4px solid var(--brand-primary);
+    }
+    .checkout-summary h2 {
+      color: var(--brand-primary);
+      margin-bottom: 1rem;
+    }
+    .features {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1.5rem;
+    }
+    .features li {
+      margin-bottom: .75rem;
+    }
+    .features li::before {
+      content: "✔️";
+      margin-right: .5rem;
+      color: var(--brand-primary);
+    }
+    .order-summary {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .order-summary .list-group-item {
+      border: none;
+      padding: .75rem 1rem;
+    }
+    .order-summary .list-group-item + .list-group-item {
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="checkout-wrapper">
+    <div class="checkout-form">
+      <h2>Select Your Plan</h2>
+      <fieldset class="payment-plan-container">
+        <div class="row">
+          <div class="col-sm-6 mb-3">
+            <input type="radio" id="plan-annual" name="plan" value="annual" hidden checked>
+            <label for="plan-annual" class="plan-option d-block">
+              <div class="plan-badge badge badge-warning">Just $41/mo — Billed Annually</div>
+              <div class="plan-badge badge badge-info ml-1">14‑day trial</div>
+              <h5 class="mt-2 mb-1">The Clarity Circle — Annual Pass</h5>
+              <h4 class="text-success">$497 <small class="text-muted d-block">yearly</small></h4>
+            </label>
+          </div>
+          <div class="col-sm-6 mb-3">
+            <input type="radio" id="plan-monthly" name="plan" value="monthly" hidden>
+            <label for="plan-monthly" class="plan-option d-block">
+              <div class="plan-badge badge badge-info">14‑day trial</div>
+              <h5 class="mt-2 mb-1">The Clarity Circle — Monthly</h5>
+              <h4 class="text-success">$69.95 <small class="text-muted d-block">monthly</small></h4>
+            </label>
+          </div>
+        </div>
+      </fieldset>
+      <h2>Contact Information</h2>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="firstName">First Name</label>
+          <input id="firstName" type="text" class="form-control" placeholder="First Name" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="lastName">Last Name</label>
+          <input id="lastName" type="text" class="form-control" placeholder="Last Name" required>
+        </div>
+        <div class="form-group col-12">
+          <label for="email">Email</label>
+          <input id="email" type="email" class="form-control" placeholder="`you@example.com`" required>
+        </div>
+      </div>
+      <h2>Payment Details</h2> <div id="card-element"></div>
+      <p class="secure-note"><i class="fas fa-lock"></i> All payments are secured by 256‑bit encryption</p>
+      <div class="form-check mb-4">
+        <input type="checkbox" id="agreeTerms" class="form-check-input" required>
+        <label for="agreeTerms" class="form-check-label">
+          I agree to the <a href="/terms" target="_blank">terms and conditions</a>.
+        </label>
+      </div>
+      <button id="submit" type="submit">Start My Free Trial</button>
+    </div>
+    <div class="checkout-summary">
+      <h2>Your Order</h2>
+      <ul class="features">
+        <li>Live coaching sessions</li>
+        <li>Full course library access</li>
+        <li>Research‑backed tools & frameworks</li>
+        <li>Bold, confident, scientific community</li>
+        <li>Cancel anytime</li>
+      </ul>
+      <div class="order-summary">
+        <div class="list-group mb-3">
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong id="selected-plan-name">Annual Pass</strong>
+              <span class="badge badge-info badge-pill ml-2" id="selected-plan-trial">14‑day trial</span>
+            </div>
+            <span id="selected-plan-price">$497/yr</span>
+          </div>
+        </div>
+        <div class="list-group">
+          <div class="list-group-item d-flex justify-content-between">
+            <span>Due Today:</span>
+            <strong>$0</strong></div>
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <span>Then</span>
+            <div class="dropdown">
+              <button class="btn btn-secondary btn-sm dropdown-toggle" id="scheduleDropdown" data-toggle="dropdown">
+                $497/yr
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="#">Apr 30, 2025 — Trial Ends</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://js.stripe.com/v3"></script>
+  <script>
+    const stripe = Stripe("pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev");
+    const elements = stripe.elements();
+    const card = elements.create("card");
+    card.mount("#card-element");
+    document.querySelectorAll('input[name="plan"]').forEach(radio => {
+      radio.addEventListener('change', e => {
+        const annual = e.target.value==='annual';
+        document.getElementById('selected-plan-name').textContent=annual?'Annual Pass':'Monthly Plan';
+        document.getElementById('selected-plan-price').textContent=annual?'$497/yr':'$69.95/mo';
+        document.getElementById('scheduleDropdown').textContent=annual?'$497/yr':'$69.95/mo';
+      });
+    });
+    document.getElementById('submit').addEventListener('click', async e => {
+      e.preventDefault(); e.target.disabled=true;
+      const res=await fetch('/api/create-payment-intent',{ method:'POST' });
+      const { clientSecret, error:backendError }=await res.json();
+      if(backendError){ alert(backendError); e.target.disabled=false; return; }
+      const { error }=await stripe.confirmCardPayment(clientSecret,{ payment_method:{card,billing_details:{ name:document.getElementById('firstName').value+' '+document.getElementById('lastName').value,email:document.getElementById('email').value }}});
+      if(error){ alert(error.message); e.target.disabled=false; } else { window.location.href='/thank-you'; }
+    });
+  </script>
+</body>
+</html>
