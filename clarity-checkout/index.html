@@ -4,24 +4,14 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Secure Checkout — The Clarity Circle</title>
-  <meta name="description" content="Join The Clarity Circle — 14‑day free trial, $97/year after.">
+  <meta name="description" content="Join The Clarity Circle — 14‑day free trial, $97/year after">
 
-  <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  <!-- Bootstrap CSS (for grid basics + resets) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
-  <!-- FontAwesome -->
+  <!-- Google Font + FontAwesome + Stripe.js -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
-  <!-- Google Font -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
-
-  <!-- Stripe.js -->
   <script src="https://js.stripe.com/v3"></script>
 
   <style>
@@ -30,200 +20,179 @@
       --brand-accent:  #c9184a;
       --bg-summary:   #f4e8de;
       --radius:       0.75rem;
-      --space:        1.5rem;
-      --transition:   0.3s ease;
+      --gap:          1.5rem;
+      --transition:   .3s ease;
     }
-
     body {
-      margin: 0;
-      padding: 2rem 0;
-      font-family: 'Lato', sans-serif;
-      background: #fdf8f5;
+      margin:0;
+      padding:2rem 0;
+      font-family:'Lato', sans-serif;
+      background:#fdf8f5;
     }
 
-    /* wrapper flex */
+    /* ==== Wrapper & columns ==== */
     .checkout-wrapper {
-      max-width: 1000px;
-      margin: auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space);
-      padding: 0;
+      display:flex;
+      flex-wrap:wrap;
+      gap:var(--gap);
+      max-width:1000px;
+      margin:0 auto;
     }
-
-    /* left card */
     .checkout-form {
-      flex: 1 1 60%;
-      background: #fff;
+      flex:1 1 60%;
+      background:#fff;
       border-radius: var(--radius) 0 0 var(--radius);
-      padding: 2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      box-shadow:0 4px 12px rgba(0,0,0,0.05);
+      padding:2rem;
     }
-    .checkout-form h2 {
-      font-size: 2rem;
-      color: var(--brand-primary);
-      margin-bottom: var(--space);
-    }
-    .checkout-form > * + * {
-      margin-top: var(--space);
+    .checkout-summary {
+      flex:1 1 38%;
+      background: var(--bg-summary);
+      border-top:4px solid var(--brand-primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      box-shadow:0 4px 12px rgba(0,0,0,0.05);
+      padding:2rem;
     }
 
-    /* plan grid */
+    /* Force side‑by‑side only on >=768px */
+    @media (max-width:767px) {
+      .checkout-wrapper { flex-direction:column; }
+      .checkout-form,
+      .checkout-summary { border-radius: var(--radius); }
+    }
+
+    /* ==== Headings & spacing ==== */
+    .checkout-form h2,
+    .checkout-summary h2 {
+      margin:0 0 var(--gap) 0;
+      color:var(--brand-primary);
+      font-weight:700;
+    }
+    .checkout-form > * + * { margin-top:var(--gap); }
+
+    /* ==== Plan cards grid ==== */
     .payment-plan-container {
-      display: grid;
-      grid-gap: var(--space);
-      grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:var(--gap);
     }
     .plan-option {
-      background: #fff;
-      border: 1px solid #eee;
-      border-radius: var(--radius);
-      padding: 2rem;
-      min-height: 260px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      cursor: pointer;
-      transition: var(--transition);
+      background:#fff;
+      border:1px solid #eee;
+      border-radius:var(--radius);
+      padding:1.5rem;
+      cursor:pointer;
+      transition:border-color var(--transition), box-shadow var(--transition);
     }
     .plan-option:hover,
     .plan-option input:checked + .plan-option {
-      border-color: var(--brand-primary);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      border-color:var(--brand-accent);
+      box-shadow:0 6px 16px rgba(0,0,0,0.08);
     }
+    .plan-option h5 { margin:0.5rem 0; font-size:1.1rem; }
+    .plan-option h4 { margin:0; font-size:1.5rem; }
     .plan-badge {
-      display: inline-block;
-      background: #F7F9FA;
-      color: var(--brand-primary);
-      font-size: 0.625rem;
-      text-transform: uppercase;
-      padding: 0.25rem 0.5rem;
-      border-radius: var(--radius);
-      margin-bottom: 0.5rem;
+      display:inline-block;
+      background:#F7F9FA;
+      color:var(--brand-primary);
+      font-size:0.625rem;
+      text-transform:uppercase;
+      padding:0.25rem 0.5rem;
+      border-radius:var(--radius);
     }
 
-    /* inputs */
-    .checkout-form label {
-      font-weight: 700;
-    }
+    /* ==== Inputs ==== */
+    .checkout-form label { font-weight:700; }
     .checkout-form .form-control {
-      background: #fafafa;
-      border: 1px solid #ddd;
-      border-radius: var(--radius);
-      padding: 1rem;
+      background:#fafafa;
+      border:1px solid #ddd;
+      border-radius:var(--radius);
+      padding:1rem;
     }
 
-    /* stripe element */
+    /* ==== Stripe element ==== */
     #card-element {
-      background: #fafafa;
-      border: 1px solid #ddd;
-      padding: 1rem;
-      border-radius: var(--radius);
-      margin-bottom: var(--space);
-      transition: var(--transition);
+      background:#fafafa;
+      border:1px solid #ddd;
+      padding:1rem;
+      border-radius:var(--radius);
+      transition:var(--transition);
     }
     #card-element.StripeElement--focus {
-      border-color: var(--brand-accent);
-      box-shadow: 0 0 0 3px rgba(201,24,74,0.2);
+      border-color:var(--brand-accent);
+      box-shadow:0 0 0 3px rgba(201,24,74,0.2);
     }
+    .secure-note { font-size:0.875rem; color:#666; }
 
-    .secure-note {
-      font-size: 0.875rem;
-      color: #666;
-    }
-
-    /* button */
+    /* ==== Button ==== */
     #submit {
-      width: 100%;
-      padding: 1.25rem;
-      background: var(--brand-primary);
-      border: none;
-      border-radius: var(--radius);
-      color: #fff;
-      font-size: 1.125rem;
-      cursor: pointer;
-      transition: var(--transition);
+      width:100%;
+      padding:1.25rem;
+      background:var(--brand-primary);
+      border:none;
+      border-radius:var(--radius);
+      color:#fff;
+      font-size:1.125rem;
+      cursor:pointer;
+      transition:var(--transition);
     }
-    #submit:hover {
-      background: var(--brand-accent);
-      transform: translateY(-1px);
-    }
-    #submit:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
+    #submit:hover { background:var(--brand-accent); transform:translateY(-1px); }
+    #submit:disabled { background:#ccc; cursor:not-allowed; }
 
-    /* right card */
-    .checkout-summary {
-      flex: 1 1 38%;
-      background: var(--bg-summary);
-      border-top: 4px solid var(--brand-primary);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-    .checkout-summary h2 {
-      font-size: 1.5rem;
-      color: var(--brand-primary);
-      margin-bottom: var(--space);
-    }
-
-    /* features list */
-    .features {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 var(--space) 0;
-    }
+    /* ==== Features list ==== */
+    .features { list-style:none; padding:0; margin:0 0 var(--gap) 0; }
     .features li {
-      margin-bottom: 0.75rem;
+      margin-bottom:0.75rem;
+      font-size:0.95rem;
     }
     .features li::before {
-      content: "✔️";
-      margin-right: 0.5rem;
-      color: var(--brand-primary);
+      content:"✔️";
+      margin-right:0.5rem;
+      color:var(--brand-primary);
     }
 
-    /* mock‑ups */
+    /* ==== Program mock‑ups ==== */
     .program-mockups {
-      text-align: center;
-      margin-bottom: var(--space);
+      text-align:center;
+      margin-bottom:var(--gap);
     }
     .program-mockups img {
-      max-width: 100%;
-      height: auto;
-      display: inline-block;
+      max-width:100%;
+      height:auto;
+      display:inline-block;
     }
 
-    /* order summary */
+    /* ==== Order summary ==== */
     .order-summary {
-      background: #fff;
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      margin-top: var(--space);
+      background:#fff;
+      border-radius:var(--radius);
+      padding:1.5rem;
+      box-shadow:0 4px 12px rgba(0,0,0,0.05);
     }
     .order-summary h3 {
-      margin: 0 0 var(--space) 0;
-      font-size: 1.25rem;
-      color: var(--brand-primary);
-      font-weight: 700;
+      margin:0 0 var(--gap) 0;
+      font-size:1.25rem;
+      color:var(--brand-primary);
+      font-weight:700;
     }
     .order-summary ul {
-      padding: 0;
-      list-style: none;
-      margin: 0;
+      list-style:none;
+      padding:0;
+      margin:0;
     }
     .order-summary li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-      font-size: 0.95rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:0.5rem;
+      font-size:0.95rem;
     }
     .order-summary li.text-muted {
-      color: #666;
-      font-size: 0.875rem;
+      color:#666;
+      font-size:0.875rem;
     }
     .order-summary li.mt-3 {
-      margin-top: 1rem!important;
+      margin-top:1rem!important;
     }
   </style>
 </head>
@@ -231,22 +200,23 @@
 <body>
   <div class="checkout-wrapper">
 
-    <!-- LEFT -->
+    <!-- LEFT COLUMN -->
     <form class="checkout-form">
       <fieldset class="payment-plan-container">
         <label>
           <input type="radio" name="plan" value="annual" hidden checked>
           <div class="plan-option">
-            <div class="plan-badge">Just $97 for Lifetime</div>
-            <h5>The Clarity Circle – Founding Member Plan</h5>
-            <h4>$97 <small class="text-muted d-block">one‑time payment</small></h4>
+            <div class="plan-badge">Just $97 for Lifetime</div>
+            <h5>The Clarity Circle – Founding Member Plan</h5>
+            <h4>$97 <small class="text-muted d-block">one‑time payment</small></h4>
           </div>
         </label>
+
         <label>
           <input type="radio" name="plan" value="monthly" hidden>
           <div class="plan-option">
-            <h5>The Clarity Circle – Monthly Plan</h5>
-            <h4>$17 <small class="text-muted d-block">monthly</small></h4>
+            <h5>The Clarity Circle – Monthly Plan</h5>
+            <h4>$17 <small class="text-muted d-block">monthly</small></h4>
           </div>
         </label>
       </fieldset>
@@ -269,7 +239,9 @@
 
       <h2>Payment Details</h2>
       <div id="card-element"></div>
-      <p class="secure-note"><i class="fas fa-lock"></i> All payments secured by 256‑bit encryption</p>
+      <p class="secure-note">
+        <i class="fas fa-lock"></i> All payments secured by 256‑bit encryption
+      </p>
 
       <div class="form-check mb-4">
         <input id="agreeTerms" class="form-check-input" type="checkbox" required>
@@ -281,12 +253,13 @@
       <button id="submit" type="submit">Secure My Spot</button>
     </form>
 
-    <!-- RIGHT -->
+
+    <!-- RIGHT COLUMN -->
     <div class="checkout-summary">
       <div class="program-mockups">
-        <!-- note the path here matches where you uploaded the file -->
-        <img src="mockup1.png" alt="Course dashboard mock‑up">
+        <img src="img/mockup1.png" alt="Course dashboard mock‑up">
       </div>
+
       <h2>Join the Clarity Circle</h2>
       <ul class="features">
         <li>Research‑Backed Tools &amp; Frameworks <em>($997+ value)</em></li>
@@ -324,33 +297,35 @@
   </div>
 
   <script>
-    // Stripe initialization (replace with your own key)
+    // Stripe.js setup (drop in your real publishable key)
     const stripe = Stripe('pk_test_…');
     const elements = stripe.elements();
     const card = elements.create('card');
     card.mount('#card-element');
 
-    // form submission
+    // submit handler
     document.querySelector('.checkout-form').addEventListener('submit', async e => {
       e.preventDefault();
       document.getElementById('submit').disabled = true;
-      // call your backend…
+
       const res = await fetch('/api/create-payment-intent', { method:'POST' });
       const { clientSecret, error:backendError } = await res.json();
       if (backendError) {
         alert(backendError);
-        return document.getElementById('submit').disabled = false;
+        document.getElementById('submit').disabled = false;
+        return;
       }
+
       const { error } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card,
           billing_details: {
-            name: document.getElementById('firstName').value + ' ' +
-                  document.getElementById('lastName').value,
+            name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
             email: document.getElementById('email').value
           }
         }
       });
+
       if (error) {
         alert(error.message);
         document.getElementById('submit').disabled = false;
