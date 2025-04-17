@@ -305,8 +305,10 @@
         payment_method:{card,billing_details:{name:`${firstName} ${lastName}`,email}}
       });
       if(error){ errorsDiv.textContent=error.message; submitBtn.disabled=false; }
-      else window.location='/thank-you';
-    });
+      else {
+  // Redirect to your live thank-you page:
+  window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+});
   </script>
 </body>
 </html>
