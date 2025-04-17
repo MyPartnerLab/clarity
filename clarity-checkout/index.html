@@ -28,40 +28,35 @@
       font-family: 'Lato', sans-serif;
       background: #faf7f3;
     }
-    .mt-3 { margin-top: 1rem !important; }
-    .mb-2 { margin-bottom: .75rem !important; }
-
-    /* Layout */
     .checkout-wrapper {
       max-width: 1100px;
       margin: 0 auto;
       display: flex;
       gap: var(--gap);
     }
-    .checkout-form,
-    .checkout-summary {
-      border-radius: var(--radius);
-      box-shadow: 0 6px 16px rgba(0,0,0,.06);
+    @media (max-width: 767px) {
+      .checkout-wrapper { flex-direction: column; }
     }
     .checkout-form {
       flex: 0 0 60%;
       background: var(--form-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
       padding: 2.25rem;
     }
     .checkout-summary {
       flex: 0 0 40%;
       background: var(--summary-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
       padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-    @media (max-width: 767px) {
-      .checkout-wrapper { flex-direction: column; }
-    }
 
     /* Plan selector */
-    fieldset { border: none; padding: 0; margin-bottom: 1rem; }
+    fieldset { border: none; margin: 0 0 1rem; padding: 0; }
     legend { font-size: .9rem; margin-bottom: .5rem; }
     #plan-options { display: flex; gap: 1rem; }
     .plan-input { display: none; }
@@ -102,7 +97,10 @@
       font-weight: 700;
       color: var(--brand);
     }
-    .corner-tag { display: none; position: absolute; top: 0; left: 0;
+    .corner-tag {
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
       width: 0; height: 0;
       border-top: 45px solid var(--brand);
       border-right: 45px solid transparent;
@@ -111,12 +109,12 @@
     .plan-input:checked + .plan-card .corner-tag { display: block; }
     .corner-tag i { position: absolute; top: -30px; left: 8px; color: #fff; font-size: .8rem; }
 
-    /* Form elements */
+    /* Form fields */
     label { font-weight: 600; }
     input.form-control { border-radius: var(--radius); }
 
-    /* Payment section */
-    .payment-label { margin-top: .5rem; margin-bottom: .5rem; }
+    /* Payment */
+    .payment-label { margin: .5rem 0 .75rem; }
     .card-logos img { height: 20px; margin-right: 4px; }
     .more-text { font-size: .75rem; opacity: .7; margin-left: 4px; }
     #card-element {
@@ -131,9 +129,9 @@
       margin-top: .5rem;
     }
 
-    /* Submit button */
+    /* Submit */
     #submit {
-      margin-top: 1.75rem;
+      margin-top: 1.5rem;
       width: 100%;
       background: var(--brand);
       color: #fff;
@@ -142,41 +140,34 @@
       padding: .85rem;
       font-weight: 700;
     }
-    #submit:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-    #submit:hover:not(:disabled) { background: var(--accent); }
+    #submit:hover { background: var(--accent); }
 
-    /* Summary */
+    /* Summary pane */
     .summary-top { text-align: center; }
     .summary-mockup {
-      width: 80%;
-      max-width: 260px;
+      width: 80%; max-width: 260px;
       border-radius: var(--radius);
       box-shadow: 0 4px 12px rgba(0,0,0,.1);
       margin-bottom: 1rem;
     }
     .checkout-summary h2 {
+      width: 100%;
       border-bottom: 1px solid rgba(0,0,0,.1);
       padding-bottom: .5rem;
       margin-bottom: 1rem;
       color: var(--brand);
       font-weight: 700;
+      text-align: center;
     }
     .benefits {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 1.5rem;
-      width: 100%;
+      list-style: none; padding: 0; margin: 0 0 1.5rem; width: 100%;
     }
     .benefits li {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: .5rem;
-      font-size: .9rem;
+      display: flex; justify-content: space-between;
+      margin-bottom: .5rem; font-size: .9rem;
     }
     .benefits li img { width: 18px; margin-right: .5rem; }
+
     .order-box {
       background: #fff;
       border-radius: var(--radius);
@@ -185,14 +176,13 @@
       width: 100%;
     }
     .order-box h4 {
-      margin-bottom: .75rem;
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--brand);
+      margin-bottom: .75rem;
     }
     .order-row {
-      display: flex;
-      justify-content: space-between;
+      display: flex; justify-content: space-between;
       font-size: .9rem;
     }
     .order-row .tag {
@@ -205,34 +195,28 @@
       margin-left: .4rem;
     }
     .order-note {
-      font-size: .8rem;
-      opacity: .75;
-      margin-top: .25rem;
+      font-size: .8rem; opacity: .75; margin-top: .25rem;
     }
     .due {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--brand);
-      text-align: right;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--brand); text-align: right;
       margin-top: .75rem;
     }
     .next-pay {
-      font-size: .85rem;
-      font-style: italic;
-      opacity: .8;
-      margin-top: .25rem;
+      font-size: .85rem; font-style: italic;
+      opacity: .8; margin-top: .25rem;
     }
   </style>
 </head>
 <body>
   <div class="checkout-wrapper">
 
-    <!-- FORM -->
+    <!-- LEFT: FORM -->
     <form id="checkout-form" class="checkout-form" novalidate>
       <fieldset>
         <legend>Choose your plan</legend>
         <div id="plan-options">
-          <input type="radio" id="plan-lifetime" name="plan" value="lifetime" class="plan-input" checked>
+          <input type="radio" id="plan-lifetime" name="plan" value="lifetime" class="plan-input" checked />
           <label for="plan-lifetime" class="plan-card">
             <span class="corner-tag"><i class="fas fa-check"></i></span>
             <span class="plan-badge">Founding Member Plan</span>
@@ -241,7 +225,7 @@
             <span class="price">$97 total</span>
           </label>
 
-          <input type="radio" id="plan-monthly" name="plan" value="monthly" class="plan-input">
+          <input type="radio" id="plan-monthly" name="plan" value="monthly" class="plan-input" />
           <label for="plan-monthly" class="plan-card">
             <span class="corner-tag"><i class="fas fa-check"></i></span>
             <span class="plan-badge">Founding Member Plan</span>
@@ -256,23 +240,23 @@
       <div class="form-row">
         <div class="col">
           <label for="firstName">First Name</label>
-          <input type="text" id="firstName" class="form-control" aria-required="true" required>
+          <input type="text" id="firstName" class="form-control" required aria-required="true" />
         </div>
         <div class="col">
           <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" class="form-control" aria-required="true" required>
+          <input type="text" id="lastName" class="form-control" required aria-required="true" />
         </div>
       </div>
       <label for="email">Email</label>
-      <input type="email" id="email" class="form-control" aria-required="true" required>
+      <input type="email" id="email" class="form-control" required aria-required="true" />
 
       <h3>Credit/Debit Card</h3>
       <div class="payment-label">
         <div class="card-logos">
-          <img src="img/visa_creditcard.png" alt="Visa">
-          <img src="img/mastercard_creditcard.png" alt="Mastercard">
-          <img src="img/amex_creditcard.png" alt="American Express">
-          <img src="img/discover_creditcard.png" alt="Discover">
+          <img src="img/visa_creditcard.png" alt="Visa" />
+          <img src="img/mastercard_creditcard.png" alt="Mastercard" />
+          <img src="img/amex_creditcard.png" alt="American Express" />
+          <img src="img/discover_creditcard.png" alt="Discover" />
           <span class="more-text">and many more…</span>
         </div>
       </div>
@@ -282,10 +266,10 @@
       <button id="submit" type="submit">Secure My Spot</button>
     </form>
 
-    <!-- SUMMARY -->
+    <!-- RIGHT: SUMMARY -->
     <aside class="checkout-summary">
       <div class="summary-top">
-        <img src="img/mockup1.png" class="summary-mockup" alt="Program preview">
+        <img src="img/mockup1.png" class="summary-mockup" alt="Program preview" />
         <h2>Join the Clarity Circle</h2>
       </div>
 
@@ -293,7 +277,7 @@
         <li><span><img src="img/checkmark.svg" alt="">Research‑Backed Tools</span><span>($997+)</span></li>
         <li><span><img src="img/checkmark.svg" alt="">Unlimited Checkups</span><span>($300+)</span></li>
         <li><span><img src="img/checkmark.svg" alt="">Private Community</span><span>($497)</span></li>
-        <li><span><img src="img/checkmark.svg" alt="">Live Q&amp;A Sessions</span><span>($997+)</span></li>
+        <li><span><img src="img/checkmark.svg" alt="">Live Q&A Sessions</span><span>($997+)</span></li>
         <li id="liLifetime"><span><img src="img/checkmark.svg" alt="">Lifetime Access</span><span>(priceless)</span></li>
         <li><span><img src="img/checkmark.svg" alt="">30‑Day Refund Policy</span></li>
         <li><span><img src="img/checkmark.svg" alt="">Cancel anytime</span></li>
@@ -315,38 +299,27 @@
     </aside>
   </div>
 
+  <!-- Stripe & Logic -->
   <script>
-    // Initialize Stripe
     const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');
     const elements = stripe.elements();
     const cardElement = elements.create('card');
     cardElement.mount('#card-element');
 
-    // State
     let selectedPlan = 'lifetime';
 
-    // Render summary
     function renderSummary() {
       const isLife = selectedPlan === 'lifetime';
       document.getElementById('summary-plan').textContent = isLife
         ? 'Clarity Circle – Lifetime Access'
         : 'Clarity Circle – Monthly Access';
-      document.getElementById('summary-price').textContent = isLife
-        ? '$97'
-        : '$17/mo';
-      document.getElementById('summary-note').textContent = isLife
-        ? 'one‑time payment'
-        : 'monthly subscription';
-      document.getElementById('dueToday').textContent = isLife
-        ? '$97 due today'
-        : '$17 due today';
-      document.getElementById('nextPayment').textContent = isLife
-        ? ''
-        : 'Next payment: $17/mo';
+      document.getElementById('summary-price').textContent = isLife ? '$97' : '$17/mo';
+      document.getElementById('summary-note').textContent = isLife ? 'one‑time payment' : 'monthly subscription';
+      document.getElementById('dueToday').textContent = isLife ? '$97 due today' : '$17 due today';
+      document.getElementById('nextPayment').textContent = isLife ? '' : 'Next payment: $17/mo';
       document.getElementById('liLifetime').style.display = isLife ? 'flex' : 'none';
     }
 
-    // Plan selection
     document.querySelectorAll('input[name="plan"]').forEach(input => {
       input.addEventListener('change', () => {
         selectedPlan = input.value;
@@ -355,7 +328,6 @@
     });
     renderSummary();
 
-    // Handle form submission
     const form = document.getElementById('checkout-form');
     const submitBtn = document.getElementById('submit');
     const cardErrors = document.getElementById('card-errors');
@@ -366,24 +338,22 @@
       cardErrors.textContent = '';
 
       const firstName = document.getElementById('firstName').value.trim();
-      const lastName  = document.getElementById('lastName').value.trim();
-      const email     = document.getElementById('email').value.trim();
-      const amount    = selectedPlan === 'lifetime' ? 9700 : 1700;
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const amount = selectedPlan === 'lifetime' ? 9700 : 1700;
 
-      // Create payment intent
       const res = await fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: selectedPlan, amount, email, firstName })
       });
-      const { clientSecret, error: be } = await res.json();
-      if (be) {
-        cardErrors.textContent = be;
+      const { clientSecret, error: backendError } = await res.json();
+      if (backendError) {
+        cardErrors.textContent = backendError;
         submitBtn.disabled = false;
         return;
       }
 
-      // Confirm payment
       const { error } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: cardElement,
