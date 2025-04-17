@@ -47,7 +47,7 @@
     #plan-options {
       display: flex;
       gap: 1rem;
-      margin-bottom: 1.25rem; /* tightened */
+      margin-bottom: 1.25rem;
     }
     .plan-input { display: none; }
     .plan-card {
@@ -72,60 +72,44 @@
       display: none;
       position: absolute; top:0; left:0;
       width:0; height:0;
-      border-top: 45px solid var(--brand);
-      border-right: 45px solid transparent;
+      border-top:45px solid var(--brand);
+      border-right:45px solid transparent;
       border-top-left-radius: var(--radius);
     }
-    .plan-input:checked + .plan-card .corner-tag {
-      display: block;
-    }
-    .corner-tag i {
-      position: absolute; top:-30px; left:8px;
-      color: #fff; font-size: .8rem;
-    }
-    .corner-star {
-      position: absolute; top:4px; right:4px;
-      width:16px; height:16px;
-    }
+    .plan-input:checked + .plan-card .corner-tag { display:block; }
+    .corner-tag i { position:absolute; top:-30px; left:8px; color:#fff; font-size:.8rem; }
+    .corner-star { position:absolute; top:4px; right:4px; width:16px; height:16px; }
     .plan-badge {
-      background: var(--summary-bg);
-      color: var(--brand);
+      background: var(--summary-bg); color: var(--brand);
       font-size: .75rem; font-weight:700;
-      border-radius:999px;
-      padding:.1rem .4rem;
-      margin-bottom:.25rem;
+      border-radius:999px; padding:.1rem .4rem; margin-bottom:.25rem;
       text-align:center;
     }
-    .plan-title {
-      font-weight:700;
-      text-align:center;
-      margin-top:.25rem;
-    }
+    .plan-title { font-weight:700; text-align:center; margin-top:.25rem; }
     .plan-sub {
-      font-style:italic;
-      opacity:.75;
-      font-size:.85rem;
-      text-align:center;
-      margin-top:.1rem;
-      line-height:1.2; /* tighten */
+      font-style:italic; opacity:.75; font-size:.85rem;
+      text-align:center; margin-top:.1rem; line-height:1.2;
     }
     .price {
       font-size:1.3rem; font-weight:700;
-      color: var(--brand);
-      margin-top:.5rem;
+      color: var(--brand); margin-top:.5rem;
     }
 
     /* Form fields */
     h3 {
-      font-size:1.05rem; font-weight:700;
+      font-size: 1.25em;        /* increased from 1.05rem */
+      font-weight:700;
       color: var(--brand);
-      margin: 1rem 0 .5rem; /* reduced top-margin */
+      margin: 1rem 0 .5rem;      /* reduced top-margin */
     }
     label { font-weight:600; }
     input.form-control { border-radius: var(--radius); }
 
     /* Payment logos */
-    .payment-label { margin-bottom:1rem; }
+    .payment-label {
+      margin-top: .75rem;       /* added spacing above card logos */
+      margin-bottom: 1rem;
+    }
     .card-logos img { height:20px; margin-right:4px; }
     .more-text { font-size:.75rem; opacity:.7; margin-left:4px; }
 
@@ -138,30 +122,27 @@
     }
     .secure-note img { width:16px; margin-right:6px; }
 
-    /* Terms & Submit */
     .terms { margin-top:1rem; }
     #submit {
       margin-top:1.5rem; width:100%;
-      background:var(--brand); color:#fff; border:none;
-      border-radius:var(--radius); padding:.85rem; font-weight:700;
+      background: var(--brand); color:#fff; border:none;
+      border-radius: var(--radius); padding:.85rem; font-weight:700;
       transition: background .25s;
     }
     #submit:hover { background: var(--accent); }
 
-
     /* ==== Right Summary ==== */
     .checkout-summary {
-      flex:0 0 40%;
-      display:flex; flex-direction:column; align-items:center;
+      flex: 0 0 40%;
+      display: flex; flex-direction: column; align-items: center;
     }
-
     /* larger mockup */
     .summary-mockup {
       width: 95%; max-width: 360px;
       margin-bottom: 1rem;
     }
 
-    /* colored overview box */
+    /* colored box */
     .summary-box {
       background: var(--summary-bg);
       border-radius: var(--radius);
@@ -171,7 +152,7 @@
     }
     .summary-box h2 {
       margin: 0 0 1rem;
-      font-size: 1.75rem;  /* larger */
+      font-size: 1.25em;       /* increased from 1.05rem */
       font-weight:700;
       color: var(--brand);
       text-align: center;
@@ -186,7 +167,7 @@
     }
     .benefits li img { width:18px; margin-right:.5rem; }
 
-    /* remove white box: make transparent */
+    /* Order Summary & Total */
     .order-box {
       background: transparent !important;
       box-shadow: none !important;
@@ -194,21 +175,26 @@
       width:100%;
     }
     .order-box h4 {
-      font-size:1.05rem; font-weight:700;
-      color:var(--brand); margin-bottom:.5rem;
+      font-size: 1.25em;       /* increased */
+      font-weight:700;
+      color: var(--brand);
+      margin-bottom: .5rem;
     }
     .order-row {
-      font-size:.9rem;
-      line-height:1.2; /* tighten vertical */
+      font-size: .9rem;
+      line-height: 1.2;         /* tightened */
     }
     .order-note {
-      margin-top:.25rem;
-      font-style:italic; opacity:.75;
+      margin-top: .25rem;
+      font-style: italic; opacity:.75;
       line-height:1.2;
     }
     .order-total {
       display:flex; justify-content:space-between;
-      margin-top:1rem; font-size:1.2rem; font-weight:700; color:var(--brand);
+      margin-top:1rem;
+      font-size:1.25em;         /* increased from 1.2rem */
+      font-weight:700;
+      color:var(--brand);
     }
   </style>
 </head>
@@ -217,8 +203,7 @@
 
     <!-- LEFT: FORM -->
     <form id="checkout-form" class="checkout-form" novalidate>
-      <fieldset>
-        <legend class="sr-only">Plan selection</legend>
+      <fieldset><legend class="sr-only">Plan selection</legend>
         <div id="plan-options">
           <input type="radio" id="plan-lifetime" name="plan" value="lifetime" class="plan-input" checked>
           <label for="plan-lifetime" class="plan-card">
@@ -325,46 +310,37 @@
         ? '$97'
         : '$17.00';
     }
-    document.querySelectorAll('input[name="plan"]').forEach(i =>
-      i.addEventListener('change', e => { selected = e.target.value; renderSummary(); })
+    document.querySelectorAll('input[name="plan"]').forEach(i=>
+      i.addEventListener('change',e=>{ selected=e.target.value; renderSummary(); })
     );
     renderSummary();
 
     const form = document.getElementById('checkout-form'),
           submitBtn = document.getElementById('submit'),
           errorsDiv = document.getElementById('card-errors');
-    form.addEventListener('submit', async e => {
+    form.addEventListener('submit',async e=>{
       e.preventDefault();
-      if (!document.getElementById('agree').checked) {
+      if(!document.getElementById('agree').checked){
         alert('You must agree to the terms and conditions.');
         return;
       }
-      submitBtn.disabled = true;
-      errorsDiv.textContent = '';
-      const firstName = document.getElementById('firstName').value.trim(),
-            lastName  = document.getElementById('lastName').value.trim(),
-            email     = document.getElementById('email').value.trim(),
-            amount    = selected === 'lifetime' ? 9700 : 1700;
-      const res = await fetch('/api/create-payment-intent', {
+      submitBtn.disabled=true; errorsDiv.textContent='';
+      const firstName=document.getElementById('firstName').value.trim(),
+            lastName=document.getElementById('lastName').value.trim(),
+            email=document.getElementById('email').value.trim(),
+            amount= selected==='lifetime'?9700:1700;
+      const res=await fetch('/api/create-payment-intent',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({plan:selected,amount,email,firstName})
+        body:JSON.stringify({plan:selected,amount,email,firstName})
       });
-      const {clientSecret, error: be} = await res.json();
-      if (be) {
-        errorsDiv.textContent = be;
-        submitBtn.disabled = false;
-        return;
-      }
-      const {error} = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {card, billing_details:{name:`${firstName} ${lastName}`,email}}
+      const {clientSecret,error:be}=await res.json();
+      if(be){ errorsDiv.textContent=be; submitBtn.disabled=false; return; }
+      const {error}=await stripe.confirmCardPayment(clientSecret,{
+        payment_method:{card,billing_details:{name:`${firstName} ${lastName}`,email}}
       });
-      if (error) {
-        errorsDiv.textContent = error.message;
-        submitBtn.disabled = false;
-      } else {
-        window.location = '/thank-you';
-      }
+      if(error){ errorsDiv.textContent=error.message; submitBtn.disabled=false; }
+      else window.location='/thank-you';
     });
   </script>
 </body>
