@@ -253,10 +253,12 @@
       </div>
     </aside>
   </div>
-  <script>
-    // 1. Initialise Stripe.js with your real publishable key
-     document.addEventListener('DOMContentLoaded', () => {
-    const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');   // <-- put full key here
+<script>
+  /* Wait until the DOM is ready, then run ALL checkout code */
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // 1. Initialise Stripe.js with your publishable key
+    const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');
 
     // 2. Mount the card Element
     const elements = stripe.elements();
@@ -277,8 +279,8 @@
         : 'monthly subscription';
       document.getElementById('yourTotal').textContent = life ? '$97.00' : '$17.00';
     }
-    document.querySelectorAll('input[name="plan"]').forEach(i =>
-      i.addEventListener('change', e => { selected = e.target.value; renderSummary(); })
+    document.querySelectorAll('input[name="plan"]').forEach(radio =>
+      radio.addEventListener('change', e => { selected = e.target.value; renderSummary(); })
     );
     renderSummary();
 
@@ -302,7 +304,7 @@
       const lastName  = document.getElementById('lastName').value.trim();
       const email     = document.getElementById('email').value.trim();
 
-      // ------------- NEW: Call Netlify without hard‑coding amounts -------------
+      // Call your Netlify Function (no amount in browser)
       const res  = await fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -310,14 +312,26 @@
       });
       const data = await res.json();
 
-      // ------------- NEW: Two possible flows -----------------
-      if (data.checkoutUrl) {
-        // Monthly (or future annual) subscription → redirect to Stripe Checkout
-        window.location.href = data.checkoutUrl;
-        return;   // stop the function here
+      // ------------ Decide by mode returned from the server ------------
+      if (data.mode === 'subscription') {
+        // Monthly (or future annual) — confirm the PaymentIntent for the first invoice
+        const { error } = await stripe.confirmCardPayment(data.clientSecret, {
+          payment_method: {
+            card,
+            billing_details: { name: `${firstName} ${lastName}`, email }
+          }
+        });
+
+        if (error) {
+          errorsDiv.textContent = error.message;
+          submitBtn.disabled = false;
+        } else {
+          window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+        }
+        return; // stop here; subscription handled
       }
 
-      // Lifetime one‑time payment → confirm the Card Element
+      // Lifetime one‑time payment
       const { error } = await stripe.confirmCardPayment(data.clientSecret, {
         payment_method: {
           card,
@@ -331,7 +345,8 @@
       } else {
         window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
       }
-    }});
-  </script>
+    });      // closes form.addEventListener
+  });        // closes DOMContentLoaded wrapper
+</script>
 </body>
 </html>
