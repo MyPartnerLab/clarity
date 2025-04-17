@@ -300,24 +300,24 @@
       const firstName = document.getElementById('firstName').value.trim();
       const lastName  = document.getElementById('lastName').value.trim();
       const email     = document.getElementById('email').value.trim();
-      const amount    = selected === 'lifetime' ? 9700 : 1700;   // cents
 
-      // Call your Netlify function
-      const res = await fetch('/api/create-payment-intent', {
+      // ------------- NEW: Call Netlify without hard‑coding amounts -------------
+      const res  = await fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: selected, amount, email, firstName })
+        body: JSON.stringify({ plan: selected, email, firstName })
       });
+      const data = await res.json();
 
-      const { clientSecret, error: beError } = await res.json();
-      if (beError) {
-        errorsDiv.textContent = beError;
-        submitBtn.disabled = false;
-        return;
+      // ------------- NEW: Two possible flows -----------------
+      if (data.checkoutUrl) {
+        // Monthly (or future annual) subscription → redirect to Stripe Checkout
+        window.location.href = data.checkoutUrl;
+        return;   // stop the function here
       }
 
-      // Confirm the card payment
-      const { error } = await stripe.confirmCardPayment(clientSecret, {
+      // Lifetime one‑time payment → confirm the Card Element
+      const { error } = await stripe.confirmCardPayment(data.clientSecret, {
         payment_method: {
           card,
           billing_details: { name: `${firstName} ${lastName}`, email }
