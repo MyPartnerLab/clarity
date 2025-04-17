@@ -194,6 +194,27 @@
     .order-summary li.mt-3 {
       margin-top:1rem!important;
     }
+    @media (min-width: 768px) {
+  /* Turn that inner “row” into a 2‑panel flex container */
+  .checkout__inner .container > .row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+  }
+
+  /* Left column = your form */
+  .checkout-form.order-md-1.order-2 {
+    order: 1;
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+
+  /* Right column = your summary */
+  .content-container.order-md-2.order-1 {
+    order: 2;
+    flex: 0 0 38%;
+    max-width: 38%;
+  }
+}
   </style>
 </head>
 
