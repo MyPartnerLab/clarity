@@ -32,20 +32,26 @@
       background: #fdf8f5;
       padding: 2rem 0;
     }
-    .checkout-wrapper {
-      max-width: 1000px;
-      margin: auto;
-      display: flex;
-      flex-wrap: wrap;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: #fff;
-    }
-    .checkout-form {
-      flex: 1 1 60%;
-      padding: 2rem;
-    }
+/* === Wrapper becomes a transparent flex container === */
+.checkout-wrapper {
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  background: transparent;     /* no more box-shadow or border-radius here */
+  padding: 0;
+}
+/* === Left column: pure white card === */
+.checkout-form {
+  flex: 1 1 60%;
+  background: #fff;
+  border-top-left-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
     .checkout-form h2 {
       color: var(--brand-primary);
       margin-bottom: 1rem;
@@ -117,12 +123,16 @@
       cursor: not-allowed;
       transform: none;
     }
-    .checkout-summary {
-      flex: 1 1 40%;
-      background: var(--bg-summary);
-      padding: 2rem;
-      border-left: 4px solid var(--brand-primary);
-    }
+/* === Right column: pale accent card with top‑border accent === */
+.checkout-summary {
+  flex: 1 1 38%;
+  background: var(--bg-summary);
+  border-top: 4px solid var(--brand-primary);
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
     .checkout-summary h2 {
       color: var(--brand-primary);
       margin-bottom: 1rem;
