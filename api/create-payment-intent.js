@@ -2,6 +2,7 @@
 // This file tells Netlify how to create a Stripe PaymentIntent
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+console.log('KEY‑IN‑LAMBDA:', (process.env.STRIPE_SECRET_KEY || 'undefined').slice(0,12));
 
 exports.handler = async (event) => {
   // Only allow POST requests
