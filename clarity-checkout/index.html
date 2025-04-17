@@ -255,6 +255,7 @@
   </div>
   <script>
     // 1. Initialise Stripe.js with your real publishable key
+     document.addEventListener('DOMContentLoaded', () => {
     const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');   // <-- put full key here
 
     // 2. Mount the card Element
@@ -330,7 +331,7 @@
       } else {
         window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
       }
-    });
+    }});
   </script>
 </body>
 </html>
