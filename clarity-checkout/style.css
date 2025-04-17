@@ -1,1 +1,88 @@
 /* Custom overrides if needed */
+:root {
+  --brand-primary: #800f2f;
+  --brand-accent: #c9184a;
+  --space: 1.5rem;
+  --radius: 1rem;
+}
+
+/* Section spacing */
+.checkout-form > * + * {
+  margin-top: var(--space);
+}
+
+/* Headings */
+.checkout-form h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+  margin-bottom: var(--space);
+}
+
+/* Plan cards as a CSS grid */
+.payment-plan-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space);
+}
+
+/* Card padding & equal heights */
+.plan-option {
+  padding: 2rem;
+  min-height: 280px;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Badges */
+.plan-badge {
+  background: #F7F9FA;
+  color: var(--brand-primary);
+  text-transform: uppercase;
+  font-size: 0.625rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius);
+}
+.plan-badge.trial {
+  background: #E0F7FA;
+  color: #007C91;
+}
+
+/* Inputs */
+.checkout-form .form-control {
+  padding: 1rem;
+  border-radius: var(--radius);
+  margin-bottom: var(--space);
+}
+
+/* Summary panel tweaks */
+.checkout-summary {
+  padding: 2rem;
+  border-top: 4px solid var(--brand-primary);
+  border-left: none;
+  background: #fdf8f5;
+}
+
+/* CTA button */
+#submit {
+  padding: 1.25rem;
+  font-size: 1.125rem;
+  border-radius: var(--radius);
+  transition: transform 0.2s ease;
+}
+#submit:hover {
+  transform: translateY(-1px);
+}
+
+/* Program mock‑ups container */
+.program-mockups {
+  text-align: center;
+  margin-bottom: var(--space);
+}
+.program-mockups img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin: 0.5rem;
+}
