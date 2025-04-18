@@ -1,87 +1,102 @@
-// api/create-payment-intent.js   (Node 18 on Netlify)
-
+// api/create-payment-intent.js
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-// map your ENV vars to plan names
 const priceMap = {
-  lifetime: process.env.STRIPE_PRICE_LIFETIME,
-  monthly:  process.env.STRIPE_PRICE_MONTHLY,
-  annual:   process.env.STRIPE_PRICE_ANNUAL,
+  lifetime: process.env.STRIPE_PRICE_LIFETIME, // your $97 one‑time Price ID
+  monthly:  process.env.STRIPE_PRICE_MONTHLY,  // your $17/mo Price ID
 };
 
-// which ones should be a Subscription
-const subscriptionPlans = new Set(['monthly', 'annual']);
+const subscriptionPlans = new Set(['monthly']);
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
-
+exports.handler = async ({ body }) => {
   try {
-    const { plan = 'lifetime', email } = JSON.parse(event.body);
+    // 1) Parse the incoming JSON
+    const {
+      plan,
+      paymentMethod: pmId,
+      firstName,
+      lastName,
+      email
+    } = JSON.parse(body);
+
+    // 2) Lookup the Price ID
     const priceId = priceMap[plan];
-
     if (!priceId) {
-      return { statusCode: 400, body: `Unknown plan "${plan}".` };
-    }
-
-    // ─── 1) SUBSCRIPTION FLOW ───────────────────────────────
-    if (subscriptionPlans.has(plan)) {
-      // create or reuse a Customer
-      const customer = await stripe.customers.create({ email });
-
-      // create the subscription in 'incomplete' state, no expand
-      const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
-        items: [{ price: priceId, quantity: 1 }],
-        payment_behavior: 'default_incomplete',
-      });
-
-      // then fetch the first invoice, expanding its payment_intent
-      const invoice = await stripe.invoices.retrieve(
-        subscription.latest_invoice,
-        { expand: ['payment_intent'] }
-      );
-
-      const paymentIntent = invoice.payment_intent;
-      const clientSecret  = paymentIntent.client_secret;
-
       return {
-        statusCode: 200,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mode: 'subscription',
-          clientSecret,
-        }),
+        statusCode: 400,
+        body: JSON.stringify({ error: `Unknown plan: ${plan}` })
       };
     }
 
-    // ─── 2) ONE‑TIME PAYMENT FLOW ────────────────────────────
-    const price = await stripe.prices.retrieve(priceId);
+    // 3) Find or create the Stripe Customer
+    const [existing] = (await stripe.customers.list({ email, limit: 1 })).data;
+    const customer = existing ||
+      await stripe.customers.create({
+        email,
+        name: `${firstName} ${lastName}`
+      });
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: price.unit_amount,
-      currency: price.currency,
-      automatic_payment_methods: { enabled: true },
-      metadata: { plan },
-      receipt_email: email,
+    // 4) Attach the PaymentMethod to the Customer
+    await stripe.paymentMethods.attach(pmId, { customer: customer.id });
+    // 5) Set as default for invoice payments
+    await stripe.customers.update(customer.id, {
+      invoice_settings: { default_payment_method: pmId }
     });
 
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        mode: 'payment',
-        clientSecret: paymentIntent.client_secret,
-      }),
-    };
+    // 6) Create subscription or one‑time payment
+    if (subscriptionPlans.has(plan)) {
+      // Subscription flow
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: priceId }],
+        payment_behavior: 'default_incomplete',
+        expand: ['latest_invoice.payment_intent']
+      });
 
+      const invoice       = subscription.latest_invoice;
+      const paymentIntent = invoice.payment_intent;
+
+      // 7) Handle SCA if required
+      if (
+        paymentIntent.status === 'requires_action' ||
+        paymentIntent.status === 'requires_payment_method'
+      ) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({
+            requiresAction: true,
+            clientSecret: paymentIntent.client_secret
+          })
+        };
+      }
+
+      // 8) Otherwise, subscription succeeded
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ success: true })
+      };
+    } else {
+      // One‑time payment flow
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: plan === 'lifetime' ? 9700 : 0,
+        currency: 'usd',
+        customer: customer.id,
+        automatic_payment_methods: { enabled: true }
+      });
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          clientSecret: paymentIntent.client_secret
+        })
+      };
+    }
   } catch (err) {
-    console.error(err);
+    console.error('🔥 error in create-payment-intent:', err);
     return {
       statusCode: err.statusCode || 500,
-      body: JSON.stringify({ error: err.message }),
+      body: JSON.stringify({ error: err.message })
     };
   }
 };
