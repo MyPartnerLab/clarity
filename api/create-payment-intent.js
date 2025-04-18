@@ -28,21 +28,24 @@ exports.handler = async (event) => {
 
     // ─── 1) SUBSCRIPTION FLOW ───────────────────────────────
     if (subscriptionPlans.has(plan)) {
-      // 1a) create or reuse a Customer
-      //    (optionally cache this on your end so you don't create one per click)
+      // create or reuse a Customer
       const customer = await stripe.customers.create({ email });
 
-      // 1b) create the subscription in 'incomplete' state,
-      //     expand the very first PaymentIntent on the first invoice:
+      // create the subscription in 'incomplete' state, no expand
       const subscription = await stripe.subscriptions.create({
         customer: customer.id,
         items: [{ price: priceId, quantity: 1 }],
         payment_behavior: 'default_incomplete',
-        expand: ['latest_invoice.payment_intent'],
       });
 
-      const paymentIntent = subscription.latest_invoice.payment_intent;
-      const clientSecret = paymentIntent.client_secret;
+      // then fetch the first invoice, expanding its payment_intent
+      const invoice = await stripe.invoices.retrieve(
+        subscription.latest_invoice,
+        { expand: ['payment_intent'] }
+      );
+
+      const paymentIntent = invoice.payment_intent;
+      const clientSecret  = paymentIntent.client_secret;
 
       return {
         statusCode: 200,
@@ -55,11 +58,10 @@ exports.handler = async (event) => {
     }
 
     // ─── 2) ONE‑TIME PAYMENT FLOW ────────────────────────────
-    // retrieve your Price so you know currency/amount
     const price = await stripe.prices.retrieve(priceId);
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount:   price.unit_amount,
+      amount: price.unit_amount,
       currency: price.currency,
       automatic_payment_methods: { enabled: true },
       metadata: { plan },
@@ -74,6 +76,7 @@ exports.handler = async (event) => {
         clientSecret: paymentIntent.client_secret,
       }),
     };
+
   } catch (err) {
     console.error(err);
     return {
