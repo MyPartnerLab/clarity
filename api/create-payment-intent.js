@@ -45,17 +45,28 @@ exports.handler = async ({ body }) => {
     });
 
     // 6) Create subscription or one‑time payment
-    if (subscriptionPlans.has(plan)) {
-      // Subscription flow
-      const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
-        items: [{ price: priceId }],
-        payment_behavior: 'default_incomplete',
-        expand: ['latest_invoice.payment_intent']
-      });
+if (subscriptionPlans.has(plan)) {
+  const subscription = await stripe.subscriptions.create({
+    customer: customer.id,
+    items: [{ price: priceId }],
 
-      const invoice       = subscription.latest_invoice;
-      const paymentIntent = invoice.payment_intent;
+    // ← ensure Stripe will immediately create a PaymentIntent
+    payment_behavior: 'default_incomplete',
+    collection_method: 'charge_automatically',
+
+    // ← expand the invoice object AND its payment_intent
+    expand: [
+      'latest_invoice',
+      'latest_invoice.payment_intent'
+    ]
+  });
+
+  console.log('Subscription object:', subscription);
+
+  // safely grab the nested PaymentIntent
+  const invoice       = subscription.latest_invoice;
+  const paymentIntent = invoice.payment_intent;
+
 
       // 7) Handle SCA if required
       if (
