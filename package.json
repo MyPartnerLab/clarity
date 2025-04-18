@@ -1,8 +1,0 @@
-{
-  "name": "clarity-checkout-site",
-  "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "stripe": "^11.0.0"
-  }
-}
