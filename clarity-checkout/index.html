@@ -397,11 +397,13 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');  // your publishable key
+  // 1) Init Stripe
+  const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');
   const elements = stripe.elements();
-  const card     = elements.create('card');
+  const card = elements.create('card');
   card.mount('#card-element');
 
+  // 2) Plan selector
   let selectedPlan = 'lifetime';
   document.querySelectorAll('input[name="plan"]').forEach(radio =>
     radio.addEventListener('change', e => {
@@ -411,9 +413,9 @@ document.addEventListener('DOMContentLoaded', () => {
   );
   renderSummary(selectedPlan);
 
-  const form     = document.getElementById('checkout-form');
+  // 3) Form submission
+  const form = document.getElementById('checkout-form');
   const errorDiv = document.getElementById('card-errors');
-
   form.addEventListener('submit', async e => {
     e.preventDefault();
     errorDiv.textContent = '';
@@ -423,43 +425,40 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Gather customer info
     const firstName = document.getElementById('firstName').value.trim();
     const lastName  = document.getElementById('lastName').value.trim();
     const email     = document.getElementById('email').value.trim();
 
-    // 1) Create PaymentMethod
+    // 4) Create a PaymentMethod
     const { paymentMethod, error: pmError } =
       await stripe.createPaymentMethod({
         type: 'card',
         card,
         billing_details: { name:`${firstName} ${lastName}`, email }
       });
-
     if (pmError) {
       errorDiv.textContent = pmError.message;
       return;
     }
 
-    // 2) POST to your function with a JSON body
+    // 5) Send to your server
     const res = await fetch('/api/create-payment-intent', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type':'application/json' },
       body: JSON.stringify({
-        plan: selectedPlan,               // "lifetime" or "monthly"
-        paymentMethod: paymentMethod.id,  // the new PM ID
-        firstName,
-        lastName,
-        email
+        plan: selectedPlan,
+        paymentMethod: paymentMethod.id,
+        firstName, lastName, email
       })
     });
-
     const data = await res.json();
     if (data.error) {
       errorDiv.textContent = data.error;
       return;
     }
 
-    // 3) If SCA is required, confirm it
+    // 6) Handle SCA if required
     if (data.requiresAction) {
       const { error: confirmError } = await stripe.confirmCardPayment(
         data.clientSecret
@@ -470,14 +469,25 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // 4) Success
-    window.location = 'https://mypartnerlab.co/checkout-thank-you';
+    // 7) Success!
+    window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
   });
 });
 
-// your existing renderSummary function…
+// 8) Your summary updater
 function renderSummary(plan) {
-  /* … */
+  const isLifetime = plan === 'lifetime';
+  document.getElementById('liLifetime').style.display = isLifetime ? 'flex' : 'none';
+  document.getElementById('liCancel').style.display   = isLifetime ? 'none' : 'flex';
+  document.getElementById('summary-plan').textContent = isLifetime
+    ? 'Clarity Circle – Lifetime Access Plan'
+    : 'Clarity Circle – Monthly Plan';
+  document.getElementById('summary-note').textContent = isLifetime
+    ? 'one‑time payment'
+    : 'monthly subscription';
+  document.getElementById('yourTotal').textContent = isLifetime
+    ? '$97.00'
+    : '$17.00';
 }
 </script>
 </body>
