@@ -1,11 +1,17 @@
-// api/create-payment-intent.js
+// api/create-payment-intent.js   (Node 18 on Netlify)
+
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
+// map your ENV vars to plan names
 const priceMap = {
   lifetime: process.env.STRIPE_PRICE_LIFETIME,
-  monthly:  process.env.STRIPE_PRICE_MONTHLY
+  monthly:  process.env.STRIPE_PRICE_MONTHLY,
+  annual:   process.env.STRIPE_PRICE_ANNUAL,
 };
+
+// which ones should be a Subscription
+const subscriptionPlans = new Set(['monthly', 'annual']);
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -13,55 +19,51 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { plan = 'lifetime', email, firstName } = JSON.parse(event.body);
+    const { plan = 'lifetime', email } = JSON.parse(event.body);
     const priceId = priceMap[plan];
-    
-    // ← debug log!
-    console.log(`⌛ create-payment-intent for plan=${plan}, priceId=${priceId}`);
-        if (!priceId) {
+
+    if (!priceId) {
       return { statusCode: 400, body: `Unknown plan "${plan}".` };
     }
 
-    if (!priceId) {
-      return {
-        statusCode: 400,
-        body: `Unknown plan "${plan}"`
-      };
-    }
+    // ─── 1) SUBSCRIPTION FLOW ───────────────────────────────
+    if (subscriptionPlans.has(plan)) {
+      // 1a) create or reuse a Customer
+      //    (optionally cache this on your end so you don't create one per click)
+      const customer = await stripe.customers.create({ email });
 
-    // ---- Subscription flow (monthly) ----
-    if (plan === 'monthly') {
-      const customer = await stripe.customers.create({
-        email,
-        name: firstName
-      });
-
+      // 1b) create the subscription in 'incomplete' state,
+      //     expand the very first PaymentIntent on the first invoice:
       const subscription = await stripe.subscriptions.create({
         customer: customer.id,
         items: [{ price: priceId, quantity: 1 }],
         payment_behavior: 'default_incomplete',
-        expand: ['latest_invoice.payment_intent']
+        expand: ['latest_invoice.payment_intent'],
       });
 
-      const pi = subscription.latest_invoice.payment_intent;
+      const paymentIntent = subscription.latest_invoice.payment_intent;
+      const clientSecret = paymentIntent.client_secret;
+
       return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           mode: 'subscription',
-          clientSecret: pi.client_secret
-        })
+          clientSecret,
+        }),
       };
     }
 
-    // ---- One‑time payment flow (lifetime) ----
+    // ─── 2) ONE‑TIME PAYMENT FLOW ────────────────────────────
+    // retrieve your Price so you know currency/amount
     const price = await stripe.prices.retrieve(priceId);
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: price.unit_amount,
+      amount:   price.unit_amount,
       currency: price.currency,
       automatic_payment_methods: { enabled: true },
       metadata: { plan },
-      receipt_email: email
+      receipt_email: email,
     });
 
     return {
@@ -69,15 +71,14 @@ exports.handler = async (event) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         mode: 'payment',
-        clientSecret: paymentIntent.client_secret
-      })
+        clientSecret: paymentIntent.client_secret,
+      }),
     };
-
   } catch (err) {
     console.error(err);
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message })
+      statusCode: err.statusCode || 500,
+      body: JSON.stringify({ error: err.message }),
     };
   }
 };
