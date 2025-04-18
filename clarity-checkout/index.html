@@ -263,44 +263,49 @@ document.addEventListener('DOMContentLoaded', () => {
   const card = elements.create('card');
   card.mount('#card-element');
 
-// 2 – Plan summary
-    let selected = 'lifetime';
-    function renderSummary() {
-      const life = selected === 'lifetime';
-      document.getElementById('liLifetime').style.display = life ? 'flex' : 'none';
-      document.getElementById('liCancel').style.display   = life ? 'none' : 'flex';
-      document.getElementById('summary-plan').textContent  = life
-        ? 'Clarity Circle - Lifetime Access Plan'
-        : 'Clarity Circle - Monthly Plan';
-      document.getElementById('summary-note').textContent  = life
-        ? 'one-time payment'
-        : 'monthly subscription';
-      document.getElementById('yourTotal').textContent     = life ? '$97.00' : '$17.00';
-    }
-    document.querySelectorAll('input[name="plan"]').forEach(radio =>
-      radio.addEventListener('change', e => { selected = e.target.value; renderSummary(); })
-    );
-    renderSummary();
+  // 2) Plan selector + summary
+  let selectedPlan = 'lifetime';
+  const radios = document.querySelectorAll('input[name="plan"]');
+  radios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      selectedPlan = radio.value;
+      renderSummary();
+    });
+  });
 
-  // 3) Form submit
+  function renderSummary() {
+    const isLifetime = selectedPlan === 'lifetime';
+    document.getElementById('liLifetime').style.display = isLifetime ? 'flex' : 'none';
+    document.getElementById('liCancel').style.display   = isLifetime ? 'none' : 'flex';
+    document.getElementById('summary-plan').textContent = isLifetime
+      ? 'Clarity Circle – Lifetime Access Plan'
+      : 'Clarity Circle – Monthly Plan';
+    document.getElementById('summary-note').textContent = isLifetime
+      ? 'one-time payment'
+      : 'monthly subscription';
+    document.getElementById('yourTotal').textContent = isLifetime ? '$97.00' : '$17.00';
+  }
+  renderSummary();
+
+  // 3) Form submit handler
   const form = document.getElementById('checkout-form');
   const errorsDiv = document.getElementById('card-errors');
+
   form.addEventListener('submit', async e => {
     e.preventDefault();
     errorsDiv.textContent = '';
 
-    // Terms check
     if (!document.getElementById('agree').checked) {
       alert('You must agree to the terms and conditions.');
       return;
     }
 
-    // 4) Gather customer info
+    // 4) Collect customer info
     const firstName = document.getElementById('firstName').value.trim();
     const lastName  = document.getElementById('lastName').value.trim();
     const email     = document.getElementById('email').value.trim();
 
-    // 5) Create PaymentMethod
+    // 5) Create a PaymentMethod
     const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
       type: 'card',
       card,
@@ -311,8 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // 6) POST to your Netlify Function
-    const res = await fetch('/.netlify/functions/create-payment-intent', {
+    // 6) POST to your Netlify function
+    const resp = await fetch('/.netlify/functions/create-payment-intent', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -323,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
         email
       })
     });
-    const data = await res.json();
+    const data = await resp.json();
     if (data.error) {
       errorsDiv.textContent = data.error;
       return;
@@ -338,24 +343,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // 8) Success
+    // 8) All done
     window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
   });
 });
-
-// 9) Summary updater
-function renderSummary() {
-  const isLifetime = selectedPlan === 'lifetime';
-  document.getElementById('liLifetime').style.display = isLifetime ? 'flex' : 'none';
-  document.getElementById('liCancel').style.display   = isLifetime ? 'none' : 'flex';
-  document.getElementById('summary-plan').textContent = isLifetime
-    ? 'Clarity Circle – Lifetime Access Plan'
-    : 'Clarity Circle – Monthly Plan';
-  document.getElementById('summary-note').textContent = isLifetime
-    ? 'one‑time payment'
-    : 'monthly subscription';
-  document.getElementById('yourTotal').textContent    = isLifetime ? '$97.00' : '$17.00';
-}
 </script>
 </body>
 </html>
