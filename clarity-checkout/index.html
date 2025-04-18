@@ -311,6 +311,16 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
   });
 });
+  // tell parent the height on load and whenever content changes
+function reportHeight(){
+  window.parent.postMessage(
+    { type:'iframeHeight', height: document.body.scrollHeight },
+    'https://your-squarespace-domain.com'  // lock it down to your site’s origin
+  );
+}
+window.addEventListener('load', reportHeight);
+new MutationObserver(reportHeight)
+  .observe(document.body, { childList:true, subtree:true });
 </script>
 </body>
 </html>
