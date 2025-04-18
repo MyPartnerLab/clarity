@@ -15,6 +15,12 @@ exports.handler = async (event) => {
   try {
     const { plan = 'lifetime', email, firstName } = JSON.parse(event.body);
     const priceId = priceMap[plan];
+    
+    // ← debug log!
+    console.log(`⌛ create-payment-intent for plan=${plan}, priceId=${priceId}`);
+        if (!priceId) {
+      return { statusCode: 400, body: `Unknown plan "${plan}".` };
+    }
 
     if (!priceId) {
       return {
