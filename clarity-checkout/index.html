@@ -32,9 +32,7 @@
       display: flex;
       gap: var(--gap);
     }
-    @media (max-width: 767px) {
-      .checkout-wrapper { flex-direction: column; }
-    }
+    @media (max-width: 767px) { .checkout-wrapper { flex-direction: column; } }
 
     /* ==== Left Form ==== */
     .checkout-form {
@@ -62,78 +60,107 @@
       border-color: var(--brand);
       box-shadow: 0 0 0 3px rgba(128,15,47,.25);
     }
-    .corner-tag { display: none; position:absolute; top:0; left:0; width:0; height:0; border-top:45px solid var(--brand); border-right:45px solid transparent; border-top-left-radius: var(--radius); }
+    .corner-tag {
+      display: none; position: absolute; top:0; left:0;
+      width:0; height:0;
+      border-top:45px solid var(--brand);
+      border-right:45px solid transparent;
+      border-top-left-radius: var(--radius);
+    }
     .plan-input:checked + .plan-card .corner-tag { display:block; }
     .corner-tag i { position:absolute; top:-30px; left:8px; color:#fff; font-size:.8rem; }
     .corner-star { position:absolute; top:4px; right:4px; width:16px; height:16px; }
-    .plan-badge { background: var(--summary-bg); color: var(--brand); font-size:.75rem; font-weight:700; border-radius:999px; padding:.1rem .4rem; margin-bottom:.25rem; text-align:center; }
+    .plan-badge {
+      background: var(--summary-bg); color: var(--brand);
+      font-size: .75rem; font-weight:700;
+      border-radius:999px; padding:.1rem .4rem; margin-bottom:.25rem;
+      text-align:center;
+    }
     .plan-title { font-weight:700; text-align:center; margin-top:.25rem; }
-    .plan-sub { font-style:italic; opacity:.75; font-size:.85rem; text-align:center; margin-top:.1rem; line-height:1.2; }
-    .price { font-size:1.3rem; font-weight:700; color: var(--brand); margin-top:.5rem; }
-    @media (max-width:767px) { .price { font-size:1em!important; } }
+    .plan-sub {
+      font-style:italic; opacity:.75; font-size:.85rem;
+      text-align:center; margin-top:.1rem; line-height:1.2;
+    }
+    .price {
+      font-size:1.3rem; font-weight:700;
+      color: var(--brand); margin-top:.5rem;
+    }
+    @media (max-width: 767px) {
+      .price { font-size: 1em !important; }
+    }
 
-    /* Sections spacing & larger inputs */
-    .checkout-form h3,
-    .checkout-form .payment-label,
-    .checkout-form .terms,
-    .checkout-form .form-row {
-      padding-bottom: 1.5rem;
+    /* Form fields */
+    h3 {
+      font-size: 1.25em; font-weight:700;
+      color: var(--brand); margin: 1rem 0 .5rem;
     }
-    input.form-control {
-      border-radius: var(--radius);
-      padding: .75rem 1rem;
-      font-size: 1rem;
-    }
+    label { font-weight:600; }
+    input.form-control { border-radius: var(--radius); }
+
+    /* Payment logos */
+    .payment-label { margin-top: .75rem; margin-bottom: 1rem; }
+    .card-logos img { height:20px; margin-right:4px; }
+    .more-text { font-size:.75rem; opacity:.7; margin-left:4px; }
 
     /* Stripe element */
-    #card-element {
-      border:1px solid #ccc;
-      border-radius:var(--radius);
-      padding:1rem;
-    }
+    #card-element { border:1px solid #ccc; border-radius:var(--radius); padding:.75rem; }
     #card-errors { color:#dc3545; font-size:.875rem; margin-top:.5rem; }
-    .secure-note { display:flex; justify-content:center; align-items:center; font-size:.85rem; opacity:.7; margin-top:.75rem; }
+    .secure-note {
+      display:flex; justify-content:center; align-items:center;
+      font-size:.85rem; opacity:.7; margin-top:.75rem;
+    }
     .secure-note img { width:16px; margin-right:6px; }
-
-    /* Submit button spacing */
+    .terms { margin-top:1rem; }
     #submit {
-      margin-top:2rem;
-      width:100%;
-      background: var(--brand);
-      color:#fff;
-      border:none;
-      border-radius: var(--radius);
-      padding:1rem;
-      font-size:1.05rem;
-      font-weight:700;
+      margin-top:1.5rem; width:100%;
+      background: var(--brand); color:#fff; border:none;
+      border-radius: var(--radius); padding:.85rem; font-weight:700;
       transition: background .25s;
     }
     #submit:hover { background: var(--accent); }
 
     /* ==== Right Summary ==== */
     .checkout-summary {
-      flex: 0 0 40%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      flex: 0 0 40%; display: flex; flex-direction: column; align-items: center;
     }
-    .summary-mockup { width: 95%; max-width:360px; margin-bottom:1rem; }
+    .summary-mockup {
+      width: 95%; max-width: 360px; margin-bottom: 1rem;
+    }
     .summary-box {
-      background:var(--summary-bg);
-      border-radius:var(--radius);
-      box-shadow:0 6px 16px rgba(0,0,0,.06);
-      padding:2rem;
-      width:100%;
+      background: var(--summary-bg); border-radius: var(--radius);
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
+      padding: 2rem; width: 100%;
     }
-    .summary-box h2 { margin:0 0 1rem; font-size:2em; font-weight:700; color:var(--brand); text-align:center; }
-    .benefits { list-style:none; padding:0; margin:0 0 1.5rem; width:100%; }
-    .benefits li { display:flex; justify-content:space-between; margin-bottom:.5rem; font-size:.9rem; }
+    .summary-box h2 {
+      margin: 0 0 1rem;
+      font-size: 2em;        /* now a true focal point */
+      font-weight:700;
+      color: var(--brand);
+      text-align: center;
+    }
+    .benefits {
+      list-style:none; padding:0; margin:0 0 1.5rem; width:100%;
+    }
+    .benefits li {
+      display:flex; justify-content:space-between;
+      margin-bottom:.5rem; font-size:.9rem;
+    }
     .benefits li img { width:18px; margin-right:.5rem; }
-    .order-box { background:transparent!important; box-shadow:none!important; padding:0!important; width:100%; }
-    .order-box h4 { font-size:1.25em; font-weight:700; color:var(--brand); margin-bottom:.5rem; }
+    .order-box {
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important; width:100%;
+    }
+    .order-box h4 {
+      font-size: 1.25em; font-weight:700;
+      color: var(--brand); margin-bottom:.5rem;
+    }
     .order-row { font-size:.9rem; line-height:1.2; }
     .order-note { margin-top:.25rem; font-style:italic; opacity:.75; line-height:1.2; }
-    .order-total { display:flex; justify-content:space-between; margin-top:1rem; font-size:1.25em; font-weight:700; color:var(--brand); }
+    .order-total {
+      display:flex; justify-content:space-between;
+      margin-top:1rem; font-size:1.25em; font-weight:700; color:var(--brand);
+    }
   </style>
 </head>
 <body>
@@ -176,7 +203,6 @@
           <input type="text" id="lastName" class="form-control" required>
         </div>
       </div>
-
       <label for="email">Email</label>
       <input type="email" id="email" class="form-control" required>
 
@@ -192,7 +218,7 @@
       </div>
       <div id="card-element"></div>
       <div id="card-errors" role="alert"></div>
-      <div class="secure-note"><img src="img/lock.svg" alt="">All payments are secured by 256‑bit encryption.</div>
+      <div class="secure-note"><img src="img/lock.svg" alt="">All payments are secured by 256-bit encryption.</div>
 
       <div class="terms">
         <input type="checkbox" id="agree" required>
@@ -205,6 +231,7 @@
     <!-- RIGHT: SUMMARY -->
     <aside class="checkout-summary">
       <img src="img/mockup1.png" class="summary-mockup" alt="Program preview">
+
       <div class="summary-box">
         <h2>Join the Clarity Circle</h2>
         <ul class="benefits">
@@ -216,6 +243,7 @@
           <li id="liCancel"><span><img src="img/checkmark.svg" alt="">Cancel anytime</span></li>
           <li><span><img src="img/checkmark.svg" alt="">30‑Day Refund Policy</span></li>
         </ul>
+
         <div class="order-box">
           <h4>Order Summary</h4>
           <div class="order-row"><span id="summary-plan"></span></div>
@@ -226,85 +254,63 @@
     </aside>
   </div>
 
-  <!-- ---------------- JavaScript ---------------- -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // 1 – Stripe init
-      const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');
-      const elements = stripe.elements();
-      const card     = elements.create('card');
-      card.mount('#card-element');
+    const stripe = Stripe('pk_test_...'); 
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
 
-      // 2 – Plan summary
-      let selected = 'lifetime';
-      function renderSummary() {
-        const life = selected === 'lifetime';
-        document.getElementById('liLifetime').style.display = life ? 'flex' : 'none';
-        document.getElementById('liCancel').style.display   = life ? 'none' : 'flex';
-        document.getElementById('summary-plan').textContent  = life
-          ? 'Clarity Circle - Lifetime Access Plan'
-          : 'Clarity Circle - Monthly Plan';
-        document.getElementById('summary-note').textContent  = life
-          ? 'one-time payment'
-          : 'monthly subscription';
-        document.getElementById('yourTotal').textContent     = life ? '$97.00' : '$17.00';
+    let selected = 'lifetime';
+    function renderSummary() {
+      const life = selected === 'lifetime';
+      document.getElementById('liLifetime').style.display = life ? 'flex' : 'none';
+      document.getElementById('liCancel').style.display = life ? 'none' : 'flex';
+      document.getElementById('summary-plan').textContent = life
+        ? 'Clarity Circle - Lifetime Access Plan'
+        : 'Clarity Circle - Monthly Plan';
+      document.getElementById('summary-note').textContent = life
+        ? 'one-time payment'
+        : 'monthly subscription';
+      document.getElementById('yourTotal').textContent = life
+        ? '$97.00'
+        : '$17.00';
+    }
+    document.querySelectorAll('input[name="plan"]').forEach(i=>
+      i.addEventListener('change',e=>{ selected=e.target.value; renderSummary(); })
+    );
+    renderSummary();
+
+    const form = document.getElementById('checkout-form'),
+          submitBtn = document.getElementById('submit'),
+          errorsDiv = document.getElementById('card-errors');
+    form.addEventListener('submit',async e=>{
+      e.preventDefault();
+      if(!document.getElementById('agree').checked){
+        alert('You must agree to the terms and conditions.');
+        return;
       }
-      document.querySelectorAll('input[name="plan"]').forEach(radio =>
-        radio.addEventListener('change', e => { selected = e.target.value; renderSummary(); })
-      );
-      renderSummary();
-
-      // 3 – Form submit
-      const form      = document.getElementById('checkout-form');
-      const submitBtn = document.getElementById('submit');
-      const errorsDiv = document.getElementById('card-errors');
-
-      form.addEventListener('submit', async e => {
-        e.preventDefault();
-        if (!document.getElementById('agree').checked) {
-          alert('You must agree to the terms and conditions.');
-          return;
-        }
-        submitBtn.disabled = true;
-        errorsDiv.textContent = '';
-
-        const firstName = document.getElementById('firstName').value.trim();
-        const lastName  = document.getElementById('lastName').value.trim();
-        const email     = document.getElementById('email').value.trim();
-
-        // Call serverless
-        const res  = await fetch('/api/create-payment-intent', {
-          method: 'POST',
-          headers: { 'Content-Type':'application/json' },
-          body: JSON.stringify({ plan:selected, email, firstName })
-        });
-        const data = await res.json();
-
-        // Subscription flow
-        if (data.mode === 'subscription') {
-          const { error } = await stripe.confirmCardPayment(data.clientSecret, {
-            payment_method:{ card, billing_details:{ name: `${firstName} ${lastName}`, email } }
-          });
-          if (error) {
-            errorsDiv.textContent = error.message;
-            submitBtn.disabled = false;
-          } else {
-            window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
-          }
-          return;
-        }
-
-        // Lifetime one-time
-        const { error } = await stripe.confirmCardPayment(data.clientSecret, {
-          payment_method:{ card, billing_details:{ name: `${firstName} ${lastName}`, email } }
-        });
-        if (error) {
-          errorsDiv.textContent = error.message;
-          submitBtn.disabled = false;
-        } else {
-          window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
-        }
+      submitBtn.disabled=true; errorsDiv.textContent='';
+      const firstName=document.getElementById('firstName').value.trim(),
+            lastName=document.getElementById('lastName').value.trim(),
+            email=document.getElementById('email').value.trim(),
+            amount= selected==='lifetime'?9700:1700;
+      const res=await fetch('/api/create-payment-intent',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({plan:selected,amount,email,firstName})
       });
+      const {clientSecret,error:be}=await res.json();
+      if(be){ errorsDiv.textContent=be; submitBtn.disabled=false; return; }
+      const {error}=await stripe.confirmCardPayment(clientSecret,{
+        payment_method:{card,billing_details:{name:`${firstName} ${lastName}`,email}}
+      });
+if (error) {
+  errorsDiv.textContent = error.message;
+  submitBtn.disabled = false;
+} else {
+  // Redirect to your live thank-you page:
+  window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+}
     });
   </script>
 </body>
