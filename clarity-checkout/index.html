@@ -216,8 +216,8 @@
           <span class="more-text">and many more…</span>
         </div>
       </div>
-      <div id="card-element"></div>
-      <div id="card-errors" role="alert"></div>
+<div id="payment-element"></div>
+<div id="payment-errors" role="alert"></div>
       <div class="secure-note"><img src="img/lock.svg" alt="">All payments are secured by 256-bit encryption.</div>
 
       <div class="terms">
@@ -257,11 +257,50 @@
   <!-- ---------------- JavaScript ---------------- -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // 1) Init Stripe
-  const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');
-  const elements = stripe.elements();
-  const card = elements.create('card');
-  card.mount('#card-element');
+  const stripe = Stripe('pk_test_…');
+  const form   = document.getElementById('checkout-form');
+  const errors = document.getElementById('payment-errors');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errors.textContent = '';
+
+    // 1) Collect contact info & plan
+    const firstName = form.firstName.value.trim();
+    const lastName  = form.lastName.value.trim();
+    const email     = form.email.value.trim();
+    const plan      = document.querySelector('input[name=plan]:checked').value;
+
+    // 2) Create subscription & get back a clientSecret
+    const resp = await fetch('/.netlify/functions/create-subscription', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ plan, firstName, lastName, email })
+    });
+    const { clientSecret, error: srvErr } = await resp.json();
+    if (srvErr) {
+      errors.textContent = srvErr;
+      return;
+    }
+
+    // 3) Build & mount the Payment Element
+    const elements = stripe.elements({ clientSecret });
+    const paymentElement = elements.create('payment');
+    paymentElement.mount('#payment-element');
+
+    // 4) Confirm the payment & handle SCA  
+    const { error: confirmErr } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: 'https://mypartnerlab.co/checkout-thank-you'
+      }
+    });
+    if (confirmErr) {
+      errors.textContent = confirmErr.message;
+    }
+    // on success, Stripe will redirect the customer to your return_url  [oai_citation_attribution:1‡Documentation](https://docs.stripe.com/billing/subscriptions/build-subscriptions?platform=web&ui=elements)
+  });
+});
 
   // 2) Plan selector + summary
   let selectedPlan = 'lifetime';
