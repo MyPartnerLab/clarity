@@ -312,8 +312,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return errors.textContent = stripeError.message;
     }
 
-    // 5) success!
-    window.top.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+// inside partnerlab.netlify.app JS, after confirmCardPayment succeeds
+window.parent.postMessage(
+  { type: 'checkoutComplete', url: 'https://mypartnerlab.co/checkout-thank-you' },
+  'https://mypartnerlab.co/'
+);
   });
 });
 </script>
