@@ -1,11 +1,14 @@
 // api/create-payment-intent.js
+// Node 18 on Netlify
+
 const Stripe = require('stripe');
+// ← Make sure STRIPE_SECRET_KEY is your *secret* key (sk_test_…)
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 const priceMap = {
-  lifetime: process.env.STRIPE_PRICE_LIFETIME, // your $97 one‑time Price ID
-  monthly: process.env.STRIPE_PRICE_MONTHLY,   // your $17/mo Price ID
-  annual:  process.env.STRIPE_PRICE_ANNUAL,    // optional
+  lifetime: process.env.STRIPE_PRICE_LIFETIME, // $97 one-time Price ID
+  monthly:  process.env.STRIPE_PRICE_MONTHLY,  // $17/mo recurring Price ID
+  annual:   process.env.STRIPE_PRICE_ANNUAL,   // optional
 };
 
 const subscriptionPlans = new Set(['monthly', 'annual']);
@@ -14,7 +17,7 @@ exports.handler = async ({ body }) => {
   try {
     const { plan, email, firstName, lastName } = JSON.parse(body);
 
-    // 1. Lookup or create the customer
+    // 1) Lookup or create Stripe customer
     const existing = await stripe.customers.list({ email, limit: 1 });
     const customer =
       existing.data[0] ||
@@ -24,15 +27,17 @@ exports.handler = async ({ body }) => {
       }));
 
     const priceId = priceMap[plan];
-    if (!priceId) throw new Error(`Unknown plan: ${plan}`);
+    if (!priceId) {
+      throw new Error(`Unknown plan: ${plan}`);
+    }
 
-    // 2A. Subscription flow
+    // 2A) Subscription flow
     if (subscriptionPlans.has(plan)) {
       const subscription = await stripe.subscriptions.create({
         customer: customer.id,
         items: [{ price: priceId }],
         payment_behavior: 'default_incomplete',
-        expand: ['latest_invoice.payment_intent'],
+        expand: ['latest_invoice.payment_intent'],   // ← correct expand
         metadata: { plan },
       });
 
@@ -47,9 +52,9 @@ exports.handler = async ({ body }) => {
       };
     }
 
-    // 2B. One‑time payment flow
+    // 2B) One‑time payment flow
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 9700, // cents for $97
+      amount: 9700, // $97.00 in cents
       currency: 'usd',
       customer: customer.id,
       automatic_payment_methods: { enabled: true },
@@ -64,6 +69,7 @@ exports.handler = async ({ body }) => {
         clientSecret: paymentIntent.client_secret,
       }),
     };
+
   } catch (err) {
     console.error(err);
     return {
