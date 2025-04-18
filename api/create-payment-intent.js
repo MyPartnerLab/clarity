@@ -1,8 +1,6 @@
 // api/create-payment-intent.js
-// Node 18 on Netlify
 
 const Stripe = require('stripe');
-// ← Make sure STRIPE_SECRET_KEY is your *secret* key (sk_test_…)
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 const priceMap = {
