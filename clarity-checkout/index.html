@@ -177,22 +177,13 @@
       margin-top:1rem; font-size:1.25em; font-weight:700; color:var(--brand);
     }
     /* new container for heading + logos */
-.card-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* cancel the standalone margins on .payment-label inside the new container */
-.card-section .payment-label {
-  margin: 0;
-}
-
-/* ensure your h3 isn’t getting extra bottom margin */
-.card-section h3 {
-  margin: 0;
-  padding: 0;
-}
+    .card-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-section .payment-label { margin: 0; }
+    .card-section h3 { margin: 0; padding: 0; }
   </style>
 </head>
 <body>
@@ -222,18 +213,18 @@
       <input type="email" id="email" name="email" class="form-control" required>
 
       <!-- Card Entry -->
-<div class="card-section" style="margin-top:1rem;">
-  <h3>Credit/Debit Card</h3>
-  <div class="payment-label">
-    <div class="card-logos">
-      <img src="img/visa_creditcard.png" alt="Visa">
-      <img src="img/mastercard_creditcard.png" alt="Mastercard">
-      <img src="img/amex_creditcard.png" alt="AMEX">
-      <img src="img/discover_creditcard.png" alt="Discover">
-      <span class="more-text">and many more…</span>
-    </div>
-  </div>
-</div>
+      <div class="card-section" style="margin-top:2rem;">
+        <h3>Credit/Debit Card</h3>
+        <div class="payment-label">
+          <div class="card-logos">
+            <img src="img/visa_creditcard.png" alt="Visa">
+            <img src="img/mastercard_creditcard.png" alt="Mastercard">
+            <img src="img/amex_creditcard.png" alt="AMEX">
+            <img src="img/discover_creditcard.png" alt="Discover">
+            <span class="more-text">and many more…</span>
+          </div>
+        </div>
+      </div>
       <div id="card-element"></div>
       <div id="card-errors" role="alert"></div>
       <div class="secure-note"><img src="img/lock.svg" alt="">
@@ -322,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5) success!
-    window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+    window.top.location.href = 'https://mypartnerlab.co/checkout-thank-you';
   });
 });
 </script>
