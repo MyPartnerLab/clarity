@@ -175,14 +175,14 @@
       <h3>Contact Info</h3>
       <div class="form-row">
         <div class="col"><label for="firstName">First Name</label>
-          <input type="text" id="firstName" class="form-control" required>
+          <input type="text" id="firstName" name="firstName" class="form-control" required>
         </div>
         <div class="col"><label for="lastName">Last Name</label>
-          <input type="text" id="lastName" class="form-control" required>
+          <input type="text" id="lastName" name="lastName" class="form-control" required>
         </div>
       </div>
       <label for="email">Email</label>
-      <input type="email" id="email" class="form-control" required>
+      <input type="email" id="email" name="email" class="form-control" required>
 
       <!-- Card Entry -->
       <h3>Credit/Debit Card</h3>
@@ -203,7 +203,7 @@
 
       <!-- Terms & Submit -->
       <div class="terms">
-        <input type="checkbox" id="agree" required>
+        <input type="checkbox" name="agree" id="agree" required>
         <label for="agree">I agree to the 
           <a href="https://www.mypartnerlab.co/" target="_blank">terms & conditions</a>
         </label>
@@ -233,67 +233,59 @@
     </aside>
   </div>
 
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev'); // your publishable key
-    const form   = document.getElementById('checkout-form');
-    const cardEl = document.getElementById('card-element');
-    const errors = document.getElementById('card-errors');
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const stripe = Stripe('pk_test_XXXXXXXXXXXX');
+  const elements = stripe.elements();
+  const card = elements.create('card');
+  card.mount('#card-element');
 
-    // mount Card Element
-    const elements = stripe.elements();
-    const card = elements.create('card');
-    card.mount(cardEl);
+  const form = document.getElementById('checkout-form');
+  const errors = document.getElementById('card-errors');
 
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      errors.textContent = '';
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    errors.textContent = '';
 
-      if (!form.agree.checked) {
-        return alert('You must agree to the terms & conditions.');
-      }
+    // 1) validate
+    if (!form.agree.checked) {
+      return alert('You must agree to the terms & conditions.');
+    }
 
-      const firstName = form.firstName.value.trim();
-      const lastName  = form.lastName.value.trim();
-      const email     = form.email.value.trim();
+    // 2) gather info
+    const firstName = form.firstName.value.trim();
+    const lastName  = form.lastName.value.trim();
+    const email     = form.email.value.trim();
 
-      // create PaymentMethod
-      const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
-        type: 'card',
-        card,
-        billing_details: { name:`${firstName} ${lastName}`, email }
-      });
-      if (pmError) {
-        return errors.textContent = pmError.message;
-      }
-
-      // call your function
-      const resp = await fetch('/.netlify/functions/create-payment-intent', {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify({
-          paymentMethod: paymentMethod.id,
-          firstName, lastName, email,
-          plan: 'lifetime'
-        })
-      });
-      const data = await resp.json();
-      if (data.error) {
-        return errors.textContent = data.error;
-      }
-
-      // handle SCA if needed
-      const { error: confirmError } = await stripe.confirmCardPayment(
-        data.clientSecret
-      );
-      if (confirmError) {
-        return errors.textContent = confirmError.message;
-      }
-
-      // success
-      window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+    // 3) ask your function for a clientSecret
+    const resp = await fetch('/.netlify/functions/create-payment-intent', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json' },
+      body: JSON.stringify({ firstName, lastName, email })
     });
+    const { clientSecret, error } = await resp.json();
+    if (error) {
+      return errors.textContent = error;
+    }
+
+    // 4) confirm the card payment in one step (with SCA support)
+    const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card,
+        billing_details: {
+          name: `${firstName} ${lastName}`,
+          email
+        }
+      }
+    });
+    if (stripeError) {
+      return errors.textContent = stripeError.message;
+    }
+
+    // 5) success!
+    window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
   });
-  </script>
+});
+</script>
 </body>
 </html>
