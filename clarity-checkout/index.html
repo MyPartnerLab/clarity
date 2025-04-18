@@ -254,101 +254,87 @@
     </aside>
   </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // 1) Init Stripe.js
-  const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');
-  const elements = stripe.elements();
-  const card = elements.create('card');
-  card.mount('#card-element');
+  <!-- ---------------- JavaScript ---------------- -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
 
-  // 2) Plan selection & summary
-  let selectedPlan = 'lifetime';
-  document.querySelectorAll('input[name="plan"]').forEach(radio =>
-    radio.addEventListener('change', e => {
-      selectedPlan = e.target.value;
-      renderSummary();
-    })
-  );
-  renderSummary();
+    // 1 – Stripe init
+    const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');
+    const elements = stripe.elements();
+    const card     = elements.create('card');
+    card.mount('#card-element');
 
-  // 3) Handle the form submit
-  const form = document.getElementById('checkout-form');
-  const errorsDiv = document.getElementById('card-errors');
-
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    errorsDiv.textContent = '';
-
-    if (!document.getElementById('agree').checked) {
-      alert('You must agree to the terms and conditions.');
-      return;
+    // 2 – Plan summary
+    let selected = 'lifetime';
+    function renderSummary() {
+      const life = selected === 'lifetime';
+      document.getElementById('liLifetime').style.display = life ? 'flex' : 'none';
+      document.getElementById('liCancel').style.display   = life ? 'none' : 'flex';
+      document.getElementById('summary-plan').textContent  = life
+        ? 'Clarity Circle - Lifetime Access Plan'
+        : 'Clarity Circle - Monthly Plan';
+      document.getElementById('summary-note').textContent  = life
+        ? 'one-time payment'
+        : 'monthly subscription';
+      document.getElementById('yourTotal').textContent     = life ? '$97.00' : '$17.00';
     }
+    document.querySelectorAll('input[name="plan"]').forEach(radio =>
+      radio.addEventListener('change', e => { selected = e.target.value; renderSummary(); })
+    );
+    renderSummary();
 
-    // 4) Collect user info
-    const firstName = document.getElementById('firstName').value.trim();
-    const lastName  = document.getElementById('lastName').value.trim();
-    const email     = document.getElementById('email').value.trim();
+    // 3 – Form submit
+    const form      = document.getElementById('checkout-form');
+    const submitBtn = document.getElementById('submit');
+    const errorsDiv = document.getElementById('card-errors');
 
-    // 5) Create a PaymentMethod
-    const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
-      type: 'card',
-      card,
-      billing_details: { name:`${firstName} ${lastName}`, email }
-    });
-    if (pmError) {
-      errorsDiv.textContent = pmError.message;
-      return;
-    }
-
-    // 6) Send to your Netlify function
-    const res = await fetch('/.netlify/functions/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        plan: selectedPlan,
-        paymentMethod: paymentMethod.id,
-        firstName,
-        lastName,
-        email
-      })
-    });
-    const data = await res.json();
-
-    if (data.error) {
-      errorsDiv.textContent = data.error;
-      return;
-    }
-
-    // 7) Handle SCA if required
-    if (data.requiresAction) {
-      const { error: confirmError } = await stripe.confirmCardPayment(data.clientSecret);
-      if (confirmError) {
-        errorsDiv.textContent = confirmError.message;
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!document.getElementById('agree').checked) {
+        alert('You must agree to the terms and conditions.');
         return;
       }
-    }
+      submitBtn.disabled = true;
+      errorsDiv.textContent = '';
 
-    // 8) On success, redirect
-    window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName  = document.getElementById('lastName').value.trim();
+      const email     = document.getElementById('email').value.trim();
+
+      // Call serverless
+      const res  = await fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify({ plan:selected, email, firstName })
+      });
+      const data = await res.json();
+
+      // Subscription flow
+      if (data.mode === 'subscription') {
+        const { error } = await stripe.confirmCardPayment(data.clientSecret, {
+          payment_method:{ card, billing_details:{ name: `${firstName} ${lastName}`, email } }
+        });
+        if (error) {
+          errorsDiv.textContent = error.message;
+          submitBtn.disabled = false;
+        } else {
+          window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+        }
+        return;
+      }
+
+      // Lifetime one-time
+      const { error } = await stripe.confirmCardPayment(data.clientSecret, {
+        payment_method:{ card, billing_details:{ name: `${firstName} ${lastName}`, email } }
+      });
+      if (error) {
+        errorsDiv.textContent = error.message;
+        submitBtn.disabled = false;
+      } else {
+        window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+      }
+    });
   });
-});
-
-// summary‐updater
-function renderSummary() {
-  const life = selectedPlan === 'lifetime';
-  document.getElementById('liLifetime').style.display = life ? 'flex' : 'none';
-  document.getElementById('liCancel').style.display   = life ? 'none' : 'flex';
-  document.getElementById('summary-plan').textContent = life
-    ? 'Clarity Circle – Lifetime Access Plan'
-    : 'Clarity Circle – Monthly Plan';
-  document.getElementById('summary-note').textContent = life
-    ? 'one‑time payment'
-    : 'monthly subscription';
-  document.getElementById('yourTotal').textContent = life
-    ? '$97.00'
-    : '$17.00';
-}
-</script>
+  </script>
 </body>
 </html>
