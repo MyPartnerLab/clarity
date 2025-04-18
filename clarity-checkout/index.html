@@ -397,8 +397,8 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // 1 – Stripe init (replace with your own publishable key)
-      const stripe = Stripe('pk_test_YOUR_PUBLISHABLE_KEY');
+      // 1 – Stripe init 
+      const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');
       const elements = stripe.elements();
       const card = elements.create('card');
       card.mount('#card-element');
