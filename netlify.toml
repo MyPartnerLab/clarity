@@ -1,0 +1,8 @@
+[build]
+  # Tell Netlify to look for functions in the same place Vercel used
+  functions = "api"
+
+[[redirects]]
+  from = "/api/*"
+  to   = "/.netlify/functions/:splat"
+  status = 200
