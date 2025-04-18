@@ -102,22 +102,18 @@
     .card-logos img { height:20px; margin-right:4px; }
     .more-text { font-size:.75rem; opacity:.7; margin-left:4px; }
 
-    /* Stripe element */
-    #card-element { border:1px solid #ccc; border-radius:var(--radius); padding:.75rem; }
-    #card-errors { color:#dc3545; font-size:.875rem; margin-top:.5rem; }
-    /* add this */
-#payment-element {
-  /* exactly the same as #card-element */
-  border: 1px solid #ccc;
-  border-radius: var(--radius);
-  padding: .75rem;
-}
-#payment-errors {
-  /* exactly the same as #card-errors */
-  color: #dc3545;
-  font-size: .875rem;
-  margin-top: .5rem;
-}
+    /* Payment Element styling (same as old Card Element) */
+    #payment-element {
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      padding: .75rem;
+    }
+    #payment-errors {
+      color: #dc3545;
+      font-size: .875rem;
+      margin-top: .5rem;
+    }
+
     .secure-note {
       display:flex; justify-content:center; align-items:center;
       font-size:.85rem; opacity:.7; margin-top:.75rem;
@@ -146,8 +142,7 @@
     }
     .summary-box h2 {
       margin: 0 0 1rem;
-      font-size: 2em;        /* now a true focal point */
-      font-weight:700;
+      font-size: 2em; font-weight:700;
       color: var(--brand);
       text-align: center;
     }
@@ -189,7 +184,7 @@
             <img src="img/star.svg" class="corner-star" alt="">
             <span class="plan-badge">Founding Member Plan</span>
             <span class="plan-title">Clarity Circle – Lifetime Access</span>
-            <span class="plan-sub">One‑time payment of $97</span>
+            <span class="plan-sub">One‑time payment of $97</span>
             <span class="price">$97 total</span>
           </label>
 
@@ -229,13 +224,20 @@
           <span class="more-text">and many more…</span>
         </div>
       </div>
-<div id="payment-element"></div>
-<div id="payment-errors" role="alert"></div>
-      <div class="secure-note"><img src="img/lock.svg" alt="">All payments are secured by 256-bit encryption.</div>
+
+      <!-- NEW: Payment Element mounts here -->
+      <div id="payment-element"></div>
+      <div id="payment-errors" role="alert"></div>
+
+      <div class="secure-note">
+        <img src="img/lock.svg" alt="">All payments are secured by 256-bit encryption.
+      </div>
 
       <div class="terms">
         <input type="checkbox" id="agree" required>
-        <label for="agree">I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms and conditions</a></label>
+        <label for="agree">
+          I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms and conditions</a>
+        </label>
       </div>
 
       <button id="submit" type="submit">Secure My Spot</button>
@@ -244,7 +246,6 @@
     <!-- RIGHT: SUMMARY -->
     <aside class="checkout-summary">
       <img src="img/mockup1.png" class="summary-mockup" alt="Program preview">
-
       <div class="summary-box">
         <h2>Join the Clarity Circle</h2>
         <ul class="benefits">
@@ -256,7 +257,6 @@
           <li id="liCancel"><span><img src="img/checkmark.svg" alt="">Cancel anytime</span></li>
           <li><span><img src="img/checkmark.svg" alt="">30‑Day Refund Policy</span></li>
         </ul>
-
         <div class="order-box">
           <h4>Order Summary</h4>
           <div class="order-row"><span id="summary-plan"></span></div>
@@ -267,138 +267,90 @@
     </aside>
   </div>
 
-  <!-- ---------------- JavaScript ---------------- -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const stripe = Stripe('pk_test_…');
-  const form   = document.getElementById('checkout-form');
-  const errors = document.getElementById('payment-errors');
+  <!-- Stripe + Payment Element logic -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const stripe = Stripe('pk_test_…'); // <-- your publishable key
+    const form   = document.getElementById('checkout-form');
+    const errors = document.getElementById('payment-errors');
+    let elements, paymentElement;
+    const planRadios = document.querySelectorAll('input[name="plan"]');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    errors.textContent = '';
-
-    // 1) Collect contact info & plan
-    const firstName = form.firstName.value.trim();
-    const lastName  = form.lastName.value.trim();
-    const email     = form.email.value.trim();
-    const plan      = document.querySelector('input[name=plan]:checked').value;
-
-    // 2) Create subscription & get back a clientSecret
-    const resp = await fetch('/.netlify/functions/create-subscription', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ plan, firstName, lastName, email })
-    });
-    const { clientSecret, error: srvErr } = await resp.json();
-    if (srvErr) {
-      errors.textContent = srvErr;
-      return;
+    // Summary rendering
+    function renderSummary(plan) {
+      const isLifetime = plan === 'lifetime';
+      document.getElementById('liLifetime').style.display = isLifetime ? 'flex' : 'none';
+      document.getElementById('liCancel')  .style.display = isLifetime ? 'none' : 'flex';
+      document.getElementById('summary-plan').textContent =
+        isLifetime
+          ? 'Clarity Circle – Lifetime Access Plan'
+          : 'Clarity Circle – Monthly Plan';
+      document.getElementById('summary-note').textContent =
+        isLifetime
+          ? 'one‑time payment'
+          : 'monthly subscription';
+      document.getElementById('yourTotal').textContent =
+        isLifetime ? '$97.00' : '$17.00';
     }
 
-    // 3) Build & mount the Payment Element
-    const elements = stripe.elements({ clientSecret });
-    const paymentElement = elements.create('payment');
-    paymentElement.mount('#payment-element');
+    // Fetch a clientSecret & mount the Payment Element
+    async function initializePayment() {
+      const plan = document.querySelector('input[name="plan"]:checked').value;
+      renderSummary(plan);
 
-    // 4) Confirm the payment & handle SCA  
-    const { error: confirmErr } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: 'https://mypartnerlab.co/checkout-thank-you'
+      const endpoint = plan === 'lifetime'
+        ? '/.netlify/functions/create-payment-intent'
+        : '/.netlify/functions/create-subscription';
+
+      const resp = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify({
+          plan,
+          firstName: form.firstName.value.trim(),
+          lastName:  form.lastName.value.trim(),
+          email:     form.email.value.trim()
+        })
+      });
+      const { clientSecret, error } = await resp.json();
+      if (error) {
+        return errors.textContent = error;
       }
-    });
-    if (confirmErr) {
-      errors.textContent = confirmErr.message;
-    }
-    // on success, Stripe will redirect the customer to your return_url  [oai_citation_attribution:1‡Documentation](https://docs.stripe.com/billing/subscriptions/build-subscriptions?platform=web&ui=elements)
-  });
-});
 
-  // 2) Plan selector + summary
-  let selectedPlan = 'lifetime';
-  const radios = document.querySelectorAll('input[name="plan"]');
-  radios.forEach(radio => {
-    radio.addEventListener('change', () => {
-      selectedPlan = radio.value;
-      renderSummary();
-    });
-  });
-
-  function renderSummary() {
-    const isLifetime = selectedPlan === 'lifetime';
-    document.getElementById('liLifetime').style.display = isLifetime ? 'flex' : 'none';
-    document.getElementById('liCancel').style.display   = isLifetime ? 'none' : 'flex';
-    document.getElementById('summary-plan').textContent = isLifetime
-      ? 'Clarity Circle – Lifetime Access Plan'
-      : 'Clarity Circle – Monthly Plan';
-    document.getElementById('summary-note').textContent = isLifetime
-      ? 'one-time payment'
-      : 'monthly subscription';
-    document.getElementById('yourTotal').textContent = isLifetime ? '$97.00' : '$17.00';
-  }
-  renderSummary();
-
-  // 3) Form submit handler
-  const form = document.getElementById('checkout-form');
-  const errorsDiv = document.getElementById('card-errors');
-
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    errorsDiv.textContent = '';
-
-    if (!document.getElementById('agree').checked) {
-      alert('You must agree to the terms and conditions.');
-      return;
+      if (paymentElement) {
+        paymentElement.unmount();
+      }
+      elements = stripe.elements({ clientSecret });
+      paymentElement = elements.create('payment');
+      paymentElement.mount('#payment-element');
     }
 
-    // 4) Collect customer info
-    const firstName = document.getElementById('firstName').value.trim();
-    const lastName  = document.getElementById('lastName').value.trim();
-    const email     = document.getElementById('email').value.trim();
+    // Initialize on load
+    initializePayment();
 
-    // 5) Create a PaymentMethod
-    const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
-      type: 'card',
-      card,
-      billing_details: { name:`${firstName} ${lastName}`, email }
-    });
-    if (pmError) {
-      errorsDiv.textContent = pmError.message;
-      return;
-    }
+    // Re-initialize whenever plan changes
+    planRadios.forEach(r => r.addEventListener('change', initializePayment));
 
-    // 6) POST to your Netlify function
-    const resp = await fetch('/.netlify/functions/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        plan: selectedPlan,
-        paymentMethod: paymentMethod.id,
-        firstName,
-        lastName,
-        email
-      })
-    });
-    const data = await resp.json();
-    if (data.error) {
-      errorsDiv.textContent = data.error;
-      return;
-    }
+    // On submit, confirm the payment
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errors.textContent = '';
 
-    // 7) Handle SCA if required
-    if (data.requiresAction) {
-      const { error: confirmError } = await stripe.confirmCardPayment(data.clientSecret);
+      if (!form.agree.checked) {
+        return alert('You must agree to the terms and conditions.');
+      }
+
+      const { error: confirmError } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: 'https://mypartnerlab.co/checkout-thank-you'
+        }
+      });
       if (confirmError) {
-        errorsDiv.textContent = confirmError.message;
-        return;
+        errors.textContent = confirmError.message;
       }
-    }
-
-    // 8) All done
-    window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+    });
   });
-});
-</script>
+  </script>
 </body>
 </html>
