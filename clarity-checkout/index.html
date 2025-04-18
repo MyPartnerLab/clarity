@@ -265,6 +265,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // — Stripe init & mount —
   const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');
   const elements = stripe.elements();
   const card = elements.create('card');
@@ -277,46 +278,61 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     errors.textContent = '';
 
-    // 1) validate
+    // 1) validate the T&C checkbox
     if (!form.agree.checked) {
       return alert('You must agree to the terms & conditions.');
     }
 
-    // 2) gather info
+    // 2) collect customer info
     const firstName = form.firstName.value.trim();
     const lastName  = form.lastName.value.trim();
     const email     = form.email.value.trim();
 
-    // 3) ask your function for a clientSecret
+    // 3) fetch a clientSecret from your serverless function
     const resp = await fetch('/.netlify/functions/create-payment-intent', {
       method: 'POST',
       headers: { 'Content-Type':'application/json' },
       body: JSON.stringify({ firstName, lastName, email })
     });
-    const { clientSecret, error } = await resp.json();
-    if (error) {
-      return errors.textContent = error;
+    const { clientSecret, error: fnError } = await resp.json();
+    if (fnError) {
+      return errors.textContent = fnError;
     }
 
-    // 4) confirm the card payment in one step (with SCA support)
+    // 4) confirm the payment (handles SCA automatically)
     const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
         card,
-        billing_details: {
-          name: `${firstName} ${lastName}`,
-          email
-        }
+        billing_details: { name: `${firstName} ${lastName}`, email }
       }
     });
     if (stripeError) {
       return errors.textContent = stripeError.message;
     }
 
-// inside partnerlab.netlify.app JS, after confirmCardPayment succeeds
-window.parent.postMessage(
-  { type: 'checkoutComplete', url: 'https://mypartnerlab.co/checkout-thank-you' },
-  '*'
-);
+    // 5) tell the parent frame “we’re done” so it can redirect the whole page
+    window.parent.postMessage(
+      {
+        type: 'checkoutComplete',
+        url: 'https://mypartnerlab.co/checkout-thank-you'
+      },
+      '*'
+    );
+  });
+
+  // — Auto‑resize: tell the parent frame how tall we are —
+  function reportHeight() {
+    window.parent.postMessage(
+      { type: 'checkoutHeight', height: document.body.scrollHeight },
+      '*'
+    );
+  }
+  // fire once on load
+  window.addEventListener('load', reportHeight);
+  // fire again whenever the DOM changes (e.g. Stripe element loads)
+  new MutationObserver(reportHeight).observe(document.body, {
+    childList: true,
+    subtree:   true
   });
 });
 </script>
