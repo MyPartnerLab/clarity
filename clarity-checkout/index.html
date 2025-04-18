@@ -263,15 +263,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const card = elements.create('card');
   card.mount('#card-element');
 
-  // 2) Plan selection & summary
-  let selectedPlan = 'lifetime';
-  document.querySelectorAll('input[name="plan"]').forEach(radio =>
-    radio.addEventListener('change', e => {
-      selectedPlan = e.target.value;
-      renderSummary();
-    })
-  );
-  renderSummary();
+// 2 – Plan summary
+    let selected = 'lifetime';
+    function renderSummary() {
+      const life = selected === 'lifetime';
+      document.getElementById('liLifetime').style.display = life ? 'flex' : 'none';
+      document.getElementById('liCancel').style.display   = life ? 'none' : 'flex';
+      document.getElementById('summary-plan').textContent  = life
+        ? 'Clarity Circle - Lifetime Access Plan'
+        : 'Clarity Circle - Monthly Plan';
+      document.getElementById('summary-note').textContent  = life
+        ? 'one-time payment'
+        : 'monthly subscription';
+      document.getElementById('yourTotal').textContent     = life ? '$97.00' : '$17.00';
+    }
+    document.querySelectorAll('input[name="plan"]').forEach(radio =>
+      radio.addEventListener('change', e => { selected = e.target.value; renderSummary(); })
+    );
+    renderSummary();
 
   // 3) Form submit
   const form = document.getElementById('checkout-form');
