@@ -311,16 +311,37 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = 'https://mypartnerlab.co/checkout-thank-you';
   });
 });
-  // tell parent the height on load and whenever content changes
-function reportHeight(){
-  window.parent.postMessage(
-    { type:'iframeHeight', height: document.body.scrollHeight },
-    'https://your-squarespace-domain.com'  // lock it down to your site’s origin
-  );
-}
-window.addEventListener('load', reportHeight);
-new MutationObserver(reportHeight)
-  .observe(document.body, { childList:true, subtree:true });
+<script>
+  (function(){
+    // 1) if we're *not* inside an iframe, bail out
+    if (window.parent === window) return;
+
+    // 2) pick your target origin — either '*' (easier) or lock it down:
+    const targetOrigin = 'https://www.mypartnerlab.co/'; 
+    // const targetOrigin = 'https://your‑squarespace‑site.com';
+
+    function reportHeight(){
+      try {
+        window.parent.postMessage(
+          { type: 'iframeHeight', height: document.body.scrollHeight },
+          targetOrigin
+        );
+      } catch (err) {
+        // swallow errors silently
+        console.warn('iframe resize error', err);
+      }
+    }
+
+    // fire once on load…
+    window.addEventListener('load', reportHeight);
+
+    // …and again any time the DOM changes
+    new MutationObserver(reportHeight).observe(document.body, {
+      childList: true,
+      subtree:   true
+    });
+  })();
+</script>
 </script>
 </body>
 </html>
