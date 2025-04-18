@@ -24,7 +24,7 @@
     body {
       margin: 0; padding: 3rem 0;
       font-family: 'Lato', sans-serif;
-      background: #faf7f3;
+      background: #fdf8f5;
     }
     .checkout-wrapper {
       max-width: 1100px; margin: 0 auto;
@@ -40,7 +40,7 @@
       background: var(--form-bg);
       border-radius: var(--radius);
       box-shadow: 0 6px 16px rgba(0,0,0,.06);
-      padding: 3rem;               /* increased overall padding */
+      padding: 3rem;              
     }
 
     /* Lifetime Plan Card */
@@ -52,24 +52,51 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1.5rem;            /* more padding */
-      margin-bottom: 2rem;        /* extra bottom space */
+      padding: 1.5rem;          
+      margin-bottom: 2rem;     
     }
-    .single-plan .corner-tag { /* unchanged */ }
-    /* …other single-plan rules unchanged… */
-
+    .single-plan .corner-tag  {
+    display:block; position:absolute; top:0; left:0;
+    width:0; height:0;
+    border-top:45px solid var(--brand);
+    border-right:45px solid transparent;
+    border-top-left-radius: var(--radius);
+  }
+    .single-plan .corner-tag i {
+    position:absolute; top:-30px; left:8px;
+    color:#fff; font-size:.8rem;
+  }
+  .single-plan .corner-star {
+    position:absolute; top:4px; right:4px;
+    width:16px; height:16px;
+  }
+  .single-plan .plan-badge {
+    background: var(--summary-bg); color: var(--brand);
+    font-size:.75rem; font-weight:700;
+    border-radius:999px; padding:.1rem .4rem;
+    margin-bottom:.25rem; text-align:center;
+  }
+  .single-plan .plan-title { font-weight:700; text-align:center; margin-top:.25rem; }
+  .single-plan .plan-sub {
+    font-style:italic; opacity:.75; font-size:.85rem;
+    text-align:center; margin-top:.1rem; line-height:1.2;
+  }
+  .single-plan .price {
+    font-size:1.3rem; font-weight:700; color:var(--brand);
+    margin-top:.5rem;
+  }
     /* ==== Section Headings & Spacing ==== */
     .checkout-form h3 {
       font-size: 1.25em;
       font-weight: 700;
       color: var(--brand);
-      margin-top: 2rem;           /* more top space */
-      margin-bottom: 1rem;        /* more bottom space */
-      display: inline-block;      /* allow inline with logos */
+      margin-top: 2rem;           
+      margin-bottom: 1rem;        
+      display: inline-block;     
       vertical-align: middle;
     }
     .checkout-form .form-row {
-      margin-bottom: 1.5rem;      /* extra space between rows */
+      margin-bottom: 1.5rem;      
     }
 
     /* Inputs */
@@ -156,7 +183,7 @@
     .summary-mockup {
       width: 100%;                /* fill available */
       max-width: 400px;           /* bump up maximum */
-      margin-bottom: 2rem;        /* extra bottom space */
+      margin-bottom: 1rem;        /* extra bottom space */
     }
     .summary-box {
       background: var(--summary-bg);
@@ -175,12 +202,23 @@
     .benefits li {
       margin-bottom: .75rem;      /* more line‑spacing */
     }
-    .order-box {
-      padding-top: 1.5rem;        /* separate from benefits */
-    }
-    .order-total {
-      margin-top: 1.75rem;        /* bigger gap above total */
-    }
+      .benefits li img { width:18px; margin-right:.5rem; }
+  .order-box {
+    background:transparent!important; box-shadow:none!important;
+    padding:0!important; width:100%;
+  }
+  .order-box h4 {
+    font-size:1.25em; font-weight:700; color:var(--brand);
+    margin-bottom:.5rem;
+  }
+  .order-row { font-size:.9rem; line-height:1.2; }
+  .order-note {
+    margin-top:.25rem; font-style:italic; opacity:.75; line-height:1.2;
+  }
+  .order-total {
+    display:flex; justify-content:space-between;
+    margin-top:1rem; font-size:1.25em; font-weight:700; color:var(--brand);
+  }
   </style>
 </head>
 <body>
