@@ -40,7 +40,10 @@ exports.handler = async ({ body }) => {
         items: [{ price: priceId }],
         payment_behavior: 'default_incomplete',
         // this is the critical bit:
-        expand: ['latest_invoice.payment_intent'],
+expand: [
+'latest_invoice',                  // first load the invoice object…
+'latest_invoice.payment_intent'    // …then expand its payment intent
+],
         metadata: { plan },
       });
 
