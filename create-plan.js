@@ -1,5 +1,8 @@
 // /.netlify/functions/create-plan.js
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const priceId = plan === 'monthly'
+  ? process.env.STRIPE_PRICE_MONTHLY
+  : process.env.STRIPE_PRICE_LIFETIME;
 
 exports.handler = async (event) => {
   try {
@@ -22,7 +25,7 @@ exports.handler = async (event) => {
     if (plan === 'monthly') {
       const sub = await stripe.subscriptions.create({
         customer: customer.id,
-        items: [{ price: process.env.PRICE_MONTHLY }],
+        items: [{ price: process.env.STRIPE_PRICE_MONTHLY }],
         trial_period_days: 14,
         payment_settings: { save_default_payment_method: 'on_subscription' },
         metadata: { plan: 'monthly' },
@@ -48,7 +51,7 @@ exports.handler = async (event) => {
           },
           /* Phase 2 – single $97 charge */
           {
-            items: [{ price: process.env.PRICE_LIFETIME, quantity: 1 }],
+            items: [{ price: process.env.STRIPE_PRICE_LIFETIME, quantity: 1 }],
             iterations: 1,                  // exactly one invoice
           },
         ],
