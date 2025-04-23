@@ -157,7 +157,6 @@
       </div>
     </aside>
   </div>
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Stripe init ---------- */
@@ -166,7 +165,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const card     = elements.create('card');
   card.mount('#card-element');
 
-  /* ---------- Plan-card highlight ---------- */
+  const form   = document.getElementById('checkout-form');
+  const btn    = document.getElementById('submit');
+  const errors = document.getElementById('card-errors');
+
+  /* live card-error messages */
+  card.on('change', e => {
+    errors.textContent = e.error ? e.error.message : '';
+  });
+
+  /* plan-picker visuals */
   function toggleSelected(el){
     document.querySelectorAll('.single-plan').forEach(p=>p.classList.remove('selected'));
     el.classList.add('selected');
@@ -178,9 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
       updateSummary(label.querySelector('input').value);
     });
   });
-  toggleSelected(document.getElementById('plan-lifetime')); // start selected
+  toggleSelected(document.getElementById('plan-lifetime'));
 
-  /* ---------- Summary swap ---------- */
+  /* summary text swap */
   const note  = document.getElementById('summary-note');
   const total = document.getElementById('due-today');
   const price = document.getElementById('order-price');
@@ -198,14 +206,16 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSummary('lifetime');
 
   /* ---------- Form submit ---------- */
-  const form   = document.getElementById('checkout-form');
-  const errors = document.getElementById('card-errors');
-
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    errors.textContent='';
+    errors.textContent = '';
 
-    if(!form.agree.checked) return alert('Please agree to the terms & conditions.');
+    if(!form.agree.checked){
+      alert('Please agree to the terms & conditions.');
+      return;
+    }
+
+    btn.disabled = true;                        // lock button
 
     const firstName = form.firstName.value.trim();
     const lastName  = form.lastName.value.trim();
@@ -218,9 +228,12 @@ document.addEventListener('DOMContentLoaded', () => {
       card,
       billing_details:{ name:`${firstName} ${lastName}`, email }
     });
-    if(pmErr) return errors.textContent = pmErr.message;
+    if(pmErr){
+      btn.disabled = false;
+      return errors.textContent = pmErr.message;
+    }
 
-    /* 2 — hit serverless function to make Subscription OR Schedule */
+    /* 2 — call Netlify function */
     const resp = await fetch('/.netlify/functions/create-plan', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -231,20 +244,26 @@ document.addEventListener('DOMContentLoaded', () => {
       })
     });
     const {clientSecret, error:fnErr} = await resp.json();
-    if(fnErr) return errors.textContent = fnErr;
+    if(fnErr){
+      btn.disabled = false;
+      return errors.textContent = fnErr;
+    }
 
     /* 3 — confirm PI (handles 3-DS) */
     const {error:piErr} = await stripe.confirmCardPayment(clientSecret);
-    if(piErr) return errors.textContent = piErr.message;
+    if(piErr){
+      btn.disabled = false;
+      return errors.textContent = piErr.message;
+    }
 
-    /* 4 — Success → notify parent (Squarespace page) */
+    /* 4 — Success → notify parent */
     window.parent.postMessage(
       { type:'checkoutComplete', url:'https://mypartnerlab.co/checkout-thank-you' },
       '*'
     );
   });
 
-  /* ---------- Auto-resize the iframe ---------- */
+  /* iframe auto-resize */
   const reportHeight = () =>
     window.parent.postMessage(
       { type:'checkoutHeight', height:document.body.scrollHeight },
@@ -252,24 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   window.addEventListener('load',reportHeight);
   new MutationObserver(reportHeight).observe(document.body,{childList:true,subtree:true});
-});
-  // Disable button while processing
-const btn = document.getElementById('submit');
-
-form.addEventListener('submit', async e => {
-  e.preventDefault();
-  btn.disabled = true;                       // <—
-  errors.textContent = '';
-
-  … full flow …
-
-  if (piErr || fnErr) {
-    btn.disabled = false;                   // re-enable on errors
-    return errors.textContent = (piErr || fnErr).message || fnErr;
-  }
-});
-  card.on('change', e => {
-  errors.textContent = e.error ? e.error.message : '';
 });
 </script>
 </body>
