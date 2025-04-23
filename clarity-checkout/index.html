@@ -253,6 +253,24 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('load',reportHeight);
   new MutationObserver(reportHeight).observe(document.body,{childList:true,subtree:true});
 });
+  // Disable button while processing
+const btn = document.getElementById('submit');
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  btn.disabled = true;                       // <—
+  errors.textContent = '';
+
+  … full flow …
+
+  if (piErr || fnErr) {
+    btn.disabled = false;                   // re-enable on errors
+    return errors.textContent = (piErr || fnErr).message || fnErr;
+  }
+});
+  card.on('change', e => {
+  errors.textContent = e.error ? e.error.message : '';
+});
 </script>
 </body>
 </html>
