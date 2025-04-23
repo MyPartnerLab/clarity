@@ -67,7 +67,7 @@
     .order-box h4{font-size:1.25em;font-weight:700;color:var(--brand);margin-bottom:.5rem;}
     .order-note{margin-top:.25rem;font-style:italic;opacity:.75;line-height:1.2;}
     .order-total{display:flex;justify-content:space-between;margin-top:1rem;font-size:1.25em;font-weight:700;color:var(--brand);}
-      /* … existing variables … */
+  /* … existing variables … */
   .plan-picker{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;}
   @media(max-width:575px){.plan-picker{flex-direction:column;}}
   .card-logos img{height:18px;margin-left:4px;}   /* smaller icons */
@@ -75,7 +75,7 @@
   </style>
 </head>
 <body>
- <div class="checkout-wrapper">
+  <div class="checkout-wrapper">
     <form id="checkout-form" class="checkout-form" novalidate>
       <!-- ===== PLAN PICKER (two cards side-by-side) ===== -->
       <div class="plan-picker">
@@ -135,19 +135,23 @@
     </form>
 
     <!-- ===== SUMMARY ===== -->
-    <aside class="checkout-summary">
+ <aside class="checkout-summary">
       <img src="img/mockup1.png" class="summary-mockup" alt="Program preview">
       <div class="summary-box">
         <h2>Join the Clarity Circle</h2>
-        <ul class="benefits"> …unchanged… </ul>
-
+        <ul class="benefits">
+          <li><span><img src="img/checkmark.svg" alt="">Research-Backed Tools & Frameworks</span><span>($997+)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="">Unlimited Relationship Wellness Checkups</span><span>($300+)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="">Private Community Access</span><span>($497)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="">Live Q&A Sessions</span><span>($997+)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="">Lifetime Access</span><span>(priceless)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="">30-Day Refund Policy</span></li>
+        </ul>
         <div class="order-box">
           <h4>Order Summary</h4>
-          <div class="order-row">
-            <span>Clarity Circle Membership</span>
-            <span id="order-price" class="font-weight-bold">$0.00</span>
-          </div>
+          <div class="order-row"><span>Clarity Circle Membership</span></div>
           <div id="summary-note" class="order-note"></div>
+          <div class="order-total"><strong>Due Today:</strong><span id="due-today">$0.00</span></div>
         </div>
       </div>
     </aside>
@@ -235,18 +239,6 @@ document.addEventListener('DOMContentLoaded', () => {
       '*'
     );
   });
-  /* ---------- NO CHANGES to the JS except one small line ---------- */
-function updateSummary(plan){
-  if(plan==='monthly'){
-    note.textContent  = '14-day free trial; then $17 / month';
-    total.textContent = '$0.00';
-    document.getElementById('order-price').textContent = '$0.00';
-  }else{
-    note.textContent  = '14-day free trial; then one-time $97';
-    total.textContent = '$0.00';
-    document.getElementById('order-price').textContent = '$0.00';
-  }
-}
 
   /* ---------- Auto-resize the iframe ---------- */
   const reportHeight = () =>
