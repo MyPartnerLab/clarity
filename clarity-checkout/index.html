@@ -22,12 +22,11 @@
     /* ========== FORM PANEL ========== */
     .checkout-form{flex:0 0 60%;background:var(--form-bg);border-radius:var(--radius);
       box-shadow:0 6px 16px rgba(0,0,0,.06);padding:2.25rem;}
-    .plan-picker{margin-bottom:1.5rem;}
+    .plan-picker{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+    @media(max-width:575px){.plan-picker{flex-direction:column;}}
     .single-plan{position:relative;border:1px solid #d7d7d7;border-radius:var(--radius);
       background:#fff;display:flex;flex-direction:column;align-items:center;padding:1.25rem;
-      cursor:pointer;transition:border .15s;}
-    .single-plan       { position:relative; z-index:0; }   /* keep card clickable */
-.terms, #submit    { position:relative; z-index:2; }   /* float these above cards */
+      cursor:pointer;transition:border .15s;z-index:0;}
     .single-plan:hover{border-color:var(--brand);}
     .single-plan input{display:none;}
     .single-plan.selected{border:2px solid var(--brand);}
@@ -45,14 +44,16 @@
 
     /* Card */
     .card-section{display:flex;align-items:center;justify-content:space-between;}
+    .card-logos img{height:18px;margin-left:4px;}   /* smaller icons */
     #card-element{border:1px solid #ccc;border-radius:var(--radius);padding:1rem;margin:.5rem 0;}
     #card-errors{color:#dc3545;font-size:.875rem;margin-top:.5rem;}
 
     .secure-note{display:flex;justify-content:center;align-items:center;font-size:.85rem;opacity:.7;margin-top:.75rem;}
     .secure-note img{width:16px;margin-right:6px;}
     #submit{width:100%;background:var(--brand);color:#fff;border:none;border-radius:var(--radius);
-      padding:.85rem;font-weight:700;transition:background .25s;}
+      padding:.85rem;font-weight:700;transition:background .25s;position:relative;z-index:2;}
     #submit:hover{background:var(--accent);}
+    .terms{position:relative;z-index:2;}
 
     /* ========== SUMMARY PANEL ========== */
     .checkout-summary{flex:0 0 40%;display:flex;flex-direction:column;align-items:center;}
@@ -65,19 +66,16 @@
     .benefits li img{width:18px;margin-right:.5rem;}
     .order-box{background:transparent!important;box-shadow:none!important;padding:0!important;width:100%;margin-top:1.5rem;}
     .order-box h4{font-size:1.25em;font-weight:700;color:var(--brand);margin-bottom:.5rem;}
+    .order-row{display:flex;justify-content:space-between;font-size:.9rem;line-height:1.2;}
+    .order-row span:last-child{font-weight:700;}  /* bold price */
     .order-note{margin-top:.25rem;font-style:italic;opacity:.75;line-height:1.2;}
     .order-total{display:flex;justify-content:space-between;margin-top:1rem;font-size:1.25em;font-weight:700;color:var(--brand);}
-  /* … existing variables … */
-  .plan-picker{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;}
-  @media(max-width:575px){.plan-picker{flex-direction:column;}}
-  .card-logos img{height:18px;margin-left:4px;}   /* smaller icons */
-  .order-row{display:flex;justify-content:space-between;font-size:.9rem;line-height:1.2;}
   </style>
 </head>
 <body>
   <div class="checkout-wrapper">
     <form id="checkout-form" class="checkout-form" novalidate>
-      <!-- ===== PLAN PICKER (two cards side-by-side) ===== -->
+      <!-- ===== PLAN PICKER ===== -->
       <div class="plan-picker">
         <!-- Lifetime -->
         <label class="single-plan flex-fill" id="plan-lifetime">
@@ -92,7 +90,7 @@
         <label class="single-plan flex-fill" id="plan-monthly">
           <input type="radio" name="plan" value="monthly">
           <span class="plan-badge">Monthly&nbsp;Subscription</span>
-          <span class="plan-title">$17&nbsp;/&nbsp;month</span>
+          <span class="plan-title">Monthly&nbsp;Access</span>
           <span class="plan-sub">14-day free trial • cancel anytime</span>
           <span class="price">$17/mo</span>
         </label>
@@ -135,7 +133,7 @@
     </form>
 
     <!-- ===== SUMMARY ===== -->
- <aside class="checkout-summary">
+    <aside class="checkout-summary">
       <img src="img/mockup1.png" class="summary-mockup" alt="Program preview">
       <div class="summary-box">
         <h2>Join the Clarity Circle</h2>
@@ -149,7 +147,10 @@
         </ul>
         <div class="order-box">
           <h4>Order Summary</h4>
-          <div class="order-row"><span>Clarity Circle Membership</span></div>
+          <div class="order-row">
+            <span>Clarity Circle Membership</span>
+            <span id="order-price">$97</span>
+          </div>
           <div id="summary-note" class="order-note"></div>
           <div class="order-total"><strong>Due Today:</strong><span id="due-today">$0.00</span></div>
         </div>
@@ -160,7 +161,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Stripe init ---------- */
-  const stripe   = Stripe('pk_test_XXXXXXXXXXXXXXXXXXXXXXXX');
+  const stripe   = Stripe('pk_test_51QxWEQ4CPqLwMoEaMeGjbC4sCuZ0tHbtGDBETBR7ah2RuWQjzHodG7XBYJB832CViz1ywgbUaaslnJTR47hOmUOf00oKjvV58V');
   const elements = stripe.elements();
   const card     = elements.create('card');
   card.mount('#card-element');
@@ -182,12 +183,15 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Summary swap ---------- */
   const note  = document.getElementById('summary-note');
   const total = document.getElementById('due-today');
+  const price = document.getElementById('order-price');
   function updateSummary(plan){
     if(plan==='monthly'){
       note.textContent  = '14-day free trial; then $17 / month';
+      price.textContent = '$17/mo';
       total.textContent = '$0.00';
     }else{
       note.textContent  = '14-day free trial; then one-time $97';
+      price.textContent = '$97';
       total.textContent = '$0.00';
     }
   }
