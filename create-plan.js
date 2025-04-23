@@ -1,13 +1,14 @@
 // /.netlify/functions/create-plan.js
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const priceId = plan === 'monthly'
-  ? process.env.STRIPE_PRICE_MONTHLY
-  : process.env.STRIPE_PRICE_LIFETIME;
 
 exports.handler = async (event) => {
   try {
     const { firstName, lastName, email, paymentMethodId, plan } = JSON.parse(event.body);
 
+    const priceId = plan === 'monthly'
+      ? process.env.STRIPE_PRICE_MONTHLY
+      : process.env.STRIPE_PRICE_LIFETIME;
+    
     /* 1 — get or create the customer */
     let customer = (await stripe.customers.list({ email, limit: 1 })).data[0];
     if (!customer) customer = await stripe.customers.create({ email, name: `${firstName} ${lastName}` });
