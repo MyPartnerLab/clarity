@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Clarity Circle Checkout</title>
-  <meta name="description" content="Join The Clarity Circle — Lifetime Access, one‑time $97" />
+  <meta name="description" content="Join The Clarity Circle — free 14-day trial" />
 
   <!-- Bootstrap / Fonts / Stripe.js -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"/>
@@ -13,206 +13,95 @@
   <script src="https://js.stripe.com/v3"></script>
 
   <style>
-    :root {
-      --brand: #800f2f;
-      --accent: #c9184a;
-      --form-bg: #fff;
-      --summary-bg: #f4e8de;
-      --radius: .75rem;
-      --gap: 1.5rem;
-    }
-    body {
-      margin: 0; padding: 3rem 0;
-      font-family: 'Lato', sans-serif;
-      background: #fdf8f5;
-    }
-    .checkout-wrapper {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; gap: var(--gap);
-    }
-    @media (max-width: 767px) {
-      .checkout-wrapper { flex-direction: column; }
-    }
+    :root { --brand:#800f2f; --accent:#c9184a; --form-bg:#fff; --summary-bg:#f4e8de;
+            --radius:.75rem; --gap:1.5rem; }
+    body{margin:0;padding:3rem 0;font-family:'Lato',sans-serif;background:#fdf8f5;}
+    .checkout-wrapper{max-width:1100px;margin:0 auto;display:flex;gap:var(--gap);}
+    @media(max-width:767px){.checkout-wrapper{flex-direction:column;}}
 
-    /* ==== Left Form ==== */
-    .checkout-form {
-      flex: 0 0 60%; background: var(--form-bg);
-      border-radius: var(--radius);
-      box-shadow: 0 6px 16px rgba(0,0,0,.06);
-      padding: 2.25rem;
-    }
-    .single-plan {
-      position: relative; border:1px solid #d7d7d7;
-      border-radius: var(--radius); background:#fff;
-      display:flex; flex-direction:column; align-items:center;
-      padding:1.25rem; margin-bottom:1.5rem;
-    }
-    .single-plan .corner-tag {
-      display:block; position:absolute; top:0; left:0;
-      width:0; height:0;
-      border-top:45px solid var(--brand);
-      border-right:45px solid transparent;
-      border-top-left-radius: var(--radius);
-    }
-    .single-plan .corner-tag i {
-      position:absolute; top:-30px; left:8px;
-      color:#fff; font-size:.8rem;
-    }
-    .single-plan .corner-star {
-      position:absolute; top:4px; right:4px;
-      width:16px; height:16px;
-    }
-    .single-plan .plan-badge {
-      background: var(--summary-bg); color: var(--brand);
-      font-size:.75rem; font-weight:700;
-      border-radius:999px; padding:.1rem .4rem;
-      margin-bottom:.25rem; text-align:center;
-    }
-    .single-plan .plan-title { font-weight:700; text-align:center; margin-top:.25rem; }
-    .single-plan .plan-sub {
-      font-style:italic; opacity:.75; font-size:.85rem;
-      text-align:center; margin-top:.1rem; line-height:1.2;
-    }
-    .single-plan .price {
-      font-size:1.3rem; font-weight:700; color:var(--brand);
-      margin-top:.5rem;
-    }
+    /* ========== FORM PANEL ========== */
+    .checkout-form{flex:0 0 60%;background:var(--form-bg);border-radius:var(--radius);
+      box-shadow:0 6px 16px rgba(0,0,0,.06);padding:2.25rem;}
+    .plan-picker{margin-bottom:1.5rem;}
+    .single-plan{position:relative;border:1px solid #d7d7d7;border-radius:var(--radius);
+      background:#fff;display:flex;flex-direction:column;align-items:center;padding:1.25rem;
+      cursor:pointer;transition:border .15s;}
+    .single-plan:hover{border-color:var(--brand);}
+    .single-plan input{display:none;}
+    .single-plan.selected{border:2px solid var(--brand);}
+    .single-plan .plan-badge{background:var(--summary-bg);color:var(--brand);font-size:.75rem;
+      font-weight:700;border-radius:999px;padding:.1rem .4rem;margin-bottom:.25rem;text-align:center;}
+    .single-plan .plan-title{font-weight:700;text-align:center;margin-top:.25rem;}
+    .single-plan .plan-sub{font-style:italic;opacity:.75;font-size:.85rem;text-align:center;
+      margin-top:.1rem;line-height:1.2;}
+    .single-plan .price{font-size:1.3rem;font-weight:700;color:var(--brand);margin-top:.5rem;}
 
-    /* Form fields */
-    h3 {
-      display: inline-block;
-      vertical-align: middle;
-      font-size:1.25em; font-weight:700;
-      color:var(--brand); 
-    }
-    .checkout-form .form-row,
-    .checkout-form input[type="email"],
-    .checkout-form .payment-label,
-    .checkout-form .terms {
-      margin-bottom:0.5rem;
-    }
-    label { font-weight:600; }
-    input.form-control {
-      border-radius: var(--radius);
-      padding: 1rem; 
-      min-height: 2.8rem;
-      font-size: 1rem;
-    }
+    h3{display:inline-block;vertical-align:middle;font-size:1.25em;font-weight:700;color:var(--brand);}
+    .checkout-form .form-row,.checkout-form input[type="email"],
+    .checkout-form .payment-label,.checkout-form .terms{margin-bottom:0.5rem;}
+    input.form-control{border-radius:var(--radius);padding:1rem;min-height:2.8rem;font-size:1rem;}
 
-    /* Payment logos inline with heading */
-    .payment-label {
-      display:inline-block;
-      vertical-align: middle;
-      margin-left:.5rem;
-      margin-bottom:0;
-    }
-    .card-logos img { height:24px; margin-right:4px; }
-    .more-text { font-size:.75rem; opacity:.7; margin-left:4px; }
+    /* Card */
+    .card-section{display:flex;align-items:center;justify-content:space-between;}
+    #card-element{border:1px solid #ccc;border-radius:var(--radius);padding:1rem;margin:.5rem 0;}
+    #card-errors{color:#dc3545;font-size:.875rem;margin-top:.5rem;}
 
-    /* Card Element styling */
-    #card-element {
-      border:1px solid #ccc;
-      border-radius: var(--radius);
-      padding:1rem;
-      margin-top:.5rem; margin-bottom:.5rem;
-    }
-    #card-errors {
-      color:#dc3545; font-size:.875rem; margin-top:.5rem;
-    }
+    .secure-note{display:flex;justify-content:center;align-items:center;font-size:.85rem;opacity:.7;margin-top:.75rem;}
+    .secure-note img{width:16px;margin-right:6px;}
+    #submit{width:100%;background:var(--brand);color:#fff;border:none;border-radius:var(--radius);
+      padding:.85rem;font-weight:700;transition:background .25s;}
+    #submit:hover{background:var(--accent);}
 
-    .secure-note {
-      display:flex; justify-content:center; align-items:center;
-      font-size:.85rem; opacity:.7; margin-top:.75rem;
-    }
-    .secure-note img { width:16px; margin-right:6px; }
-
-    .terms { margin-top:1rem; }
-    #submit {
-      width:100%;
-      background:var(--brand); color:#fff; border:none;
-      border-radius: var(--radius); padding:.85rem; font-weight:700;
-      transition: background .25s;
-    }
-    #submit:hover { background: var(--accent); }
-
-    /* ==== Right Summary ==== */
-    .checkout-summary {
-      flex:0 0 40%; display:flex; flex-direction:column; align-items:center;
-    }
-    .summary-mockup {
-      width:100%; max-width:480px; margin-bottom:1.5rem;
-    }
-    .summary-box {
-      background:var(--summary-bg); border-radius:var(--radius);
-      box-shadow:0 6px 16px rgba(0,0,0,.06);
-      padding:2rem; width:100%;
-      text-align:left;
-    }
-    .summary-box h2 {
-      margin:0 0 1rem; font-size:2em; font-weight:700;
-      color:var(--brand);
-    }
-    .benefits {
-      list-style:none; padding:0; margin:0 0 1.5rem; width:100%;
-    }
-    .benefits li {
-      display:flex; justify-content:space-between;
-      margin-bottom:.5rem; font-size:.9rem;
-    }
-    .benefits li img { width:18px; margin-right:.5rem; }
-    .order-box {
-      background:transparent!important; box-shadow:none!important;
-      padding:0!important; width:100%; margin-top:1.5rem;
-    }
-    .order-box h4 {
-      font-size:1.25em; font-weight:700; color:var(--brand);
-      margin-bottom:.5rem;
-    }
-    .order-row { font-size:.9rem; line-height:1.2; }
-    .order-note {
-      margin-top:.25rem; font-style:italic; opacity:.75; line-height:1.2;
-    }
-    .order-total {
-      display:flex; justify-content:space-between;
-      margin-top:1rem; font-size:1.25em; font-weight:700; color:var(--brand);
-    }
-    /* new container for heading + logos */
-    .card-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .card-section .payment-label { margin: 0; }
-    .card-section h3 { margin: 0; padding: 0; }
+    /* ========== SUMMARY PANEL ========== */
+    .checkout-summary{flex:0 0 40%;display:flex;flex-direction:column;align-items:center;}
+    .summary-mockup{width:100%;max-width:480px;margin-bottom:1.5rem;}
+    .summary-box{background:var(--summary-bg);border-radius:var(--radius);
+      box-shadow:0 6px 16px rgba(0,0,0,.06);padding:2rem;width:100%;text-align:left;}
+    .summary-box h2{margin:0 0 1rem;font-size:2em;font-weight:700;color:var(--brand);}
+    .benefits{list-style:none;padding:0;margin:0 0 1.5rem;width:100%;}
+    .benefits li{display:flex;justify-content:space-between;margin-bottom:.5rem;font-size:.9rem;}
+    .benefits li img{width:18px;margin-right:.5rem;}
+    .order-box{background:transparent!important;box-shadow:none!important;padding:0!important;width:100%;margin-top:1.5rem;}
+    .order-box h4{font-size:1.25em;font-weight:700;color:var(--brand);margin-bottom:.5rem;}
+    .order-note{margin-top:.25rem;font-style:italic;opacity:.75;line-height:1.2;}
+    .order-total{display:flex;justify-content:space-between;margin-top:1rem;font-size:1.25em;font-weight:700;color:var(--brand);}
   </style>
 </head>
 <body>
   <div class="checkout-wrapper">
     <form id="checkout-form" class="checkout-form" novalidate>
-      <!-- Lifetime Plan Card -->
-      <div class="single-plan">
-        <span class="corner-tag"><i class="fas fa-check"></i></span>
-        <img src="img/star.svg" class="corner-star" alt="">
-        <span class="plan-badge">Founding Member Plan</span>
-        <span class="plan-title">Clarity Circle – Lifetime Access</span>
-        <span class="plan-sub">One‑time payment of $97</span>
-        <span class="price">$97 total</span>
+      <!-- ===== PLAN PICKER ===== -->
+      <div class="plan-picker row">
+        <!-- Lifetime -->
+        <label class="single-plan col-12 mb-3" id="plan-lifetime">
+          <input type="radio" name="plan" value="lifetime" checked>
+          <span class="plan-badge">Founding&nbsp;Member</span>
+          <span class="plan-title">Lifetime Access</span>
+          <span class="plan-sub">one-time&nbsp;$97 after 14-day trial</span>
+          <span class="price">$97</span>
+        </label>
+        <!-- Monthly -->
+        <label class="single-plan col-12" id="plan-monthly">
+          <input type="radio" name="plan" value="monthly">
+          <span class="plan-badge">Flexible</span>
+          <span class="plan-title">$17&nbsp;/&nbsp;month</span>
+          <span class="plan-sub">14-day free trial • cancel anytime</span>
+          <span class="price">$17/mo</span>
+        </label>
       </div>
 
-      <!-- Contact Info -->
+      <!-- ===== Contact ===== -->
       <h3>Contact Info</h3>
       <div class="form-row">
         <div class="col"><label for="firstName">First Name</label>
-          <input type="text" id="firstName" name="firstName" class="form-control" required>
-        </div>
+          <input type="text" id="firstName" name="firstName" class="form-control" required></div>
         <div class="col"><label for="lastName">Last Name</label>
-          <input type="text" id="lastName" name="lastName" class="form-control" required>
-        </div>
+          <input type="text" id="lastName" name="lastName" class="form-control" required></div>
       </div>
       <label for="email">Email</label>
       <input type="email" id="email" name="email" class="form-control" required>
 
-      <!-- Card Entry -->
+      <!-- ===== Card ===== -->
       <div class="card-section" style="margin-top:2rem;">
         <h3>Credit/Debit Card</h3>
         <div class="payment-label">
@@ -221,43 +110,40 @@
             <img src="img/mastercard_creditcard.png" alt="Mastercard">
             <img src="img/amex_creditcard.png" alt="AMEX">
             <img src="img/discover_creditcard.png" alt="Discover">
-            <span class="more-text">and many more…</span>
+            <span class="more-text">and more…</span>
           </div>
         </div>
       </div>
       <div id="card-element"></div>
       <div id="card-errors" role="alert"></div>
-      <div class="secure-note"><img src="img/lock.svg" alt="">
-        All payments are secured by 256-bit encryption.
-      </div>
+      <div class="secure-note"><img src="img/lock.svg" alt="">All payments secured by 256-bit encryption.</div>
 
-      <!-- Terms & Submit -->
+      <!-- ===== Terms & CTA ===== -->
       <div class="terms">
         <input type="checkbox" name="agree" id="agree" required>
-        <label for="agree">I agree to the 
-          <a href="https://www.mypartnerlab.co/" target="_blank">terms & conditions</a>
-        </label>
+        <label for="agree">I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms & conditions</a></label>
       </div>
       <button id="submit" type="submit">Secure My Spot</button>
     </form>
 
+    <!-- ===== SUMMARY ===== -->
     <aside class="checkout-summary">
       <img src="img/mockup1.png" class="summary-mockup" alt="Program preview">
       <div class="summary-box">
         <h2>Join the Clarity Circle</h2>
         <ul class="benefits">
-          <li><span><img src="img/checkmark.svg" alt="">Research‑Backed Tools & Frameworks</span><span>($997+)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="">Research-Backed Tools & Frameworks</span><span>($997+)</span></li>
           <li><span><img src="img/checkmark.svg" alt="">Unlimited Relationship Wellness Checkups</span><span>($300+)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="">Private, Like‑Minded Community Access</span><span>($497)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="">Private Community Access</span><span>($497)</span></li>
           <li><span><img src="img/checkmark.svg" alt="">Live Q&A Sessions</span><span>($997+)</span></li>
           <li><span><img src="img/checkmark.svg" alt="">Lifetime Access</span><span>(priceless)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="">30‑Day Refund Policy</span></li>
+          <li><span><img src="img/checkmark.svg" alt="">30-Day Refund Policy</span></li>
         </ul>
         <div class="order-box">
           <h4>Order Summary</h4>
-          <div class="order-row"><span>Clarity Circle – Lifetime Access</span></div>
-          <div id="summary-note" class="order-note">One‑time payment</div>
-          <div class="order-total"><strong>Your Total:</strong><span>$97.00</span></div>
+          <div class="order-row"><span>Clarity Circle Membership</span></div>
+          <div id="summary-note" class="order-note"></div>
+          <div class="order-total"><strong>Due Today:</strong><span id="due-today">$0.00</span></div>
         </div>
       </div>
     </aside>
@@ -265,75 +151,95 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // — Stripe init & mount —
-  const stripe = Stripe('pk_test_51REdLuE8SHAdzYaCRQaHpLF10cTJq1FWcg5P39UAzp2W4tWUJ8S2BlWrqH6x7lYJIBhNnzkga48YObl5HphE9eBT001D6w1Oev');
+  /* ---------- Stripe init ---------- */
+  const stripe   = Stripe('pk_test_XXXXXXXXXXXXXXXXXXXXXXXX');
   const elements = stripe.elements();
-  const card = elements.create('card');
+  const card     = elements.create('card');
   card.mount('#card-element');
 
-  const form = document.getElementById('checkout-form');
+  /* ---------- Plan-card highlight ---------- */
+  function toggleSelected(el){
+    document.querySelectorAll('.single-plan').forEach(p=>p.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  document.querySelectorAll('.single-plan').forEach(label => {
+    label.addEventListener('click', () => {
+      label.querySelector('input').checked = true;
+      toggleSelected(label);
+      updateSummary(label.querySelector('input').value);
+    });
+  });
+  toggleSelected(document.getElementById('plan-lifetime')); // start selected
+
+  /* ---------- Summary swap ---------- */
+  const note  = document.getElementById('summary-note');
+  const total = document.getElementById('due-today');
+  function updateSummary(plan){
+    if(plan==='monthly'){
+      note.textContent  = '14-day free trial; then $17 / month';
+      total.textContent = '$0.00';
+    }else{
+      note.textContent  = '14-day free trial; then one-time $97';
+      total.textContent = '$0.00';
+    }
+  }
+  updateSummary('lifetime');
+
+  /* ---------- Form submit ---------- */
+  const form   = document.getElementById('checkout-form');
   const errors = document.getElementById('card-errors');
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    errors.textContent = '';
+    errors.textContent='';
 
-    // 1) validate the T&C checkbox
-    if (!form.agree.checked) {
-      return alert('You must agree to the terms & conditions.');
-    }
+    if(!form.agree.checked) return alert('Please agree to the terms & conditions.');
 
-    // 2) collect customer info
     const firstName = form.firstName.value.trim();
     const lastName  = form.lastName.value.trim();
     const email     = form.email.value.trim();
+    const plan      = document.querySelector('input[name="plan"]:checked').value;
 
-    // 3) fetch a clientSecret from your serverless function
-    const resp = await fetch('/.netlify/functions/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json' },
-      body: JSON.stringify({ firstName, lastName, email })
+    /* 1 — create PaymentMethod */
+    const {paymentMethod, error:pmErr} = await stripe.createPaymentMethod({
+      type:'card',
+      card,
+      billing_details:{ name:`${firstName} ${lastName}`, email }
     });
-    const { clientSecret, error: fnError } = await resp.json();
-    if (fnError) {
-      return errors.textContent = fnError;
-    }
+    if(pmErr) return errors.textContent = pmErr.message;
 
-    // 4) confirm the payment (handles SCA automatically)
-    const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card,
-        billing_details: { name: `${firstName} ${lastName}`, email }
-      }
+    /* 2 — hit serverless function to make Subscription OR Schedule */
+    const resp = await fetch('/.netlify/functions/create-plan', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        firstName, lastName, email,
+        paymentMethodId: paymentMethod.id,
+        plan
+      })
     });
-    if (stripeError) {
-      return errors.textContent = stripeError.message;
-    }
+    const {clientSecret, error:fnErr} = await resp.json();
+    if(fnErr) return errors.textContent = fnErr;
 
-    // 5) tell the parent frame “we’re done” so it can redirect the whole page
+    /* 3 — confirm PI (handles 3-DS) */
+    const {error:piErr} = await stripe.confirmCardPayment(clientSecret);
+    if(piErr) return errors.textContent = piErr.message;
+
+    /* 4 — Success → notify parent (Squarespace page) */
     window.parent.postMessage(
-      {
-        type: 'checkoutComplete',
-        url: 'https://mypartnerlab.co/checkout-thank-you'
-      },
+      { type:'checkoutComplete', url:'https://mypartnerlab.co/checkout-thank-you' },
       '*'
     );
   });
 
-  // — Auto‑resize: tell the parent frame how tall we are —
-  function reportHeight() {
+  /* ---------- Auto-resize the iframe ---------- */
+  const reportHeight = () =>
     window.parent.postMessage(
-      { type: 'checkoutHeight', height: document.body.scrollHeight },
+      { type:'checkoutHeight', height:document.body.scrollHeight },
       '*'
     );
-  }
-  // fire once on load
-  window.addEventListener('load', reportHeight);
-  // fire again whenever the DOM changes (e.g. Stripe element loads)
-  new MutationObserver(reportHeight).observe(document.body, {
-    childList: true,
-    subtree:   true
-  });
+  window.addEventListener('load',reportHeight);
+  new MutationObserver(reportHeight).observe(document.body,{childList:true,subtree:true});
 });
 </script>
 </body>
