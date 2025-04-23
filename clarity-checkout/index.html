@@ -26,6 +26,8 @@
     .single-plan{position:relative;border:1px solid #d7d7d7;border-radius:var(--radius);
       background:#fff;display:flex;flex-direction:column;align-items:center;padding:1.25rem;
       cursor:pointer;transition:border .15s;}
+    .single-plan       { position:relative; z-index:0; }   /* keep card clickable */
+.terms, #submit    { position:relative; z-index:2; }   /* float these above cards */
     .single-plan:hover{border-color:var(--brand);}
     .single-plan input{display:none;}
     .single-plan.selected{border:2px solid var(--brand);}
