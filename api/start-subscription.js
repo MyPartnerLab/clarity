@@ -13,7 +13,7 @@ exports.handler = async (event) => {
       customer: customerId,
       items: [{ price: priceId }],
       trial_period_days: 14,
-      cancel_at_period_end: plan === 'lifetime',  // auto-stop after first invoice
+      cancel_at_period_end: plan === 'lifetime',   // ← monthly stays false
       payment_settings: { save_default_payment_method: 'on_subscription' },
       metadata: { plan },
     });
