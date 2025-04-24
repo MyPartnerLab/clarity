@@ -14,7 +14,7 @@
 
   <style>
     :root { --brand:#800f2f; --accent:#c9184a; --form-bg:#fff; --summary-bg:#f4e8de;
-            --radius:.75rem; --gap:1.5rem; }
+            --radius:.75rem; --gap:1.5rem; --hl:#ffeb86; }
     body{margin:0;padding:3rem 0;font-family:'Lato',sans-serif;background:#fdf8f5;}
     .checkout-wrapper{max-width:1100px;margin:0 auto;display:flex;gap:var(--gap);}
     @media(max-width:767px){.checkout-wrapper{flex-direction:column;}}
@@ -44,7 +44,7 @@
 
     /* Card */
     .card-section{display:flex;align-items:center;justify-content:space-between;}
-    .card-logos img{height:18px;margin-left:4px;}   /* smaller icons */
+    .card-logos img{height:18px;margin-left:4px;}
     #card-element{border:1px solid #ccc;border-radius:var(--radius);padding:1rem;margin:.5rem 0;}
     #card-errors{color:#dc3545;font-size:.875rem;margin-top:.5rem;}
 
@@ -64,10 +64,15 @@
     .benefits{list-style:none;padding:0;margin:0 0 1.5rem;width:100%;}
     .benefits li{display:flex;justify-content:space-between;margin-bottom:.5rem;font-size:.9rem;}
     .benefits li img{width:18px;margin-right:.5rem;}
+
+    .trial-badge{background:var(--hl);color:#000;font-size:.65rem;font-weight:700;
+      border-radius:4px;padding:1px 4px;margin-left:4px;white-space:nowrap;text-transform:uppercase;}
+    .cross{text-decoration:line-through;opacity:.6;}
+
     .order-box{background:transparent!important;box-shadow:none!important;padding:0!important;width:100%;margin-top:1.5rem;}
     .order-box h4{font-size:1.25em;font-weight:700;color:var(--brand);margin-bottom:.5rem;}
     .order-row{display:flex;justify-content:space-between;font-size:.9rem;line-height:1.2;}
-    .order-row span:last-child{font-weight:700;}  /* bold price */
+    .order-row span:last-child{font-weight:700;}
     .order-note{margin-top:.25rem;font-style:italic;opacity:.75;line-height:1.2;}
     .order-total{display:flex;justify-content:space-between;margin-top:1rem;font-size:1.25em;font-weight:700;color:var(--brand);}
   </style>
@@ -82,7 +87,7 @@
           <input type="radio" name="plan" value="lifetime" checked>
           <span class="plan-badge">Founding&nbsp;Member</span>
           <span class="plan-title">Lifetime Access</span>
-          <span class="plan-sub">Just $97 total | 14-day free trial</span>
+          <span class="plan-sub">Includes 14-day free trial</span>
           <span class="price">$97</span>
         </label>
 
@@ -91,7 +96,7 @@
           <input type="radio" name="plan" value="monthly">
           <span class="plan-badge">Monthly&nbsp;Subscription</span>
           <span class="plan-title">Monthly&nbsp;Access</span>
-          <span class="plan-sub">Just $17/mo | 14-day free trial</span>
+          <span class="plan-sub">Includes 14-day free trial</span>
           <span class="price">$17/mo</span>
         </label>
       </div>
@@ -127,7 +132,7 @@
       <!-- ===== Terms & CTA ===== -->
       <div class="terms" style="margin-top:30px;">
         <input type="checkbox" name="agree" id="agree" required>
-        <label for="agree">I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms & conditions</a></label>
+        <label for="agree">I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms &amp; conditions</a></label>
       </div>
       <button id="submit" type="submit">Secure My Spot</button>
     </form>
@@ -138,25 +143,28 @@
       <div class="summary-box">
         <h2>Join the Clarity Circle</h2>
         <ul class="benefits">
-          <li><span><img src="img/checkmark.svg" alt="">Research-Backed Tools & Frameworks</span><span>($997+)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="">Research-Backed Tools &amp; Frameworks</span><span>($997+)</span></li>
           <li><span><img src="img/checkmark.svg" alt="">Unlimited Relationship Wellness Checkups</span><span>($300+)</span></li>
           <li><span><img src="img/checkmark.svg" alt="">Private Community Access</span><span>($497)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="">Live Q&A Sessions</span><span>($997+)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="">Live Q&amp;A Sessions</span><span>($997+)</span></li>
           <li><span><img src="img/checkmark.svg" alt="">Lifetime Access</span><span>(priceless)</span></li>
           <li><span><img src="img/checkmark.svg" alt="">30-Day Refund Policy</span></li>
         </ul>
+
         <div class="order-box">
           <h4>Order Summary</h4>
           <div class="order-row">
-            <span>Clarity Circle Membership</span>
-            <span id="order-price">$97</span>
+            <span>Clarity Circle Membership<span class="trial-badge">FREE 14-DAY TRIAL</span></span>
+            <span id="order-price" class="cross">$97</span>
           </div>
           <div id="summary-note" class="order-note"></div>
           <div class="order-total"><strong>Due Today:</strong><span id="due-today">$0.00</span></div>
+          <div id="due-note" class="order-note"></div>
         </div>
       </div>
     </aside>
   </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Stripe init ---------- */
@@ -169,11 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const btn    = document.getElementById('submit');
   const errors = document.getElementById('card-errors');
 
-  card.on('change', e => {
-    errors.textContent = e.error ? e.error.message : '';
-  });
+  card.on('change', e => { errors.textContent = e.error ? e.error.message : ''; });
 
-  /* plan-picker visuals (unchanged) */
+  /* plan-picker visuals */
   function toggleSelected(el){
     document.querySelectorAll('.single-plan').forEach(p=>p.classList.remove('selected'));
     el.classList.add('selected');
@@ -187,32 +193,34 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   toggleSelected(document.getElementById('plan-lifetime'));
 
-  /* summary swap (unchanged) */
-  const note  = document.getElementById('summary-note');
-  const total = document.getElementById('due-today');
-  const price = document.getElementById('order-price');
+  /* ===== dynamic summary ===== */
+  const note      = document.getElementById('summary-note');
+  const total     = document.getElementById('due-today');
+  const priceEl   = document.getElementById('order-price');
+  const dueLine   = document.getElementById('due-note');
+
+  function fmtDate(date){
+    return date.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  }
   function updateSummary(plan){
+    const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate()+14);
+
     if(plan==='monthly'){
-      note.textContent  = '14-day free trial; then a $17 monthly payment';
-      price.textContent = '$17/mo';
+      note.textContent  = '14-day free trial; monthly subscription';
+      priceEl.textContent = '$17/mo';
     }else{
-      note.textContent  = '14-day free trial; then one-time payment';
-      price.textContent = '$97';
+      note.textContent  = '14-day free trial; one-time payment';
+      priceEl.textContent = '$97';
     }
     total.textContent = '$0.00';
+    dueLine.textContent = `Your free trial will end on ${fmtDate(trialEnd)} and you will be billed ${priceEl.textContent} at that time.`;
   }
   updateSummary('lifetime');
 
-  /* ---------- Form submit ---------- */
+  /* ---------- Form submit (unchanged) ---------- */
   form.addEventListener('submit', async e => {
-    e.preventDefault();
-    errors.textContent = '';
-
-    if (!form.agree.checked) {
-      alert('Please agree to the terms & conditions.');
-      return;
-    }
-
+    e.preventDefault(); errors.textContent = '';
+    if (!form.agree.checked) return alert('Please agree to the terms & conditions.');
     btn.disabled = true;
 
     const firstName = form.firstName.value.trim();
@@ -220,53 +228,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const email     = form.email.value.trim();
     const plan      = document.querySelector('input[name="plan"]:checked').value;
 
-    /* STEP 1 — ask server for a SetupIntent */
-    const siResp = await fetch('/.netlify/functions/create-setup-intent', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+    /* STEP 1 — SetupIntent */
+    const siResp = await fetch('/.netlify/functions/create-setup-intent',{
+      method:'POST',headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ firstName, lastName, email })
     });
     const {clientSecret, customerId, error:siErr} = await siResp.json();
-    if (siErr) {
-      btn.disabled = false;
-      return errors.textContent = siErr;
-    }
+    if (siErr){ btn.disabled=false; return errors.textContent=siErr; }
 
-    /* STEP 2 — confirm SetupIntent (handles SCA) */
-    const {error:confirmErr} = await stripe.confirmCardSetup(clientSecret, {
-      payment_method: {
-        card,
-        billing_details: { name:`${firstName} ${lastName}`, email }
-      }
+    /* STEP 2 — confirm */
+    const {error:confirmErr}=await stripe.confirmCardSetup(clientSecret,{
+      payment_method:{ card, billing_details:{name:`${firstName} ${lastName}`,email} }
     });
-    if (confirmErr) {
-      btn.disabled = false;
-      return errors.textContent = confirmErr.message;
-    }
+    if(confirmErr){ btn.disabled=false; return errors.textContent=confirmErr.message;}
 
-    /* STEP 3 — start the subscription */
-    const subResp = await fetch('/.netlify/functions/start-subscription', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+    /* STEP 3 — subscription */
+    const subResp=await fetch('/.netlify/functions/start-subscription',{
+      method:'POST',headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ customerId, plan })
     });
-    const {error:subErr} = await subResp.json();
-    if (subErr) {
-      btn.disabled = false;
-      return errors.textContent = subErr;
-    }
+    const {error:subErr}=await subResp.json();
+    if(subErr){ btn.disabled=false; return errors.textContent=subErr; }
 
-    /* SUCCESS — redirect parent page */
-    window.parent.postMessage(
-      { type:'checkoutComplete', url:'https://mypartnerlab.co/checkout-thank-you' },
-      '*'
-    );
+    /* SUCCESS */
+    window.parent.postMessage({type:'checkoutComplete',url:'https://mypartnerlab.co/checkout-thank-you'},'*');
   });
 
-  /* iframe auto-resize (unchanged) */
-  const reportHeight = () =>
-    window.parent.postMessage({ type:'checkoutHeight', height:document.body.scrollHeight }, '*');
-  window.addEventListener('load', reportHeight);
+  /* iframe auto-resize */
+  const reportHeight=()=>window.parent.postMessage({type:'checkoutHeight',height:document.body.scrollHeight},'*');
+  window.addEventListener('load',reportHeight);
   new MutationObserver(reportHeight).observe(document.body,{childList:true,subtree:true});
 });
 </script>
