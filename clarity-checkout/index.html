@@ -169,12 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const btn    = document.getElementById('submit');
   const errors = document.getElementById('card-errors');
 
-  /* live card-error messages */
   card.on('change', e => {
     errors.textContent = e.error ? e.error.message : '';
   });
 
-  /* plan-picker visuals */
+  /* plan-picker visuals (unchanged) */
   function toggleSelected(el){
     document.querySelectorAll('.single-plan').forEach(p=>p.classList.remove('selected'));
     el.classList.add('selected');
@@ -188,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   toggleSelected(document.getElementById('plan-lifetime'));
 
-  /* summary text swap */
+  /* summary swap (unchanged) */
   const note  = document.getElementById('summary-note');
   const total = document.getElementById('due-today');
   const price = document.getElementById('order-price');
@@ -196,12 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if(plan==='monthly'){
       note.textContent  = '14-day free trial; then a $17 monthly payment';
       price.textContent = '$17/mo';
-      total.textContent = '$0.00';
     }else{
       note.textContent  = '14-day free trial; then one-time payment';
       price.textContent = '$97';
-      total.textContent = '$0.00';
     }
+    total.textContent = '$0.00';
   }
   updateSummary('lifetime');
 
@@ -210,66 +208,65 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     errors.textContent = '';
 
-    if(!form.agree.checked){
+    if (!form.agree.checked) {
       alert('Please agree to the terms & conditions.');
       return;
     }
 
-    btn.disabled = true;                        // lock button
+    btn.disabled = true;
 
     const firstName = form.firstName.value.trim();
     const lastName  = form.lastName.value.trim();
     const email     = form.email.value.trim();
     const plan      = document.querySelector('input[name="plan"]:checked').value;
 
-    /* 1 — create PaymentMethod */
-    const {paymentMethod, error:pmErr} = await stripe.createPaymentMethod({
-      type:'card',
-      card,
-      billing_details:{ name:`${firstName} ${lastName}`, email }
-    });
-    if(pmErr){
-      btn.disabled = false;
-      return errors.textContent = pmErr.message;
-    }
-
-    /* 2 — call Netlify function */
-    const resp = await fetch('/.netlify/functions/create-plan', {
+    /* STEP 1 — ask server for a SetupIntent */
+    const siResp = await fetch('/.netlify/functions/create-setup-intent', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        firstName, lastName, email,
-        paymentMethodId: paymentMethod.id,
-        plan
-      })
+      body: JSON.stringify({ firstName, lastName, email })
     });
-    const {clientSecret, error:fnErr} = await resp.json();
-    if(fnErr){
+    const {clientSecret, customerId, error:siErr} = await siResp.json();
+    if (siErr) {
       btn.disabled = false;
-      return errors.textContent = fnErr;
+      return errors.textContent = siErr;
     }
 
-    /* 3 — confirm PI (handles 3-DS) */
-    const {error:piErr} = await stripe.confirmCardPayment(clientSecret);
-    if(piErr){
+    /* STEP 2 — confirm SetupIntent (handles SCA) */
+    const {error:confirmErr} = await stripe.confirmCardSetup(clientSecret, {
+      payment_method: {
+        card,
+        billing_details: { name:`${firstName} ${lastName}`, email }
+      }
+    });
+    if (confirmErr) {
       btn.disabled = false;
-      return errors.textContent = piErr.message;
+      return errors.textContent = confirmErr.message;
     }
 
-    /* 4 — Success → notify parent */
+    /* STEP 3 — start the subscription */
+    const subResp = await fetch('/.netlify/functions/start-subscription', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ customerId, plan })
+    });
+    const {error:subErr} = await subResp.json();
+    if (subErr) {
+      btn.disabled = false;
+      return errors.textContent = subErr;
+    }
+
+    /* SUCCESS — redirect parent page */
     window.parent.postMessage(
       { type:'checkoutComplete', url:'https://mypartnerlab.co/checkout-thank-you' },
       '*'
     );
   });
 
-  /* iframe auto-resize */
+  /* iframe auto-resize (unchanged) */
   const reportHeight = () =>
-    window.parent.postMessage(
-      { type:'checkoutHeight', height:document.body.scrollHeight },
-      '*'
-    );
-  window.addEventListener('load',reportHeight);
+    window.parent.postMessage({ type:'checkoutHeight', height:document.body.scrollHeight }, '*');
+  window.addEventListener('load', reportHeight);
   new MutationObserver(reportHeight).observe(document.body,{childList:true,subtree:true});
 });
 </script>
