@@ -206,10 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate()+14);
 
     if(plan==='monthly'){
-      note.textContent  = '14-day free trial; monthly subscription';
+      note.textContent  = 'monthly subscription';
       priceEl.textContent = '$17/mo';
     }else{
-      note.textContent  = '14-day free trial; one-time payment';
+      note.textContent  = 'one-time payment';
       priceEl.textContent = '$97';
     }
     total.textContent = '$0.00';
