@@ -1,4 +1,4 @@
-// api/create-plan.js
+// api/create-plan.js  (or netlify/functions/)
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
@@ -17,36 +17,38 @@ exports.handler = async (event) => {
 
     let clientSecret;
 
-    /* —— Monthly ($17/mo) —— */
+    /* —— Shared options —— */
+    const baseOptions = {
+      customer: customer.id,
+      trial_period_days: 14,
+      payment_behavior: 'default_incomplete',           // <— important!
+      payment_settings: { save_default_payment_method: 'on_subscription' },
+      expand: ['latest_invoice.payment_intent'],        // <— gives us the PI
+      metadata: { plan }
+    };
+
+    /* —— Monthly —— */
     if (plan === 'monthly') {
       const sub = await stripe.subscriptions.create({
-        customer: customer.id,
+        ...baseOptions,
         items: [{ price: process.env.STRIPE_PRICE_MONTHLY }],
-        trial_period_days: 14,
-        payment_settings: { save_default_payment_method: 'on_subscription' },
-        metadata: { plan },
       });
-      const invoice = await stripe.invoices.retrieve(sub.latest_invoice, {
-        expand: ['payment_intent'],
-      });
-      clientSecret = invoice.payment_intent.client_secret;
+      clientSecret = sub.latest_invoice.payment_intent.client_secret;
     }
 
-    /* —— Lifetime ($97 once) —— */
+    /* —— Lifetime —— */
     if (plan === 'lifetime') {
-      /* Use a *recurring* $97 price but cancel after first cycle */
       const sub = await stripe.subscriptions.create({
-        customer: customer.id,
+        ...baseOptions,
         items: [{ price: process.env.STRIPE_PRICE_LIFETIME }],
-        trial_period_days: 14,
-        cancel_at_period_end: true,                  // auto-stop after first invoice
-        payment_settings: { save_default_payment_method: 'on_subscription' },
-        metadata: { plan },
+        cancel_at_period_end: true,                     // auto-stop after first invoice
       });
-      const invoice = await stripe.invoices.retrieve(sub.latest_invoice, {
-        expand: ['payment_intent'],
-      });
-      clientSecret = invoice.payment_intent.client_secret;
+      clientSecret = sub.latest_invoice.payment_intent.client_secret;
+    }
+
+    /* No PI? → send explicit error */
+    if (!clientSecret) {
+      throw new Error('Stripe did not return a PaymentIntent; check price IDs and customer data.');
     }
 
     return {
@@ -54,7 +56,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ clientSecret }),
     };
   } catch (err) {
-    console.error('Stripe error:', err);
+    console.error('create-plan error:', err);
     return {
       statusCode: 400,
       body: JSON.stringify({ error: err.message }),
