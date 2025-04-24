@@ -9,6 +9,19 @@ exports.handler = async (event) => {
       ? process.env.STRIPE_PRICE_MONTHLY
       : process.env.STRIPE_PRICE_LIFETIME;
 
+    /* 0 — retrieve the latest payment method that was attached by the
+SetupIntent and make it the default for invoices           */
+const paymentMethods = await stripe.paymentMethods.list({
+customer: customerId,
+type: 'card',
+limit: 1,                    // newest is first
+});
+if (paymentMethods.data[0]) {
+await stripe.customers.update(customerId, {
+invoice_settings: { default_payment_method: paymentMethods.data[0].id },
+});
+}
+        /* 1 — create subscription */
     const sub = await stripe.subscriptions.create({
       customer: customerId,
       items: [{ price: priceId }],
