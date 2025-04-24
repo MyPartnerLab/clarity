@@ -202,19 +202,27 @@ document.addEventListener('DOMContentLoaded', () => {
   function fmtDate(date){
     return date.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   }
-  function updateSummary(plan){
-    const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate()+14);
+function updateSummary(plan){
+  const trialEnd = new Date();
+  trialEnd.setDate(trialEnd.getDate() + 14);
 
-    if(plan==='monthly'){
-      note.textContent  = 'monthly subscription';
-      priceEl.textContent = '$17/mo';
-    }else{
-      note.textContent  = 'one-time payment';
-      priceEl.textContent = '$97';
-    }
-    total.textContent = '$0.00';
-    dueLine.textContent = `Your free trial will end on ${fmtDate(trialEnd)} and you will be billed ${priceEl.textContent} at that time.`;
-  }
+  /* text that used to be in note */
+  const planLine = plan === 'monthly'
+      ? '14-day free trial; monthly subscription'
+      : '14-day free trial; one-time payment';
+
+  /* text that used to be in dueLine */
+  const dueLineTxt = `Your free trial will end on ${fmtDate(trialEnd)} and you will be billed ${priceEl.textContent} at that time.`;
+
+  /* ---------- swap ---------- */
+  note.textContent   = dueLineTxt;   // goes to the old note position
+  dueLine.textContent = planLine;    // goes underneath the total
+
+  /* update the crossed-out price */
+  priceEl.textContent = plan === 'monthly' ? '$17/mo' : '$97';
+
+  total.textContent = '$0.00';
+}
   updateSummary('lifetime');
 
   /* ---------- Form submit (unchanged) ---------- */
