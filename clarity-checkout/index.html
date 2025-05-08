@@ -129,6 +129,16 @@
       <div id="card-errors" role="alert"></div>
       <div class="secure-note"><img src="img/lock.svg" alt="">All payments secured by 256-bit encryption.</div>
 
+    <!-- =====  COUPON INPUT ===== -->
+<div class="form-group">
+  <label for="coupon">Have a coupon?</label>
+  <div style="display:flex; gap:0.5rem; align-items:center;">
+    <input id="coupon" name="coupon" class="form-control" placeholder="Enter code" style="flex:1"/>
+    <button type="button" id="apply-coupon" class="btn btn-outline-secondary">Apply</button>
+  </div>
+  <small id="coupon-msg" class="form-text"></small>
+</div>
+
       <!-- ===== Terms & CTA ===== -->
       <div class="terms" style="margin-top:30px;">
         <input type="checkbox" name="agree" id="agree" required>
@@ -160,6 +170,10 @@
           <div id="summary-note" class="order-note"></div>
           <div class="order-total"><strong>Due Today:</strong><span id="due-today">$0.00</span></div>
           <div id="due-note" class="order-note"></div>
+          <div class="order-row" id="discount-row" style="display:none;">
+  <span>Discount savings:</span>
+  <span id="discount-amount"></span>
+</div>
         </div>
       </div>
     </aside>
@@ -224,6 +238,42 @@ function updateSummary(plan){
 }
   updateSummary('lifetime');
 
+    /* ---------- discount code ---------- */
+
+  let promotionCodeId = null;
+let promotionAmount  = 0;
+
+document.getElementById('apply-coupon').addEventListener('click', async () => {
+  const code = document.getElementById('coupon').value.trim();
+  const msg  = document.getElementById('coupon-msg');
+  msg.textContent = '';
+  promotionCodeId = null;
+
+  if (!code) {
+    return msg.textContent = 'Please enter a code.';
+  }
+
+  const resp = await fetch('/.netlify/functions/validate-coupon', {
+    method: 'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ code })
+  });
+  const { id, amount_off, percent_off, currency, error } = await resp.json();
+  if (error) {
+    msg.textContent = error;
+  } else {
+    promotionCodeId = id;
+    // calculate how much the discount is in your UI:
+    let discountText = amount_off
+      ? `–${(amount_off/100).toFixed(2)} ${currency.toUpperCase()}`
+      : `–${percent_off}%`;
+    promotionAmount = amount_off || percent_off;
+    msg.textContent = `Code applied: you save ${discountText}`;
+    document.getElementById('discount-amount').textContent = discountText;
+    document.getElementById('discount-row').style.display = 'flex';
+  }
+});
+
   /* ---------- Form submit (unchanged) ---------- */
   form.addEventListener('submit', async e => {
     e.preventDefault(); errors.textContent = '';
@@ -242,14 +292,21 @@ function updateSummary(plan){
     });
     const {clientSecret, customerId, error:siErr} = await siResp.json();
     if (siErr){ btn.disabled=false; return errors.textContent=siErr; }
+    
+    /* STEP 2 - Coupon Code */
+const subResp = await fetch('/.netlify/functions/start-subscription', {
+  method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body: JSON.stringify({ customerId, plan, promotionCode: promotionCodeId })
+});
 
-    /* STEP 2 — confirm */
+    /* STEP 3 — confirm */
     const {error:confirmErr}=await stripe.confirmCardSetup(clientSecret,{
       payment_method:{ card, billing_details:{name:`${firstName} ${lastName}`,email} }
     });
     if(confirmErr){ btn.disabled=false; return errors.textContent=confirmErr.message;}
 
-    /* STEP 3 — subscription */
+    /* STEP 4 — subscription */
     const subResp=await fetch('/.netlify/functions/start-subscription',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ customerId, plan })
