@@ -168,7 +168,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Stripe init ---------- */
-  const stripe   = Stripe('pk_test_51QxWEQ4CPqLwMoEaMeGjbC4sCuZ0tHbtGDBETBR7ah2RuWQjzHodG7XBYJB832CViz1ywgbUaaslnJTR47hOmUOf00oKjvV58V');
+  const stripe   = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
   const elements = stripe.elements();
   const card     = elements.create('card');
   card.mount('#card-element');
