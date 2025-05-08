@@ -13,130 +13,298 @@
 
   <style>
     :root {
-      --brand:#800f2f; --accent:#c9184a; --form-bg:#fff;
-      --summary-bg:#f4e8de; --radius:.75rem; --gap:1.5rem; --hl:#ffeb86;
+      --brand: #800f2f;
+      --accent: #c9184a;
+      --form-bg: #fff;
+      --summary-bg: #f4e8de;
+      --radius: .75rem;
+      --gap: 1.5rem;
+      --hl: #ffeb86;
+      --border: #e0e0e0;
     }
-    body { margin:0; padding:3rem 0; font-family:'Lato',sans-serif; background:#fdf8f5; }
-    .checkout-wrapper { max-width:1100px; margin:0 auto; display:flex; gap:var(--gap); }
-    @media(max-width:767px){ .checkout-wrapper{ flex-direction:column } }
+    body {
+      margin: 0;
+      padding: 3rem 0;
+      font-family: 'Lato', sans-serif;
+      background: #fdf8f5;
+    }
+    .checkout-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: var(--gap);
+    }
+    @media(max-width: 767px) {
+      .checkout-wrapper { flex-direction: column; }
+    }
 
-    /* FORM PANEL */
-    .checkout-form { flex:0 0 60%; background:var(--form-bg); border-radius:var(--radius);
-      box-shadow:0 6px 16px rgba(0,0,0,.06); padding:2.25rem; }
-    .card { background:#fff; border-radius:var(--radius); box-shadow:0 4px 12px rgba(0,0,0,.04);
-      padding:1.5rem; margin-bottom:1.5rem; }
-    .plan-picker { display:flex; gap:1rem; flex-wrap:wrap; margin:0 -0.5rem 1.5rem; }
-    .single-plan { flex:1; border:1px solid #d7d7d7; border-radius:var(--radius);
-      padding:1rem; text-align:center; cursor:pointer; transition:border .15s; }
-    .single-plan.selected { border-color:var(--brand); }
-    .plan-badge { display:inline-block; background:var(--summary-bg); color:var(--brand);
-      padding:.2rem .5rem; border-radius:999px; font-size:.75rem; font-weight:700; }
-    .plan-title { display:block; margin-top:.5rem; font-weight:700; }
-    .plan-sub { display:block; font-style:italic; opacity:.75; font-size:.85rem; margin-top:.3rem; }
-    .plan-price { display:block; font-size:1.3rem; font-weight:700; color:var(--brand); margin-top:.5rem; }
+    /* Shared white card container */
+    .section-box {
+      background: var(--form-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: var(--gap);
+    }
 
-    h3 { margin-top:0; font-size:1.25em; font-weight:700; color:var(--brand); }
+    /* PLAN PICKER */
+    .plan-picker {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0;
+    }
+    @media(max-width: 575px) { .plan-picker { flex-direction: column; } }
+    .single-plan {
+      position: relative;
+      border: 1px solid #d7d7d7;
+      border-radius: var(--radius);
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: border .15s;
+      z-index: 0;
+      flex: 1;
+    }
+    .single-plan:hover { border-color: var(--brand); }
+    .single-plan input { display: none; }
+    .single-plan.selected { border: 2px solid var(--brand); }
+    .plan-badge {
+      background: var(--summary-bg);
+      color: var(--brand);
+      font-size: .75rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: .1rem .4rem;
+      margin-bottom: .25rem;
+      text-align: center;
+    }
+    .plan-title { font-weight: 700; text-align: center; margin-top: .25rem; }
+    .plan-sub {
+      font-style: italic; opacity: .75;
+      font-size: .85rem; text-align: center;
+      margin-top: .1rem; line-height: 1.2;
+    }
+    .single-plan .price {
+      font-size: 1.3rem; font-weight: 700;
+      color: var(--brand); margin-top: .5rem;
+    }
 
-    input.form-control { border-radius:var(--radius); padding:1rem; min-height:2.8rem; }
-    .form-group { margin-bottom:1rem; }
-    .coupon-row input { padding-left:1rem; }
+    /* FORM HEADINGS & FIELDS */
+    h3 {
+      display: inline-block;
+      font-size: 1.25em;
+      font-weight: 700;
+      color: var(--brand);
+      margin-bottom: .5rem;
+    }
+    .form-row, input.form-control, .payment-label, .terms, .coupon-row {
+      margin-bottom: .5rem;
+    }
+    input.form-control {
+      border-radius: var(--radius);
+      padding: 1rem;
+      min-height: 2.8rem;
+      font-size: 1rem;
+    }
 
-    #card-element { border:1px solid #ccc; border-radius:var(--radius); padding:1rem; margin:.5rem 0; }
-    #card-errors { color:#dc3545; font-size:.875rem; margin-top:.5rem; }
-    .secure-note { font-size:.85rem; opacity:.7; margin-top:.75rem; display:flex; align-items:center; }
-    .secure-note img { width:16px; margin-right:6px; }
+    /* CARD SECTION */
+    .card-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .5rem;
+    }
+    .card-logos img { height: 18px; margin-left: 4px; }
+    #card-element {
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: .5rem;
+    }
+    #card-errors {
+      color: #dc3545;
+      font-size: .875rem;
+      margin-top: .5rem;
+    }
+    .secure-note {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: .85rem;
+      opacity: .7;
+      margin-top: .75rem;
+    }
+    .secure-note img { width: 16px; margin-right: 6px; }
 
-    #submit { width:100%; background:var(--brand); color:#fff; border:none; border-radius:var(--radius);
-      padding:.85rem; font-weight:700; transition:background .25s; }
-    #submit:hover { background:var(--accent); }
+    /* BUTTON & TERMS */
+    #submit {
+      width: 100%;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: .85rem;
+      font-weight: 700;
+      transition: background .25s;
+      margin-top: 1rem;
+    }
+    #submit:hover { background: var(--accent); }
+    .terms { position: relative; z-index: 2; }
 
     /* SUMMARY PANEL */
-    .checkout-summary { flex:0 0 40%; }
-    .summary-box { background:var(--summary-bg); border-radius:var(--radius);
-      box-shadow:0 6px 16px rgba(0,0,0,.06); padding:2rem; text-align:left; }
-    .benefits { list-style:none; padding:0; margin:0 0 1rem; font-size:.9rem; }
-    .benefits li { display:flex; justify-content:space-between; margin-bottom:.5rem; }
-    .benefits img { width:18px; margin-right:.5rem; }
-    .total-value { font-weight:700; margin-top:.5rem; font-size:1rem; }
+    .checkout-summary {
+      flex: 0 0 40%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .summary-box {
+      background: var(--summary-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
+      padding: 2rem;
+      width: 100%;
+      text-align: left;
+    }
+    .summary-box h2 {
+      margin: 0 0 1rem;
+      font-size: 2em;
+      font-weight: 700;
+      color: var(--brand);
+    }
+    .benefits { list-style: none; padding: 0; margin: 0 0 1rem; }
+    .benefits li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: .5rem;
+      font-size: .9rem;
+    }
+    .benefits img { width: 18px; margin-right: .5rem; }
 
-    .order-row { display:flex; justify-content:space-between; margin-top:1rem; font-size:1rem; }
-    .trial-badge { background:var(--hl); color:#000; font-size:.65rem; font-weight:700;
-      border-radius:4px; padding:1px 4px; margin-left:4px; text-transform:uppercase; }
-    .cross { text-decoration:line-through; opacity:.6; }
-    .order-note { margin-top:.5rem; font-style:italic; opacity:.75; font-size:.85rem; }
-    .order-total { display:flex; justify-content:space-between; margin-top:1rem;
-      font-size:1.25em; font-weight:700; color:var(--brand); }
+    .total-value {
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+    .trial-badge {
+      background: var(--hl);
+      color: #000;
+      font-size: .65rem;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 1px 4px;
+      margin-left: 4px;
+      text-transform: uppercase;
+    }
+    .cross { text-decoration: line-through; opacity: .6; }
+    .order-note {
+      margin-top: .25rem;
+      font-style: italic;
+      opacity: .75;
+      font-size: .85rem;
+      line-height: 1.2;
+    }
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-size: 1.25em;
+      font-weight: 700;
+      color: var(--brand);
+    }
+    .promo-line {
+      margin-top: .5rem;
+      font-size: .9rem;
+      color: var(--accent);
+    }
   </style>
 </head>
 <body>
   <div class="checkout-wrapper">
-
-    <!-- ===== FORM ===== -->
-    <form id="checkout-form" class="checkout-form" novalidate>
-      <!-- Plan picker card -->
-      <div class="card plan-picker">
+    <!-- PLAN PICKER -->
+    <div class="section-box">
+      <div class="plan-picker">
         <label class="single-plan" id="plan-lifetime">
-          <input type="radio" name="plan" value="lifetime" checked hidden>
+          <input type="radio" name="plan" value="lifetime" checked>
           <span class="plan-badge">Founding Member</span>
           <span class="plan-title">Lifetime Access</span>
           <span class="plan-sub">Includes 14-day free trial</span>
-          <span class="plan-price">$97</span>
+          <span class="price">$97</span>
         </label>
         <label class="single-plan" id="plan-monthly">
-          <input type="radio" name="plan" value="monthly" hidden>
+          <input type="radio" name="plan" value="monthly">
           <span class="plan-badge">Monthly Subscription</span>
           <span class="plan-title">Monthly Access</span>
           <span class="plan-sub">Includes 14-day free trial</span>
-          <span class="plan-price">$17/mo</span>
+          <span class="price">$17/mo</span>
         </label>
       </div>
+    </div>
 
-      <!-- Contact card -->
-      <div class="card">
-        <h3>Contact Info</h3>
-        <div class="form-row">
-          <div class="col form-group">
-            <label for="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" class="form-control" required>
-          </div>
-          <div class="col form-group">
-            <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" class="form-control" required>
-          </div>
+    <!-- CONTACT INFO -->
+    <div class="section-box">
+      <h3>Contact Info</h3>
+      <div class="form-row row">
+        <div class="col">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" name="firstName" class="form-control" required>
         </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" class="form-control" required>
+        <div class="col">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" class="form-control" required>
         </div>
       </div>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" class="form-control" required>
+    </div>
 
-      <!-- Payment card -->
-      <div class="card">
+    <!-- PAYMENT & COUPON -->
+    <div class="section-box">
+      <div class="card-section">
         <h3>Payment Info</h3>
-        <div class="coupon-row form-group">
-          <input type="text" id="coupon" class="form-control"
-                 placeholder="Enter coupon code">
-        </div>
-        <div class="form-group">
-          <div id="card-element"></div>
-          <div id="card-errors" role="alert"></div>
-        </div>
-        <div class="secure-note">
-          <img src="img/lock.svg" alt="">All payments secured by 256-bit encryption.
+        <div class="payment-label">
+          <img src="img/visa_creditcard.png" alt="Visa">
+          <img src="img/mastercard_creditcard.png" alt="Mastercard">
+          <img src="img/amex_creditcard.png" alt="AMEX">
+          <img src="img/discover_creditcard.png" alt="Discover">
+          <span class="more-text">and more…</span>
         </div>
       </div>
 
-      <!-- Terms + submit -->
-      <div class="form-group terms">
+      <!-- coupon input group -->
+      <div class="coupon-row mb-3">
+        <div class="input-group">
+          <input type="text" id="coupon" class="form-control"
+                 placeholder="Enter gift card code or promo code">
+          <div class="input-group-append">
+            <button type="button" id="apply-coupon" class="btn btn-outline-secondary">Apply</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="card-element"></div>
+      <div id="card-errors" role="alert"></div>
+      <div class="secure-note">
+        <img src="img/lock.svg" alt="">All payments secured by 256-bit encryption.
+      </div>
+
+      <div class="terms mt-3">
         <input type="checkbox" name="agree" id="agree" required>
-        <label for="agree">
-          I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms & conditions</a>
-        </label>
+        <label for="agree">I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms & conditions</a></label>
       </div>
       <button id="submit" type="submit">Secure My Spot</button>
-    </form>
+    </div>
 
-    <!-- ===== SUMMARY ===== -->
+    <!-- SUMMARY -->
     <aside class="checkout-summary">
       <div class="summary-box">
         <h2>Join the Clarity Circle</h2>
@@ -158,9 +326,10 @@
           <span id="order-price" class="cross">$97</span>
         </div>
         <div id="summary-note" class="order-note"></div>
+        <div id="promo-line" class="promo-line"></div>
+
         <div class="order-total">
-          <strong>Due Today:</strong>
-          <span id="due-today">$0.00</span>
+          <strong>Due Today:</strong> <span id="due-today">$0.00</span>
         </div>
         <div id="due-note" class="order-note"></div>
       </div>
@@ -169,29 +338,30 @@
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // ——— Stripe init ———
-    const stripe = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
+    /* ---------- Stripe init ---------- */
+    const stripe   = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
     const elements = stripe.elements();
-    const card = elements.create('card');
+    const card     = elements.create('card');
     card.mount('#card-element');
 
-    // ——— UI refs ———
-    const form     = document.getElementById('checkout-form');
-    const btn      = document.getElementById('submit');
-    const errors   = document.getElementById('card-errors');
-    const couponIn = document.getElementById('coupon');
-    const priceEl  = document.getElementById('order-price');
-    const note     = document.getElementById('summary-note');
-    const dueNote  = document.getElementById('due-note');
+    const form       = document.getElementById('checkout-form');
+    const btn        = document.getElementById('submit');
+    const errors     = document.getElementById('card-errors');
+    const couponIn   = document.getElementById('coupon');
+    const applyBtn   = document.getElementById('apply-coupon');
+    const priceEl    = document.getElementById('order-price');
+    const note       = document.getElementById('summary-note');
+    const dueNote    = document.getElementById('due-note');
+    const promoLine  = document.getElementById('promo-line');
 
-    // ——— pricing + coupons ———
+    /* price constants & coupon maps */
     const BASE = { lifetime: 97, monthly: 17 };
-    const couponMapUniversal = { FREE100:100 };
-    const couponMapMonthly   = { OFF50:50, OFF30:30 };
-    const couponMapLifetime  = { OFF20L:20 };
+    const couponMapUniversal = { FREE100: 100 };
+    const couponMapMonthly   = { OFF50: 50, OFF30: 30 };
+    const couponMapLifetime  = { OFF20L: 20 };
 
     function pctFor(plan, code) {
-      code = code.trim().toUpperCase();
+      code = (code||'').trim().toUpperCase();
       return couponMapUniversal[code] ||
              (plan==='monthly' ? couponMapMonthly[code] : couponMapLifetime[code]) ||
              0;
@@ -200,38 +370,40 @@
       return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     }
 
-    // ——— dynamic summary ———
-    function updateSummary(plan){
-      const trialEnd = new Date();
-      trialEnd.setDate(trialEnd.getDate()+14);
-
+    function updateSummary(plan) {
+      const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate()+14);
       const discountPct = pctFor(plan, couponIn.value);
-      const base        = BASE[plan];
-      const discounted  = ((base*(100-discountPct)/100).toFixed(2));
+      const base = BASE[plan];
+      const discounted = (base * (100 - discountPct)/100).toFixed(2);
 
-      // crossed original
+      // crossed price
       priceEl.textContent = `$${base}${plan==='monthly'?'/mo':''}`;
-      priceEl.classList[ discountPct>0 ? 'add' : 'remove' ]('cross');
+      priceEl.classList[discountPct>0?'add':'remove']('cross');
 
       // after-trial line
       note.textContent = plan==='monthly'
         ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted}/mo.`
         : `After your trial ends on ${fmtDate(trialEnd)}, you will be charged a one-time payment of $${discounted}.`;
 
-      // “due today” helper
+      // promo line
+      promoLine.textContent = discountPct>0
+        ? `Promo applied: ${discountPct}% off (${discountPct===100?'FREE!':''})`
+        : '';
+
+      // due-note
       dueNote.textContent = `Your free trial will end on ${fmtDate(trialEnd)}.`;
     }
 
-    // wire up plan picker & coupon input
-    document.querySelectorAll('.single-plan').forEach(label=>{
-      label.addEventListener('click',()=>{
-        label.querySelector('input').checked=true;
+    // wiring
+    document.querySelectorAll('.single-plan').forEach(label => {
+      label.addEventListener('click', () => {
+        label.querySelector('input').checked = true;
         document.querySelectorAll('.single-plan').forEach(l=>l.classList.remove('selected'));
         label.classList.add('selected');
         updateSummary(label.querySelector('input').value);
       });
     });
-    couponIn.addEventListener('input', ()=>{
+    applyBtn.addEventListener('click', () => {
       const plan = document.querySelector('input[name=plan]:checked').value;
       updateSummary(plan);
     });
@@ -239,54 +411,68 @@
     // init
     document.getElementById('plan-lifetime').classList.add('selected');
     updateSummary('lifetime');
-    card.on('change', e => { errors.textContent = e.error?.message||'' });
 
-    // ——— form submit (3-step flow) ———
-    form.addEventListener('submit', async e=>{
+    card.on('change', e => { errors.textContent = e.error ? e.error.message : ''; });
+
+    /* ---------- Form submit ---------- */
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       errors.textContent = '';
       if (!form.agree.checked) {
-        alert('Please agree to the terms & conditions.');
-        return;
+        return alert('Please agree to the terms & conditions.');
       }
       btn.disabled = true;
 
       const firstName = form.firstName.value.trim();
       const lastName  = form.lastName.value.trim();
       const email     = form.email.value.trim();
-      const plan      = document.querySelector('input[name=plan]:checked').value;
+      const plan      = document.querySelector('input[name="plan"]:checked').value;
       const coupon    = couponIn.value.trim().toUpperCase();
 
-      // 1 — create SetupIntent + customer
-      let siResp = await fetch('/.netlify/functions/create-setup-intent', {
+      /* STEP 1 — SetupIntent */
+      const siResp = await fetch('/.netlify/functions/create-setup-intent', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ firstName, lastName, email })
       });
-      let { clientSecret, customerId, error: siErr } = await siResp.json();
-      if (siErr) { btn.disabled=false; return errors.textContent=siErr; }
+      const { clientSecret, customerId, error: siErr } = await siResp.json();
+      if (siErr) {
+        btn.disabled = false;
+        errors.textContent = siErr;
+        return;
+      }
 
-      // 2 — confirm the SetupIntent
-      let { error: confirmErr } = await stripe.confirmCardSetup(clientSecret, {
-        payment_method: { card,
-          billing_details:{ name:`${firstName} ${lastName}`, email } }
+      /* STEP 2 — confirm */
+      const { error: confirmErr } = await stripe.confirmCardSetup(clientSecret, {
+        payment_method: {
+          card,
+          billing_details: { name:`${firstName} ${lastName}`, email }
+        }
       });
-      if (confirmErr) { btn.disabled=false; return errors.textContent=confirmErr.message; }
+      if (confirmErr) {
+        btn.disabled = false;
+        errors.textContent = confirmErr.message;
+        return;
+      }
 
-      // 3 — actually start the subscription
-      let subResp = await fetch('/.netlify/functions/start-subscription', {
+      /* STEP 3 — subscription (pass coupon) */
+      const subResp = await fetch('/.netlify/functions/start-subscription', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ customerId, plan, coupon })
       });
-      let { error: subErr } = await subResp.json();
-      if (subErr) { btn.disabled=false; return errors.textContent=subErr; }
+      const { error: subErr } = await subResp.json();
+      if (subErr) {
+        btn.disabled = false;
+        errors.textContent = subErr;
+        return;
+      }
 
-      // success → parent iframe
-      window.parent.postMessage({
-        type:'checkoutComplete',
-        url:'https://mypartnerlab.co/checkout-thank-you'
-      },'*');
+      /* SUCCESS */
+      window.parent.postMessage(
+        { type:'checkoutComplete', url:'https://mypartnerlab.co/checkout-thank-you' },
+        '*'
+      );
     });
   });
   </script>
