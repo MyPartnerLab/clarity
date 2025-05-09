@@ -514,11 +514,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const base       = BASE[plan];
     const discounted = (base * (100 - discount) / 100).toFixed(2);
 
-    orderPrice.textContent = `$${base}${plan==='monthly'?'/mo':''}`;
+    orderPrice.textContent = `$${base}${plan==='monthly'?'per month':''}`;
     orderPrice.classList.toggle('cross', discount > 0);
 
     summaryNote.textContent = plan==='monthly'
-      ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted}/mo.`
+      ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted} per month.`
       : `After your trial ends on ${fmtDate(trialEnd)}, you will be charged a one-time payment of $${discounted}.`;
 
     dueNote.textContent = `Your free trial ends on ${fmtDate(trialEnd)}.`;
