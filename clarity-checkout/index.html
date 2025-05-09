@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const base       = BASE[plan];
     const discounted = (base * (100 - discount) / 100).toFixed(2);
 
-    orderPrice.textContent = `$${base}${plan==='monthly'?'per month':''}`;
+    orderPrice.textContent = `$${base}${plan==='monthly'?'':''}`;
     orderPrice.classList.toggle('cross', discount > 0);
 
     summaryNote.textContent = plan==='monthly'
