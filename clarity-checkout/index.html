@@ -426,7 +426,7 @@
             <label for="newsletter" class="form-check-label">Check this box to subscribe to The Partner Lab weekly newsletter.  
             </label>
           </div>
-          <button id="submit" type="submit" class="btn btn-block" style="background:var(--brand); color:#fff;">
+          <button id="submit" type="button" class="btn btn-block" style="background:var(--brand); color:#fff;">
             Secure My Spot
           </button>
                     <div class="secure-note" style="margin-top:1rem;">
@@ -483,7 +483,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const dueNote        = document.getElementById('due-note');
   const discountRow    = document.getElementById('discount-row');
   const discountAmount = document.getElementById('discount-amount');
-  const form           = document.getElementById('checkout-form');
   const submitBtn      = document.getElementById('submit');
 
   const BASE = { lifetime:97, monthly:17 };
@@ -492,33 +491,26 @@ document.addEventListener('DOMContentLoaded', () => {
     BOGO50:    50,
     SAVE20:    20
   };
-
   function pct(code) {
     return couponMap[ code.trim().toUpperCase() ] || 0;
   }
-
   function fmtDate(d){
     return d.toLocaleDateString('en-US',{ month:'short', day:'numeric', year:'numeric' });
   }
 
   let currentPlan = 'lifetime';
-
   function updateSummary(plan){
     currentPlan = plan;
-    const trialEnd  = new Date();
-    trialEnd.setDate(trialEnd.getDate() + 14);
-
+    const trialEnd  = new Date(); trialEnd.setDate(trialEnd.getDate() + 14);
     const discount   = pct(couponIn.value);
     const base       = BASE[plan];
     const discounted = (base * (100 - discount)/100).toFixed(2);
 
     orderPrice.textContent = `$${base}${plan==='monthly'?'/mo':''}`;
     orderPrice.classList.toggle('cross', discount > 0);
-
     summaryNote.textContent = plan==='monthly'
       ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted}/mo.`
       : `After your trial ends on ${fmtDate(trialEnd)}, you will be charged a one-time payment of $${discounted}.`;
-
     dueNote.textContent = `Your free trial ends on ${fmtDate(trialEnd)}.`;
 
     if (discount > 0) {
@@ -532,14 +524,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Plan selector
+  // Plan clicks
   planEls.forEach(el => el.addEventListener('click', () => {
     planEls.forEach(x=>x.classList.remove('selected'));
     el.classList.add('selected');
     updateSummary(el.dataset.plan);
   }));
 
-  // Coupon handler
+  // Apply coupon
   applyBtn.addEventListener('click', () => {
     const discount = pct(couponIn.value);
     if (discount > 0) {
@@ -555,21 +547,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial render
   updateSummary(currentPlan);
 
-  // Display card input errors
+  // Card input errors
   card.on('change', e => {
     document.getElementById('card-errors').textContent = e.error?.message || '';
   });
 
-  // **KEY CHANGE**: listen on the form’s submit, not the button click
-  form.addEventListener('submit', async e => {
+  // **Use button‐click instead of form submit**
+  submitBtn.addEventListener('click', async e => {
     e.preventDefault();
     document.getElementById('card-errors').textContent = '';
-
     if (!document.getElementById('agree').checked) {
-      alert('Please agree to the terms & conditions.');
-      return;
+      return alert('Please agree to the terms & conditions.');
     }
-
     submitBtn.disabled = true;
 
     const data = {
@@ -581,44 +570,39 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      // STEP 1: Create SetupIntent
+      // 1) SetupIntent
       const siResp = await fetch('/.netlify/functions/create-setup-intent', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
         body: JSON.stringify(data)
       });
       const { clientSecret, customerId, error: siErr } = await siResp.json();
       if (siErr) throw new Error(siErr);
 
-      // STEP 2: Confirm card setup
+      // 2) Confirm Card
       const { error: confirmErr } = await stripe.confirmCardSetup(clientSecret, {
-        payment_method: {
+        payment_method:{
           card,
-          billing_details: {
-            name:  `${data.firstName} ${data.lastName}`,
-            email: data.email
-          }
+          billing_details:{ name:`${data.firstName} ${data.lastName}`, email:data.email }
         }
       });
       if (confirmErr) throw new Error(confirmErr.message);
 
-      // STEP 3: Start subscription
-      const subResp = await fetch('/.netlify/functions/start-subscription', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
+      // 3) Subscription
+      const subResp = await fetch('/.netlify/functions/start-subscription',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          customerId,
-          plan: data.plan,
-          coupon: data.coupon
+          customerId, plan:data.plan, coupon:data.coupon
         })
       });
       const { error: subErr } = await subResp.json();
       if (subErr) throw new Error(subErr);
 
-      // Redirect parent to thank-you
+      // Redirect parent
       window.parent.postMessage({
-        type: 'checkoutComplete',
-        url:  'https://mypartnerlab.co/checkout-thank-you'
+        type:'checkoutComplete',
+        url: 'https://mypartnerlab.co/checkout-thank-you'
       }, '*');
 
     } catch(err) {
@@ -627,8 +611,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Auto post height
-  function postMyHeight() {
+  // Let parent know height
+  function postMyHeight(){
     window.parent.postMessage({
       type: 'checkoutHeight',
       height: document.documentElement.scrollHeight
