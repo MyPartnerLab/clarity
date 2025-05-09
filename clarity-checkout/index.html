@@ -114,31 +114,54 @@
           <div id="coupon-msg" class="coupon-msg"></div>
         </div>
       </div>
-      <!-- Payment Info -->
-      <form id="checkout-form" class="panel mt-0">
-        <div class="panel-title">Credit/Debit Card</div>
-        <div class="d-flex align-items-center mb-3">
-          <div id="card-element" style="flex:1"></div>
-          <div class="card-logos">
-            <img src="img/visa_creditcard.png" alt="Visa">
-            <img src="img/mastercard_creditcard.png" alt="Mastercard">
-            <img src="img/amex_creditcard.png" alt="AMEX">
-            <img src="img/discover_creditcard.png" alt="Discover">
-          </div>
-        </div>
-        <div id="card-errors"></div>
-        <div class="secure-note"><img src="img/lock.svg" alt="Secure"/>All payments secured by 256-bit encryption.</div>
-        <div class="form-check mb-2">
-          <input id="agree" type="checkbox" class="form-check-input" required>
-          <label for="agree" class="form-check-label">I agree to the <a href="https://www.mypartnerlab.co/terms" target="_blank">terms & conditions</a></label>
-        </div>
-        <div class="form-check mb-3">
-          <input id="newsletter" type="checkbox" class="form-check-input">
-          <label for="newsletter" class="form-check-label">To join our newsletter, simply check this box.</label>
-        </div>
-        <button id="submit" class="btn btn-block" style="background:var(--brand); color:#fff;">Secure My Spot</button>
-      </form>
+      <!-- Credit/Debit Card -->
+<div class="panel" style="margin-top:var(--gap)">
+  <div class="panel-title">Credit/Debit Card</div>
+
+  <!-- Card brand logos row -->
+  <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+    <div class="card-logos" style="display: flex; gap: 0.5rem;">
+      <img src="img/visa_creditcard.png" alt="Visa">
+      <img src="img/mastercard_creditcard.png" alt="Mastercard">
+      <img src="img/amex_creditcard.png" alt="American Express">
+      <img src="img/discover_creditcard.png" alt="Discover">
     </div>
+    <div style="font-size: .85rem; white-space: nowrap;">and more…</div>
+  </div>
+
+  <!-- Stripe Element -->
+  <div id="card-element"></div>
+  <div id="card-errors"></div>
+
+  <!-- Secure note, centered -->
+  <div class="secure-note">
+    <img src="img/lock.svg" alt="Secure">All payments secured by 256-bit encryption.
+  </div>
+
+  <!-- Terms -->
+  <div class="form-check mb-2">
+    <input id="agree" type="checkbox" class="form-check-input" required>
+    <label for="agree" class="form-check-label">
+      I agree to the <a href="https://www.mypartnerlab.co/terms" target="_blank">terms &amp; conditions</a>
+    </label>
+  </div>
+
+  <!-- Newsletter opt-in -->
+  <div class="form-check mb-3">
+    <input id="newsletter" type="checkbox" class="form-check-input">
+    <label for="newsletter" class="form-check-label">
+      To join our newsletter, simply check this box.
+    </label>
+  </div>
+
+  <!-- CTA button (increased height via .btn and inline padding if needed) -->
+  <button id="submit"
+          type="submit"
+          class="btn btn-block"
+          style="background: var(--brand); color: #fff; padding: 1rem; font-size: 1rem;">
+    Secure My Spot
+  </button>
+</div>
     <!-- Right Column: summary -->
     <aside class="checkout-summary">
       <img src="img/mockup1.png" class="summary-mockup" alt="Program preview">
