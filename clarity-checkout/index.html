@@ -474,78 +474,74 @@ document.addEventListener('DOMContentLoaded', () => {
   const card = elements.create('card');
   card.mount('#card-element');
 
-  const planEls       = document.querySelectorAll('.single-plan');
-  const couponIn      = document.getElementById('coupon');
-  const applyBtn      = document.getElementById('apply-coupon');
-  const couponMsg     = document.getElementById('coupon-msg');
-  const orderPrice    = document.getElementById('order-price');
-  const summaryNote   = document.getElementById('summary-note');
-  const dueNote       = document.getElementById('due-note');
-  const discountRow   = document.getElementById('discount-row');
-  const discountAmount= document.getElementById('discount-amount');
+  const planEls        = document.querySelectorAll('.single-plan');
+  const couponIn       = document.getElementById('coupon');
+  const applyBtn       = document.getElementById('apply-coupon');
+  const couponMsg      = document.getElementById('coupon-msg');
+  const orderPrice     = document.getElementById('order-price');
+  const summaryNote    = document.getElementById('summary-note');
+  const dueNote        = document.getElementById('due-note');
+  const discountRow    = document.getElementById('discount-row');
+  const discountAmount = document.getElementById('discount-amount');
+  const form           = document.getElementById('checkout-form');
+  const submitBtn      = document.getElementById('submit');
 
   const BASE = { lifetime:97, monthly:17 };
-
-  // your new coupon lookup
   const couponMap = {
-    LIVEFREE: 100,  // 100% off
-    BOGO50:   50,   // 50% off
-    SAVE20:   20    // 20% off
+    LIVEFREE: 100,
+    BOGO50:    50,
+    SAVE20:    20
   };
+
   function pct(code) {
     return couponMap[ code.trim().toUpperCase() ] || 0;
   }
 
   function fmtDate(d){
-    return d.toLocaleDateString('en-US',{
-      month:'short', day:'numeric', year:'numeric'
-    });
+    return d.toLocaleDateString('en-US',{ month:'short', day:'numeric', year:'numeric' });
   }
 
-  // keep track of which plan is active
   let currentPlan = 'lifetime';
 
   function updateSummary(plan){
     currentPlan = plan;
     const trialEnd = new Date();
-    trialEnd.setDate(trialEnd.getDate()+14);
+    trialEnd.setDate(trialEnd.getDate() + 14);
 
     const discount   = pct(couponIn.value);
     const base       = BASE[plan];
     const discounted = (base * (100 - discount) / 100).toFixed(2);
 
-    orderPrice.textContent = `$${base}${plan==='monthly'?'':''}`;
+    orderPrice.textContent = `$${base}${plan==='monthly'?'/mo':''}`;
     orderPrice.classList.toggle('cross', discount > 0);
 
     summaryNote.textContent = plan==='monthly'
-      ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted} per month.`
+      ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted}/mo.`
       : `After your trial ends on ${fmtDate(trialEnd)}, you will be charged a one-time payment of $${discounted}.`;
 
     dueNote.textContent = `Your free trial ends on ${fmtDate(trialEnd)}.`;
 
-      if (discount > 0) {
-        discountRow.style.display = 'flex';
-        discountRow.querySelector('span:nth-child(1)').textContent =
-          `Discount code: ${couponIn.value.trim().toUpperCase()}.`;         // ← CHANGED
-        discountAmount.textContent =
-          `$${(base - discounted).toFixed(2)} off`;                          // ← CHANGED
-      } else {
-        discountRow.style.display = 'none';
-      }
+    if (discount > 0) {
+      discountRow.style.display = 'flex';
+      discountRow.querySelector('span:first-child').textContent =
+        `Discount code: ${couponIn.value.trim().toUpperCase()}.`;
+      discountAmount.textContent =
+        `$${(base - discounted).toFixed(2)} off`;
+    } else {
+      discountRow.style.display = 'none';
     }
+  }
 
-  // plan selection UI
+  // Plan selection
   planEls.forEach(el => el.addEventListener('click', () => {
     planEls.forEach(x => x.classList.remove('selected'));
     el.classList.add('selected');
     updateSummary(el.dataset.plan);
   }));
 
-  // coupon application
+  // Coupon application
   applyBtn.addEventListener('click', () => {
-    const code     = couponIn.value;
-    const discount = pct(code);
-
+    const discount = pct(couponIn.value);
     if (discount > 0) {
       couponMsg.textContent = 'This coupon has been applied to your order';
       couponMsg.className   = 'coupon-msg success';
@@ -553,31 +549,29 @@ document.addEventListener('DOMContentLoaded', () => {
       couponMsg.textContent = 'The promotional code you entered is not valid.';
       couponMsg.className   = 'coupon-msg error';
     }
-
-    // re-draw summary for the same plan
     updateSummary(currentPlan);
   });
 
-  // init
+  // Initialize summary
   updateSummary(currentPlan);
 
-  // stripe card errors
+  // Card element errors
   card.on('change', e => {
     document.getElementById('card-errors').textContent = e.error?.message || '';
   });
 
-  // form submission
-  document.getElementById('submit').addEventListener('click', async e => {
+  // **Use the form’s submit event to prevent full-page reload**
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const errs = document.getElementById('card-errors');
     errs.textContent = '';
 
     if (!document.getElementById('agree').checked) {
-      return alert('Please agree to the terms & conditions.');
+      alert('Please agree to the terms & conditions.');
+      return;
     }
 
-    const btn = document.getElementById('submit');
-    btn.disabled = true;
+    submitBtn.disabled = true;
 
     const data = {
       firstName: document.getElementById('firstName').value.trim(),
@@ -588,14 +582,16 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
+      // Create SetupIntent
       const siResp = await fetch('/.netlify/functions/create-setup-intent', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
         body: JSON.stringify(data)
       });
-      const {clientSecret, customerId, error: siErr} = await siResp.json();
+      const { clientSecret, customerId, error: siErr } = await siResp.json();
       if (siErr) throw new Error(siErr);
 
+      // Confirm Card Setup
       const { error: confirmErr } = await stripe.confirmCardSetup(clientSecret, {
         payment_method: {
           card,
@@ -607,9 +603,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (confirmErr) throw new Error(confirmErr.message);
 
+      // Start Subscription
       const subResp = await fetch('/.netlify/functions/start-subscription', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
           customerId,
           plan: data.plan,
@@ -619,36 +616,28 @@ document.addEventListener('DOMContentLoaded', () => {
       const { error: subErr } = await subResp.json();
       if (subErr) throw new Error(subErr);
 
-      window.parent.postMessage(
-        { type:'checkoutComplete', url:'https://mypartnerlab.co/checkout-thank-you' },
-        '*'
-      );
+      // Redirect parent frame to thank-you page
+      window.parent.postMessage({
+        type: 'checkoutComplete',
+        url:  'https://mypartnerlab.co/checkout-thank-you'
+      }, '*');
 
     } catch(err) {
       errs.textContent = err.message;
-      btn.disabled = false;
+      submitBtn.disabled = false;
     }
   });
 
-});
-</script>
-<script>
-  // Send height to parent on load & whenever things change
+  // Send height to parent
   function postMyHeight() {
-    const h = document.documentElement.scrollHeight;
     window.parent.postMessage({
       type: 'checkoutHeight',
-      height: h
+      height: document.documentElement.scrollHeight
     }, '*');
   }
-
-  // Once on load…
-  window.addEventListener('load', postMyHeight);
-
-  // …and again if the user resizes (e.g. rotates phone) or content changes size
+  window.addEventListener('load',   postMyHeight);
   window.addEventListener('resize', postMyHeight);
-
-  // Optional: if you dynamically show/hide things, call postMyHeight() after each change
+});
 </script>
 </body>
 </html>
