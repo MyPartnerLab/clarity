@@ -25,49 +25,45 @@
     body {
       margin: 0;
       padding: 3rem 0;
-      font-family: 'Lato', sans-serif;
+      font-family: 'Lato',sans-serif;
       background: #fdf8f5;
     }
     .checkout-wrapper {
+      display: flex;
       max-width: 1100px;
       margin: 0 auto;
-      display: flex;
       gap: var(--gap);
     }
-    @media(max-width: 767px) {
+    @media(max-width:767px){
       .checkout-wrapper { flex-direction: column; }
     }
 
-    /* Shared white card container */
-    .section-box {
-      background: var(--form-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      margin-bottom: var(--gap);
+    /* ==== LEFT FORM PANEL ==== */
+    .checkout-form {
+      flex: 0 0 60%;
     }
 
-    /* PLAN PICKER */
+    /* plan picker stays transparent */
     .plan-picker {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
-      margin-bottom: 0;
+      margin-bottom: var(--gap);
     }
-    @media(max-width: 575px) { .plan-picker { flex-direction: column; } }
+    @media(max-width:575px){
+      .plan-picker { flex-direction: column; }
+    }
     .single-plan {
-      position: relative;
       border: 1px solid #d7d7d7;
       border-radius: var(--radius);
-      background: #fff;
+      background: transparent;
+      padding: 1.25rem;
+      flex: 1;
+      cursor: pointer;
+      transition: border .15s;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1.25rem;
-      cursor: pointer;
-      transition: border .15s;
-      z-index: 0;
-      flex: 1;
     }
     .single-plan:hover { border-color: var(--brand); }
     .single-plan input { display: none; }
@@ -80,158 +76,163 @@
       border-radius: 999px;
       padding: .1rem .4rem;
       margin-bottom: .25rem;
-      text-align: center;
     }
-    .plan-title { font-weight: 700; text-align: center; margin-top: .25rem; }
+    .plan-title { font-weight:700; }
     .plan-sub {
-      font-style: italic; opacity: .75;
-      font-size: .85rem; text-align: center;
-      margin-top: .1rem; line-height: 1.2;
+      font-style: italic;
+      opacity:.75;
+      font-size:.85rem;
+      text-align:center;
+      margin-top:.1rem;
+      line-height:1.2;
     }
-    .single-plan .price {
-      font-size: 1.3rem; font-weight: 700;
-      color: var(--brand); margin-top: .5rem;
+    .price {
+      font-size:1.3rem;
+      font-weight:700;
+      color:var(--brand);
+      margin-top:.5rem;
     }
 
-    /* FORM HEADINGS & FIELDS */
-    h3 {
-      display: inline-block;
-      font-size: 1.25em;
-      font-weight: 700;
-      color: var(--brand);
-      margin-bottom: .5rem;
+    /* white card style for contact & payment */
+    .section-box {
+      background: var(--form-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: var(--gap);
     }
-    .form-row, input.form-control, .payment-label, .terms, .coupon-row {
-      margin-bottom: .5rem;
+
+    h3 {
+      font-size:1.25em;
+      font-weight:700;
+      color:var(--brand);
+      margin-bottom:.75rem;
+    }
+    .form-row, .section-box label, input.form-control, .payment-label, .terms {
+      margin-bottom:.5rem;
     }
     input.form-control {
       border-radius: var(--radius);
-      padding: 1rem;
-      min-height: 2.8rem;
-      font-size: 1rem;
+      padding:1rem;
+      min-height:2.8rem;
     }
 
-    /* CARD SECTION */
     .card-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: .5rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:.5rem;
     }
-    .card-logos img { height: 18px; margin-left: 4px; }
+    .payment-label img { height:18px; margin-left:4px; }
     #card-element {
-      border: 1px solid #ccc;
-      border-radius: var(--radius);
-      padding: 1rem;
-      margin-bottom: .5rem;
+      border:1px solid #ccc;
+      border-radius:var(--radius);
+      padding:1rem;
+      margin-bottom:.5rem;
     }
     #card-errors {
-      color: #dc3545;
-      font-size: .875rem;
-      margin-top: .5rem;
+      color:#dc3545;
+      font-size:.875rem;
+      margin-top:.5rem;
     }
     .secure-note {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: .85rem;
-      opacity: .7;
-      margin-top: .75rem;
+      display:flex;
+      align-items:center;
+      font-size:.85rem;
+      opacity:.7;
+      margin-top:.75rem;
     }
-    .secure-note img { width: 16px; margin-right: 6px; }
+    .secure-note img { width:16px; margin-right:6px; }
 
-    /* BUTTON & TERMS */
+    .terms { margin-top:1rem; }
     #submit {
-      width: 100%;
-      background: var(--brand);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      padding: .85rem;
-      font-weight: 700;
-      transition: background .25s;
-      margin-top: 1rem;
+      width:100%;
+      background:var(--brand);
+      color:#fff;
+      border:none;
+      border-radius:var(--radius);
+      padding:.85rem;
+      font-weight:700;
+      margin-top:.5rem;
     }
-    #submit:hover { background: var(--accent); }
-    .terms { position: relative; z-index: 2; }
+    #submit:hover { background:var(--accent); }
 
-    /* SUMMARY PANEL */
+    /* ==== RIGHT SUMMARY PANEL ==== */
     .checkout-summary {
       flex: 0 0 40%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
     .summary-box {
       background: var(--summary-bg);
       border-radius: var(--radius);
-      box-shadow: 0 6px 16px rgba(0,0,0,.06);
-      padding: 2rem;
-      width: 100%;
-      text-align: left;
+      box-shadow:0 6px 16px rgba(0,0,0,.06);
+      padding:2rem;
+      text-align:left;
     }
-    .summary-box h2 {
-      margin: 0 0 1rem;
-      font-size: 2em;
-      font-weight: 700;
-      color: var(--brand);
+    .summary-mockup {
+      width:100%;
+      max-width:480px;
+      margin-bottom:1rem;
     }
-    .benefits { list-style: none; padding: 0; margin: 0 0 1rem; }
+    .benefits {
+      list-style:none;
+      padding:0;
+      margin:0 0 1rem;
+      font-size:.9rem;
+    }
     .benefits li {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: .5rem;
-      font-size: .9rem;
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:.5rem;
     }
-    .benefits img { width: 18px; margin-right: .5rem; }
+    .benefits img { width:18px; margin-right:.5rem; }
 
     .total-value {
-      font-weight: 700;
-      margin-bottom: 1rem;
+      font-weight:700;
+      margin-bottom:1rem;
     }
     .order-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 1rem;
-      line-height: 1.2;
+      display:flex;
+      justify-content:space-between;
+      font-size:1rem;
+      line-height:1.2;
     }
     .trial-badge {
-      background: var(--hl);
-      color: #000;
-      font-size: .65rem;
-      font-weight: 700;
-      border-radius: 4px;
-      padding: 1px 4px;
-      margin-left: 4px;
-      text-transform: uppercase;
+      background:var(--hl);
+      color:#000;
+      font-size:.65rem;
+      font-weight:700;
+      border-radius:4px;
+      padding:1px 4px;
+      margin-left:4px;
+      text-transform:uppercase;
     }
-    .cross { text-decoration: line-through; opacity: .6; }
+    .cross { text-decoration:line-through; opacity:.6; }
     .order-note {
-      margin-top: .25rem;
-      font-style: italic;
-      opacity: .75;
-      font-size: .85rem;
-      line-height: 1.2;
-    }
-    .order-total {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1rem;
-      font-size: 1.25em;
-      font-weight: 700;
-      color: var(--brand);
+      font-style:italic;
+      opacity:.75;
+      font-size:.85rem;
+      margin-top:.25rem;
     }
     .promo-line {
-      margin-top: .5rem;
-      font-size: .9rem;
-      color: var(--accent);
+      color:var(--accent);
+      font-size:.9rem;
+      margin-top:.5rem;
+    }
+    .order-total {
+      display:flex;
+      justify-content:space-between;
+      margin-top:1rem;
+      font-size:1.25em;
+      font-weight:700;
+      color:var(--brand);
     }
   </style>
 </head>
 <body>
   <div class="checkout-wrapper">
-    <!-- PLAN PICKER -->
-    <div class="section-box">
+    <!-- LEFT: single form with three sections -->
+    <form id="checkout-form" class="checkout-form" novalidate>
+      <!-- ==== PLAN PICKER ==== -->
       <div class="plan-picker">
         <label class="single-plan" id="plan-lifetime">
           <input type="radio" name="plan" value="lifetime" checked>
@@ -248,64 +249,63 @@
           <span class="price">$17/mo</span>
         </label>
       </div>
-    </div>
 
-    <!-- CONTACT INFO -->
-    <div class="section-box">
-      <h3>Contact Info</h3>
-      <div class="form-row row">
-        <div class="col">
-          <label for="firstName">First Name</label>
-          <input type="text" id="firstName" name="firstName" class="form-control" required>
-        </div>
-        <div class="col">
-          <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" name="lastName" class="form-control" required>
-        </div>
-      </div>
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" class="form-control" required>
-    </div>
-
-    <!-- PAYMENT & COUPON -->
-    <div class="section-box">
-      <div class="card-section">
-        <h3>Payment Info</h3>
-        <div class="payment-label">
-          <img src="img/visa_creditcard.png" alt="Visa">
-          <img src="img/mastercard_creditcard.png" alt="Mastercard">
-          <img src="img/amex_creditcard.png" alt="AMEX">
-          <img src="img/discover_creditcard.png" alt="Discover">
-          <span class="more-text">and more…</span>
-        </div>
-      </div>
-
-      <!-- coupon input group -->
-      <div class="coupon-row mb-3">
-        <div class="input-group">
-          <input type="text" id="coupon" class="form-control"
-                 placeholder="Enter gift card code or promo code">
-          <div class="input-group-append">
-            <button type="button" id="apply-coupon" class="btn btn-outline-secondary">Apply</button>
+      <!-- ==== CONTACT INFO ==== -->
+      <div class="section-box">
+        <h3>Contact Info</h3>
+        <div class="form-row row">
+          <div class="col">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" class="form-control" required>
+          </div>
+          <div class="col">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" class="form-control" required>
           </div>
         </div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-control" required>
       </div>
 
-      <div id="card-element"></div>
-      <div id="card-errors" role="alert"></div>
-      <div class="secure-note">
-        <img src="img/lock.svg" alt="">All payments secured by 256-bit encryption.
-      </div>
+      <!-- ==== PAYMENT & COUPON ==== -->
+      <div class="section-box">
+        <div class="card-section">
+          <h3>Payment Info</h3>
+          <div class="payment-label">
+            <img src="img/visa_creditcard.png" alt="Visa">
+            <img src="img/mastercard_creditcard.png" alt="Mastercard">
+            <img src="img/amex_creditcard.png" alt="AMEX">
+            <img src="img/discover_creditcard.png" alt="Discover">
+          </div>
+        </div>
 
-      <div class="terms mt-3">
-        <input type="checkbox" name="agree" id="agree" required>
-        <label for="agree">I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms & conditions</a></label>
-      </div>
-      <button id="submit" type="submit">Secure My Spot</button>
-    </div>
+        <!-- coupon input -->
+        <div class="coupon-row mb-3">
+          <div class="input-group">
+            <input type="text" id="coupon" class="form-control" placeholder="Enter gift card code or promo code">
+            <div class="input-group-append">
+              <button type="button" id="apply-coupon" class="btn btn-outline-secondary">Apply</button>
+            </div>
+          </div>
+        </div>
 
-    <!-- SUMMARY -->
+        <div id="card-element"></div>
+        <div id="card-errors" role="alert"></div>
+        <div class="secure-note">
+          <img src="img/lock.svg" alt="">All payments secured by 256-bit encryption.
+        </div>
+
+        <div class="terms">
+          <input type="checkbox" name="agree" id="agree" required>
+          <label for="agree">I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms & conditions</a></label>
+        </div>
+        <button id="submit" type="submit">Secure My Spot</button>
+      </div>
+    </form>
+
+    <!-- RIGHT: summary -->
     <aside class="checkout-summary">
+      <img src="img/mockup1.png" class="summary-mockup" alt="Program preview">
       <div class="summary-box">
         <h2>Join the Clarity Circle</h2>
         <ul class="benefits">
@@ -338,7 +338,6 @@
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    /* ---------- Stripe init ---------- */
     const stripe   = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
     const elements = stripe.elements();
     const card     = elements.create('card');
@@ -354,7 +353,6 @@
     const dueNote    = document.getElementById('due-note');
     const promoLine  = document.getElementById('promo-line');
 
-    /* price constants & coupon maps */
     const BASE = { lifetime: 97, monthly: 17 };
     const couponMapUniversal = { FREE100: 100 };
     const couponMapMonthly   = { OFF50: 50, OFF30: 30 };
@@ -376,25 +374,20 @@
       const base = BASE[plan];
       const discounted = (base * (100 - discountPct)/100).toFixed(2);
 
-      // crossed price
       priceEl.textContent = `$${base}${plan==='monthly'?'/mo':''}`;
       priceEl.classList[discountPct>0?'add':'remove']('cross');
 
-      // after-trial line
       note.textContent = plan==='monthly'
         ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted}/mo.`
         : `After your trial ends on ${fmtDate(trialEnd)}, you will be charged a one-time payment of $${discounted}.`;
 
-      // promo line
       promoLine.textContent = discountPct>0
-        ? `Promo applied: ${discountPct}% off (${discountPct===100?'FREE!':''})`
+        ? `Promo applied: ${discountPct}% off${discountPct===100?' (FREE!)':''}`
         : '';
 
-      // due-note
       dueNote.textContent = `Your free trial will end on ${fmtDate(trialEnd)}.`;
     }
 
-    // wiring
     document.querySelectorAll('.single-plan').forEach(label => {
       label.addEventListener('click', () => {
         label.querySelector('input').checked = true;
@@ -412,9 +405,8 @@
     document.getElementById('plan-lifetime').classList.add('selected');
     updateSummary('lifetime');
 
-    card.on('change', e => { errors.textContent = e.error ? e.error.message : ''; });
+    card.on('change', e => errors.textContent = e.error ? e.error.message : '');
 
-    /* ---------- Form submit ---------- */
     form.addEventListener('submit', async e => {
       e.preventDefault();
       errors.textContent = '';
@@ -430,45 +422,42 @@
       const coupon    = couponIn.value.trim().toUpperCase();
 
       /* STEP 1 — SetupIntent */
-      const siResp = await fetch('/.netlify/functions/create-setup-intent', {
+      const siResp = await fetch('/.netlify/functions/create-setup-intent',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ firstName, lastName, email })
       });
       const { clientSecret, customerId, error: siErr } = await siResp.json();
       if (siErr) {
-        btn.disabled = false;
-        errors.textContent = siErr;
-        return;
+        btn.disabled=false;
+        return errors.textContent = siErr;
       }
 
       /* STEP 2 — confirm */
-      const { error: confirmErr } = await stripe.confirmCardSetup(clientSecret, {
+      const { error: confirmErr } = await stripe.confirmCardSetup(clientSecret,{
         payment_method: {
           card,
           billing_details: { name:`${firstName} ${lastName}`, email }
         }
       });
       if (confirmErr) {
-        btn.disabled = false;
-        errors.textContent = confirmErr.message;
-        return;
+        btn.disabled=false;
+        return errors.textContent = confirmErr.message;
       }
 
-      /* STEP 3 — subscription (pass coupon) */
-      const subResp = await fetch('/.netlify/functions/start-subscription', {
+      /* STEP 3 — subscription (with coupon) */
+      const subResp = await fetch('/.netlify/functions/start-subscription',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ customerId, plan, coupon })
       });
       const { error: subErr } = await subResp.json();
       if (subErr) {
-        btn.disabled = false;
-        errors.textContent = subErr;
-        return;
+        btn.disabled=false;
+        return errors.textContent = subErr;
       }
 
-      /* SUCCESS */
+      /* SUCCESS – redirect */
       window.parent.postMessage(
         { type:'checkoutComplete', url:'https://mypartnerlab.co/checkout-thank-you' },
         '*'
