@@ -204,7 +204,7 @@
     }
     .divider {
       border-top: 1px solid var(--brand);
-      margin: 1rem 0;
+      margin: 2rem 0;
     }
     .order-summary-header {
       font-size: 1.125rem;
@@ -274,7 +274,7 @@
 
         <!-- YOUR INFORMATION PANEL -->
         <div class="panel">
-          <div class="panel-title">Your Information</div>
+          <div class="panel-title">Contact Info</div>
           <div class="d-flex mb-3">
             <div class="flex-fill pr-2">
               <label for="firstName">First Name</label>
@@ -289,13 +289,7 @@
             <label for="email">Email</label>
             <input id="email" name="email" type="email" class="form-control" required>
           </div>
-          <div>
-            <div class="coupon-row" style="margin-top:1rem">
-              <input id="coupon" type="text" class="form-control" placeholder="Enter your gift card or promo code here">
-              <button id="apply-coupon" type="button" class="btn btn-outline-secondary" style="padding-top:0rem;padding-bottom:0rem;">Apply</button>
-            </div>
-            <div id="coupon-msg" class="coupon-msg"></div>
-          </div>
+         
         </div>
 
         <!-- CREDIT/DEBIT CARD PANEL -->
@@ -312,8 +306,12 @@
           </div>
             <div id="card-element" style="flex:1"></div> 
           <div id="card-errors"></div>
-          <div class="secure-note">
-            <img src="img/lock.svg" alt="Secure"/>All payments secured by 256-bit encryption.
+           <div>
+            <div class="coupon-row" style="margin-top:2rem">
+              <input id="coupon" type="text" class="form-control" placeholder="Enter your gift card or promo code here">
+              <button id="apply-coupon" type="button" class="btn btn-outline-secondary" style="padding-top:0rem;padding-bottom:0rem;">Apply</button>
+            </div>
+            <div id="coupon-msg" class="coupon-msg"></div>
           </div>
           <div class="form-check mb-2">
             <input id="agree" type="checkbox" class="form-check-input" required>
@@ -330,6 +328,9 @@ Check this box to subscribe to The Partner Lab weekly newsletter.
           <button id="submit" type="submit" class="btn btn-block" style="background:var(--brand); color:#fff;">
             Secure My Spot
           </button>
+                    <div class="secure-note">
+            <img src="img/lock.svg" alt="Secure"/>All payments secured by 256-bit encryption.
+          </div>
         </div>
 
       </form>
