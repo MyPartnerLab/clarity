@@ -579,5 +579,21 @@ Check this box to subscribe to The Partner Lab weekly newsletter.
 
   });
   </script>
+  <style>
+    /* target the iframe element in Squarespace by ID */
+    #checkout-frame {
+      width: 100%;
+      border: none;
+      /* default to desktop height */
+      height: 2200px;
+      overflow: hidden;
+    }
+    @media (max-width: 767px) {
+      /* mobile: shorter height so you’re not stuck with blank space */
+      #checkout-frame {
+        height: 1400px;
+      }
+    }
+  </style>
 </body>
 </html>
