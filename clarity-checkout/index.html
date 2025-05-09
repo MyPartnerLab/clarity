@@ -442,26 +442,21 @@
       <img src="img/mockup1.png" class="summary-mockup" alt="Program preview">
       <div class="summary-box">
         <h2>Join the Clarity Circle</h2>
-        <ul class="benefits">
-          <li><span><img src="img/checkmark.svg" alt="✓"/>Research-Backed Tools &amp; Frameworks</span><span>($997+)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="✓"/>Unlimited Relationship Wellness Checkups</span><span>($300+)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="✓"/>Private Community Access</span><span>($497)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="✓"/>Live Q&amp;A Sessions</span><span>($997+)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="✓"/>Lifetime Access</span><span>(priceless)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="✓"/>30-Day Refund Policy</span></li>
-        </ul>
-        <div class="total-value"><span>Total Value:</span><span style="font-style:italize;">$2,791+</span></div>
+        <ul class="benefits">…</ul>
+        <div class="total-value"><span>Total Value:</span><span>$2,791+</span></div>
         <div class="divider"></div>
         <div class="order-summary-header">Order Summary:</div>
         <div class="order-row">
           <span>Clarity Circle Membership <span class="trial-badge">FREE 14-DAY TRIAL</span></span>
           <span id="order-price" class="cross"><del>$97</del></span>
         </div>
-
         <div id="discount-row" class="order-row" style="display:none;">
-          <span>Discount</span><span id="discount-amount" style="color:var(--accent)"></span>
+          <span><!-- label set by JS --></span>
+          <span id="discount-amount" style="color:var(--accent)"></span>
         </div>
-        <div class="order-total"style="margin-top:1rem;margin-bottom:1rem;"><strong>Due Today:</strong><span id="due-today">$0.00</span></div>
+        <div class="order-total" style="margin-top:1rem;margin-bottom:1rem;">
+          <strong>Due Today:</strong><span id="due-today">$0.00</span>
+        </div>
         <div id="summary-note" class="order-note"></div>
       </div>
     </aside>
@@ -523,13 +518,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dueNote.textContent = `Your free trial ends on ${fmtDate(trialEnd)}.`;
 
-    if (discount > 0) {
-      discountRow.style.display = 'flex';
-      discountAmount.textContent = `- $${(base - discounted).toFixed(2)}`;
-    } else {
-      discountRow.style.display = 'none';
+      if (discount > 0) {
+        discountRow.style.display = 'flex';
+        discountRow.querySelector('span:nth-child(1)').textContent =
+          `Discount code: ${couponIn.value.trim().toUpperCase()}.`;         // ← CHANGED
+        discountAmount.textContent =
+          `$${(base - discounted).toFixed(2)} off`;                          // ← CHANGED
+      } else {
+        discountRow.style.display = 'none';
+      }
     }
-  }
 
   // plan selection UI
   planEls.forEach(el => el.addEventListener('click', () => {
