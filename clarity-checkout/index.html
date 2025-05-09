@@ -41,6 +41,71 @@
         flex-direction: column; 
       }
     }
+    /* ======================= */
+/* Tablet (up to 992px)   */
+/* ======================= */
+@media (max-width: 992px) {
+  /* Stack both columns */
+  .checkout-wrapper {
+    flex-direction: column;
+  }
+  .checkout-wrapper > div:first-child,
+  .checkout-summary {
+    flex: 1 1 100%;
+    margin-top: var(--gap);
+  }
+  /* Make plan-picker vertical */
+  .plan-picker {
+    flex-direction: column;
+  }
+  /* Stack first/last name fields */
+  .panel .d-flex.mb-3 {
+    flex-direction: column !important;
+  }
+  .panel .d-flex.mb-3 .flex-fill {
+    padding: 0 !important;
+    margin-bottom: var(--gap);
+  }
+}
+
+/* ======================= */
+/* Mobile (up to 575px)   */
+/* ======================= */
+@media (max-width: 575px) {
+  /* Tighten up padding */
+  .panel {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  /* Smaller gap between cards */
+  .plan-picker {
+    gap: .75rem;
+  }
+  .single-plan {
+    padding: 1rem;
+  }
+  /* Scale down typography */
+  .plan-title { font-size: 1rem; }
+  .price { font-size: 1.25rem; }
+  .panel-title { font-size: 1.125rem; }
+  .form-control, button.btn {
+    padding: .75rem;
+    font-size: .9rem;
+  }
+  /* Condense summary panel */
+  .summary-box {
+    padding: 1.5rem;
+  }
+  .summary-box h2 { font-size: 1.5rem; }
+  .benefits li { font-size: .85rem; }
+  .total-value, .order-total {
+    font-size: 1.1rem;
+  }
+  /* Reduce mockup height */
+  .summary-mockup {
+    margin-bottom: var(--gap);
+  }
+}
     /* PANEL */
     .panel {
       background: var(--form-bg);
