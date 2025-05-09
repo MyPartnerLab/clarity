@@ -70,6 +70,7 @@
     button.btn {
       padding: 1rem;
       font-size: 1rem;
+      radius: .75rem;
     }
     /* PLAN PICKER */
     .plan-picker { 
@@ -109,7 +110,8 @@
       font-size: 1.5rem;
       font-weight: 700;
       color: var(--brand);
-      padding-top:20px;
+      padding-top:10px;
+      margin-bottom: -8px;
     }
     .small {
     font-size: .88rem;
@@ -288,9 +290,9 @@
             <input id="email" name="email" type="email" class="form-control" required>
           </div>
           <div>
-            <div class="coupon-row">
+            <div class="coupon-row" style="margin-top:1rem">
               <input id="coupon" type="text" class="form-control" placeholder="Enter your gift card or promo code here">
-              <button id="apply-coupon" type="button" class="btn btn-outline-secondary"styling="padding:0rem">Apply</button>
+              <button id="apply-coupon" type="button" class="btn btn-outline-secondary" style="padding:0rem">Apply</button>
             </div>
             <div id="coupon-msg" class="coupon-msg"></div>
           </div>
@@ -353,12 +355,12 @@ Check this box to subscribe to The Partner Lab weekly newsletter.
           <span>Clarity Circle Membership <span class="trial-badge">FREE 14-DAY TRIAL</span></span>
           <span id="order-price" class="cross"><strike> $97</strike></span>
         </div>
-        <div id="summary-note" class="order-note"></div>
+
         <div id="discount-row" class="order-row" style="display:none;">
           <span>Discount</span><span id="discount-amount" style="color:var(--accent)"></span>
         </div>
         <div class="order-total"><strong>Due Today:</strong><span id="due-today">$0.00</span></div>
-        <div id="due-note" class="order-note"></div>
+        <div id="summary-note" class="order-note"></div>
       </div>
     </aside>
 
