@@ -307,6 +307,19 @@
       text-decoration: line-through; 
       opacity: .6; 
     }
+    @media (max-width: 575px) {
+  /* Panels fill 100% and lose side-margins */
+  .panel {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  /* Panels stack nicely */
+  .checkout-wrapper {
+    padding: 0;
+    gap: var(--gap);
+  }
+}
   </style>
 </head>
 <body>
