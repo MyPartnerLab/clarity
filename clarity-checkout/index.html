@@ -1,4 +1,4 @@
-><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -150,10 +150,10 @@
       flex-grow: 1;
     }
     .form-control {
-      border-radius: var(--radius);
+      border-radius: .75rem;
       padding: 1rem;
       font-size: 1rem;
-      height: calc(2em + .75rem + 2px);
+      height: 4rem;
     }
     button.btn {
       padding: 1rem;
@@ -409,8 +409,10 @@
             <div id="card-element" style="flex:1"></div> 
           <div id="card-errors"></div>
            <div>
-            <div class="coupon-row" style="margin-top:2rem">
-                          <label for="email">Have a gift card or promo code?</label>
+            <div class="panel">
+              <label for="email">Have a gift card or promo code?</label>
+            </div>
+             <div class="coupon-row" style="margin-top:2rem">
               <input id="coupon" type="text" class="form-control" placeholder="Enter your gift card or promo code here">
               <button id="apply-coupon" type="button" class="btn btn-outline-secondary" style="text-size:10px;">Apply</button>
             </div>
