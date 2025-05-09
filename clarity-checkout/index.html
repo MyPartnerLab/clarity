@@ -46,13 +46,17 @@
       background: var(--form-bg);
       border-radius: var(--radius);
       box-shadow: 0 6px 16px rgba(0,0,0,.06);
-      padding: 2rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      padding-right: 1.5rem;
+      padding-left: 1.5rem;
+      margin:1rem;
     }
     .panel-plan-picker {
       padding-top: 0rem;
       padding-bottom: 1.5rem;
-      padding-right: 2rem;
-      padding-left: 2rem;
+      padding-right: 1.5rem;
+      padding-left: 1.5rem;
     }
     .panel-title {
       font-size: 1.25rem;
@@ -77,7 +81,7 @@
     .single-plan {
       flex: 1;
       background: #fff;
-      border: 1px solid #d7d7d7;
+      text-align: center;
       border-radius: var(--radius);
       padding: 1.5rem;
       cursor: pointer;
@@ -135,7 +139,6 @@
       border: 1px solid #ccc;
       border-radius: var(--radius);
       padding: 1rem;
-      margin-bottom: 1rem;
     }
     #card-errors {
       color: #dc3545;
@@ -146,7 +149,7 @@
       text-align: center;
       font-size: .85rem;
       opacity: .7;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
     .secure-note img {
       width: 16px;
@@ -291,10 +294,9 @@
 
         <!-- CREDIT/DEBIT CARD PANEL -->
         <div class="panel">
-          <div class="panel-title">Credit/Debit Card</div>
           <div class="d-flex align-items-center mb-3">
-            <div id="card-element" style="flex:1"></div>
-            <div class="card-logos">
+            <div class="panel-title">Credit/Debit Card</div>
+ <div class="card-logos">
               <img src="img/visa_creditcard.png" alt="Visa">
               <img src="img/mastercard_creditcard.png" alt="Mastercard">
               <img src="img/amex_creditcard.png" alt="American Express">
@@ -302,6 +304,7 @@
             </div>
             <div style="margin-left:.5rem; white-space:nowrap; font-size:.85rem;">and more…</div>
           </div>
+            <div id="card-element" style="flex:1"></div> 
           <div id="card-errors"></div>
           <div class="secure-note">
             <img src="img/lock.svg" alt="Secure"/>All payments secured by 256-bit encryption.
@@ -315,10 +318,10 @@
           <div class="form-check mb-3">
             <input id="newsletter" type="checkbox" class="form-check-input">
             <label for="newsletter" class="form-check-label">
-              To join our newsletter, simply check this box.
+Check this box if you'd like us to send you The Partner Lab weekly newsletter.  
             </label>
           </div>
-          <button id="submit" type="submit" class="btn btn-block" style="background:var(--brand); color:#fff;">
+          <button id="submit" type="submit" class="btn btn-block" style="background:var(--brand); color:#fff;padding:0rem">
             Secure My Spot
           </button>
         </div>
