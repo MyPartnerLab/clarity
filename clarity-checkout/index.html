@@ -46,7 +46,7 @@
       background: var(--form-bg);
       border-radius: var(--radius);
       box-shadow: 0 6px 16px rgba(0,0,0,.06);
-      padding: 20px;
+      padding: 1.5rem;
       margin-bottom:1rem;
     }
     .panel-plan-picker {
@@ -314,8 +314,8 @@
           </div>
           <div class="form-check mb-3">
             <input id="newsletter" type="checkbox" class="form-check-input">
-            <label for="newsletter" class="form-check-label" style="font-style:italic;">
-Check this box if you'd like us to send you The Partner Lab weekly newsletter.  
+            <label for="newsletter" class="form-check-label">
+Check this box to subscribe to The Partner Lab weekly newsletter.  
             </label>
           </div>
           <button id="submit" type="submit" class="btn btn-block" style="background:var(--brand); color:#fff;">
@@ -339,12 +339,12 @@ Check this box if you'd like us to send you The Partner Lab weekly newsletter.
           <li><span><img src="img/checkmark.svg" alt="✓"/>Lifetime Access</span><span>(priceless)</span></li>
           <li><span><img src="img/checkmark.svg" alt="✓"/>30-Day Refund Policy</span></li>
         </ul>
-        <div class="total-value" styling="font-style:italize"><span>Total Value:</span><span>$2,791+</span></div>
+        <div class="total-value"><span>Total Value:</span><span style="font-style:italize;">$2,791+</span></div>
         <div class="divider"></div>
         <div class="order-summary-header">Order Summary:</div>
         <div class="order-row">
           <span>Clarity Circle Membership <span class="trial-badge">FREE 14-DAY TRIAL</span></span>
-          <span id="order-price" class="cross">$97</span>
+          <span id="order-price" class="cross"><strike> $97</strike></span>
         </div>
         <div id="summary-note" class="order-note"></div>
         <div id="discount-row" class="order-row" style="display:none;">
