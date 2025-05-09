@@ -106,6 +106,29 @@
     margin-bottom: var(--gap);
   }
 }
+  /* make the summary full-width under 576px */
+  .checkout-summary {
+    flex: 1 1 100% !important;
+    margin-top: var(--gap) !important;
+  }
+  /* prevent any accidental horizontal scrolling */
+  .summary-box {
+    overflow-x: hidden;
+  }
+  /* stack each part of the order rows vertically */
+  .order-row,
+  .order-total {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  /* add a little breathing room under each line */
+  .order-row > span,
+  .order-total > span {
+    display: block;
+    margin-top: 0.25rem;
+  }
+}
     /* PANEL */
     .panel {
       background: var(--form-bg);
@@ -401,8 +424,7 @@
           </div>
           <div class="form-check mb-3">
             <input id="newsletter" type="checkbox" class="form-check-input">
-            <label for="newsletter" class="form-check-label">
-Check this box to subscribe to The Partner Lab weekly newsletter.  
+            <label for="newsletter" class="form-check-label">Check this box to subscribe to The Partner Lab weekly newsletter.  
             </label>
           </div>
           <button id="submit" type="submit" class="btn btn-block" style="background:var(--brand); color:#fff;">
