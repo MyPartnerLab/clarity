@@ -37,7 +37,9 @@
       flex-wrap: wrap;
     }
     @media (max-width:767px) {
-      .checkout-wrapper { flex-direction: column; }
+      .checkout-wrapper { 
+        flex-direction: column; 
+      }
     }
     /* PANEL */
     .panel {
@@ -45,6 +47,12 @@
       border-radius: var(--radius);
       box-shadow: 0 6px 16px rgba(0,0,0,.06);
       padding: 2rem;
+    }
+    .panel-plan-picker {
+      padding-top: 0rem;
+      padding-bottom: 1.5rem;
+      padding-right: 2rem;
+      padding-left: 2rem;
     }
     .panel-title {
       font-size: 1.25rem;
@@ -62,7 +70,10 @@
       font-size: 1rem;
     }
     /* PLAN PICKER */
-    .plan-picker { display: flex; gap: 1rem; }
+    .plan-picker { 
+      display: flex; 
+      gap: 1rem; 
+    }
     .single-plan {
       flex: 1;
       background: #fff;
@@ -71,7 +82,9 @@
       padding: 1.5rem;
       cursor: pointer;
     }
-    .single-plan.selected { border: 2px solid var(--brand); }
+    .single-plan.selected { 
+      border: 2px solid var(--brand); 
+    }
     .plan-badge {
       display: inline-block;
       background: var(--summary-bg);
@@ -82,7 +95,10 @@
       padding: .2rem .6rem;
       margin-bottom: .5rem;
     }
-    .plan-title { font-weight: 700; margin: .5rem 0; }
+    .plan-title { 
+      font-weight: 700; 
+      margin: .5rem 0; 
+    }
     .plan-sub {
       font-style: italic;
       opacity: .75;
@@ -95,12 +111,26 @@
       color: var(--brand);
     }
     /* COUPON */
-    .coupon-row { display: flex; gap: .5rem; margin-bottom: 1rem; }
-    .coupon-msg { font-size: .9rem; margin-top: .5rem; }
-    .coupon-msg.success { color: green;}
-    .coupon-msg.error { color: red; }
+    .coupon-row { 
+      display: flex; 
+      gap: .5rem; 
+      margin-bottom: 1rem; 
+    }
+    .coupon-msg { 
+      font-size: .9rem; 
+      margin-top: .5rem; 
+    }
+    .coupon-msg.success { 
+      color: green;
+    }
+    .coupon-msg.error { 
+      color: red; 
+    }
     /* STRIPE & CARD */
-    .card-logos img { height: 24px; margin-right: .5rem; }
+    .card-logos img { 
+      height: 24px; 
+      margin-right: .5rem; 
+    }
     #card-element {
       border: 1px solid #ccc;
       border-radius: var(--radius);
@@ -124,7 +154,9 @@
       vertical-align: middle;
     }
     /* SUMMARY */
-    .checkout-summary { flex: 0 0 35%; }
+    .checkout-summary { 
+      flex: 0 0 35%; 
+    }
     .summary-mockup {
       width: 100%;
       border-radius: var(--radius);
@@ -152,7 +184,10 @@
       margin-bottom: .5rem;
       font-size: .9rem;
     }
-    .benefits img { width: 18px; margin-right: .5rem; }
+    .benefits img { 
+      width: 18px; 
+      margin-right: .5rem; 
+    }
     .total-value {
       display: flex;
       justify-content: space-between;
@@ -195,7 +230,10 @@
       padding: 2px 6px;
       margin-left: .5rem;
     }
-    .cross { text-decoration: line-through; opacity: .6; }
+    .cross { 
+      text-decoration: line-through; 
+      opacity: .6; 
+    }
   </style>
 </head>
 <body>
@@ -207,7 +245,7 @@
       <form id="checkout-form">
 
         <!-- PLAN PICKER PANEL -->
-        <div class="panel plan-container">
+        <div class="panel-plan-picker">
           <div class="plan-picker" id="plan-picker">
             <div class="single-plan selected" data-plan="lifetime">
               <span class="plan-badge">Founding Member</span>
