@@ -22,42 +22,64 @@
       --hl: #ffeb86;
     }
     body { margin:0; padding:3rem 0; font-family:'Lato',sans-serif; background:#fdf8f5; }
-    .checkout-wrapper { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; gap:var(--gap); }
+    .checkout-wrapper { max-width:1100px; margin:0 auto; display:flex; gap:var(--gap); }
     @media(max-width:767px){ .checkout-wrapper { flex-direction:column; } }
-    .panel { background:var(--form-bg); border-radius:var(--radius); box-shadow:0 6px 16px rgba(0,0,0,.06); padding:1.5rem; }
-    .panel-title { font-size:1.25rem; font-weight:700; color:var(--brand); margin-bottom:1rem; }
-    .plan-picker { display:flex; gap:1rem; }
-    .single-plan { flex:1; border:1px solid #d7d7d7; border-radius:var(--radius); padding:1rem; cursor:pointer; }
-    .single-plan.selected { border:2px solid var(--brand); }
-    .plan-badge { display:inline-block; background:var(--summary-bg); color:var(--brand); font-size:.75rem; font-weight:700; border-radius:999px; padding:.1rem .4rem; margin-bottom:.5rem; }
-    .plan-title { font-weight:700; margin-bottom:.25rem; }
-    .plan-sub { font-style:italic; opacity:.75; font-size:.85rem; margin-bottom:.5rem; }
-    .price { font-size:1.3rem; font-weight:700; color:var(--brand); }
-    .benefits { list-style:none; padding:0; margin:1rem 0; }
-    .benefits li { display:flex; justify-content:space-between; margin-bottom:.5rem; font-size:.9rem; }
-    .benefits img { width:18px; margin-right:.5rem; }
-    .total-value { display:flex; justify-content:space-between; font-weight:700; margin-bottom:1rem; }
-    .divider { border-top:1px solid var(--brand); margin:1rem 0; }
-    .order-summary-header { font-size:1.125rem; font-weight:700; margin-bottom:.5rem; }
-    .order-row { display:flex; justify-content:space-between; margin-bottom:.5rem; }
-    .order-note, #due-note { font-style:italic; opacity:.75; font-size:.85rem; margin-bottom:.5rem; }
-    .order-total { display:flex; justify-content:space-between; font-size:1.25rem; font-weight:700; color:var(--brand); }
-    .trial-badge { background:var(--hl); color:#000; font-size:.65rem; font-weight:700; border-radius:4px; padding:1px 4px; margin-left:.5rem; }
-    .cross { text-decoration:line-through; opacity:.6; }
-    .form-control { border-radius:var(--radius); padding:.75rem; }
-    #card-element { border:1px solid #ccc; border-radius:var(--radius); padding:1rem; margin-bottom:.5rem; }
-    #card-errors { color:#dc3545; font-size:.875rem; margin-bottom:.5rem; }
-    .secure-note { text-align:center; font-size:.85rem; opacity:.7; margin-bottom:1rem; }
-    .coupon-row { display:flex; align-items:center; gap:.5rem; margin-bottom:1rem; }
-    .coupon-msg { font-size:.875rem; margin-top:.25rem; }
-    .coupon-msg.success { color:green; }
-    .coupon-msg.error { color:red; }
+
+    /* FORM PANEL */
+    .checkout-form{flex:0 0 60%;background:var(--form-bg);border-radius:var(--radius);
+      box-shadow:0 6px 16px rgba(0,0,0,.06);padding:2.25rem;}
+
+    /* PLAN PICKER */
+    .plan-picker{display:flex;gap:1rem;margin-bottom:1.5rem;}
+    .single-plan{flex:1;border:1px solid #d7d7d7;border-radius:var(--radius);
+      background:#fff;padding:1.25rem;cursor:pointer;}
+    .single-plan.selected{border:2px solid var(--brand);}
+    .plan-badge{background:var(--summary-bg);color:var(--brand);padding:.1rem .4rem;
+      font-size:.75rem;font-weight:700;border-radius:999px;display:inline-block;margin-bottom:.5rem;}
+    .plan-title{font-weight:700;margin-bottom:.25rem;}
+    .plan-sub{font-style:italic;opacity:.75;font-size:.85rem;margin-bottom:.5rem;}
+    .price{font-size:1.3rem;font-weight:700;color:var(--brand);}
+
+    /* PANELS */
+    .panel{background:var(--form-bg);border-radius:var(--radius);
+      box-shadow:0 6px 16px rgba(0,0,0,.06);padding:1.5rem;margin-bottom:var(--gap);}
+    .panel-title{font-size:1.25rem;font-weight:700;color:var(--brand);margin-bottom:1rem;}
+
+    /* FORM CONTROLS */
+    .form-control{border-radius:var(--radius);padding:.75rem;}
+    #card-element{border:1px solid #ccc;border-radius:var(--radius);padding:1rem;margin-bottom:.5rem;}
+    #card-errors{color:#dc3545;font-size:.875rem;margin-bottom:1rem;}
+
+    /* COUPON */
+    .coupon-row{display:flex;gap:.5rem;margin-bottom:1rem;}
+    .coupon-msg{font-size:.875rem;margin-top:.25rem;}
+    .coupon-msg.success{color:green;}
+    .coupon-msg.error{color:red;}
+
+    /* SUMMARY PANEL */
+    .checkout-summary{flex:0 0 40%;}
+    .summary-box{background:var(--summary-bg);border-radius:var(--radius);
+      box-shadow:0 6px 16px rgba(0,0,0,.06);padding:2rem;}
+    .summary-box h2{font-size:2rem;font-weight:700;color:var(--brand);margin-top:0;}
+    .benefits{list-style:none;padding:0;margin:1rem 0;}
+    .benefits li{display:flex;justify-content:space-between;margin-bottom:.5rem;font-size:.9rem;}
+    .benefits img{width:18px;margin-right:.5rem;}
+    .total-value{display:flex;justify-content:space-between;font-weight:700;margin-bottom:1rem;}
+    .divider{border-top:1px solid var(--brand);margin:1rem 0;}
+    .order-summary-header{font-size:1.125rem;font-weight:700;margin-bottom:.5rem;}
+    .order-row{display:flex;justify-content:space-between;margin-bottom:.5rem;}
+    .order-note,#due-note{font-style:italic;opacity:.75;font-size:.85rem;margin-bottom:.5rem;}
+    .order-total{display:flex;justify-content:space-between;font-size:1.25rem;
+      font-weight:700;color:var(--brand);}
+    .trial-badge{background:var(--hl);color:#000;font-size:.65rem;font-weight:700;
+      border-radius:4px;padding:1px 4px;margin-left:.5rem;}
+    .cross{text-decoration:line-through;opacity:.6;}
   </style>
 </head>
 <body>
   <div class="checkout-wrapper">
-    <!-- Checkout Form -->
-    <form id="checkout-form" class="panel" style="flex:1 1 auto;">
+    <!-- FORM -->
+    <form id="checkout-form" class="checkout-form" novalidate>
       <!-- Plan Picker -->
       <div class="plan-picker" id="plan-picker">
         <label class="single-plan selected" data-plan="lifetime">
@@ -75,9 +97,8 @@
           <div class="price">$17/mo</div>
         </label>
       </div>
-
-      <!-- Your Information -->
-      <div class="panel" style="margin-top:var(--gap)">
+      <!-- Contact Info -->
+      <div class="panel">
         <div class="panel-title">Your Information</div>
         <div class="form-row mb-2">
           <div class="col">
@@ -102,188 +123,117 @@
           <div id="coupon-msg" class="coupon-msg"></div>
         </div>
       </div>
-
-<!-- Credit/Debit Card -->
-<div class="panel" style="margin-top:var(--gap)">
-  <div class="panel-title">Credit/Debit Card</div>
-  <div style="display:flex; align-items:center; gap:1rem; margin-bottom:.5rem;">
-    <div id="card-element" style="flex:1"></div>
-    <div class="card-logos" style="display:flex; align-items:center; gap:.5rem;">
-      <img src="img/visa_creditcard.png" alt="Visa" height="18">
-      <img src="img/mastercard_creditcard.png" alt="Mastercard" height="18">
-      <img src="img/amex_creditcard.png" alt="AMEX" height="18">
-      <img src="img/discover_creditcard.png" alt="Discover" height="18">
-      <span class="more-text">and more…</span>
-    </div>
-  </div>
-  <div id="card-errors"></div>
-  <div class="secure-note">
-    <img src="img/lock.svg" alt="Lock"/>
-    All payments secured by 256-bit encryption.
-  </div>
-  <div class="form-check mb-2">
-    <input id="agree" type="checkbox" class="form-check-input" required>
-    <label for="agree" class="form-check-label">I agree to the terms & conditions</label>
-  </div>
-  <div class="form-check mb-3">
-    <input id="newsletter" type="checkbox" class="form-check-input">
-    <label for="newsletter" class="form-check-label">To join our newsletter, simply check this box.</label>
-  </div>
-  <button id="submit" type="submit" class="btn btn-block" style="background:var(--brand); color:#fff;">
-    Secure My Spot
-  </button>
-</div>
+      <!-- Card -->
+      <div class="panel">
+        <div class="panel-title">Credit/Debit Card</div>
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.5rem;">
+          <img src="img/visa_creditcard.png" alt="Visa" style="height:24px;">
+          <img src="img/mastercard_creditcard.png" alt="Mastercard" style="height:24px;">
+          <img src="img/amex_creditcard.png" alt="AMEX" style="height:24px;">
+          <img src="img/discover_creditcard.png" alt="Discover" style="height:24px;">
+          <span style="margin-left:.5rem;opacity:.7;">and more…</span>
+        </div>
+        <div id="card-element"></div>
+        <div id="card-errors"></div>
+        <div class="secure-note"><img src="img/lock.svg" alt="Lock"/>All payments secured by 256-bit encryption.</div>
+        <div class="form-check mb-2">
+          <input id="agree" type="checkbox" class="form-check-input" required>
+          <label for="agree" class="form-check-label">I agree to the terms & conditions</label>
+        </div>
+        <div class="form-check mb-3">
+          <input id="newsletter" type="checkbox" class="form-check-input">
+          <label for="newsletter" class="form-check-label">To join our newsletter, simply check this box.</label>
+        </div>
+        <button id="submit" type="submit" class="btn btn-block" style="background:var(--brand);color:#fff;">Secure My Spot</button>
+      </div>
     </form>
-
-    <!-- Summary Panel -->
-    <aside class="checkout-summary panel" style="flex:0 0 40%">
-      <h2>Join the Clarity Circle</h2>
-      <ul class="benefits">
-        <li><span><img src="img/checkmark.svg" alt="Check"/>Research-Backed Tools & Frameworks</span><span>($997+)</span></li>
-        <li><span><img src="img/checkmark.svg" alt="Check"/>Unlimited Relationship Wellness Checkups</span><span>($300+)</span></li>
-        <li><span><img src="img/checkmark.svg" alt="Check"/>Private Community Access</span><span>($497)</span></li>
-        <li><span><img src="img/checkmark.svg" alt="Check"/>Live Q&A Sessions</span><span>($997+)</span></li>
-        <li><span><img src="img/checkmark.svg" alt="Check"/>Lifetime Access</span><span>(priceless)</span></li>
-        <li><span><img src="img/checkmark.svg" alt="Check"/>30-Day Refund Policy</span></li>
-      </ul>
-      <div class="total-value"><span>Total Value:</span><span>$2,791+</span></div>
-      <div class="divider"></div>
-      <div class="order-summary-header">Order Summary:</div>
-      <div class="order-row">
-        <span>Clarity Circle Membership <span class="trial-badge">FREE 14-DAY TRIAL</span></span>
-        <span id="order-price" class="cross">$97</span>
+    <!-- SUMMARY -->
+    <aside class="checkout-summary">
+      <div class="summary-box">
+        <h2>Join the Clarity Circle</h2>
+        <ul class="benefits">
+          <li><span><img src="img/checkmark.svg" alt="Check"/>Research-Backed Tools & Frameworks</span><span>($997+)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="Check"/>Unlimited Relationship Wellness Checkups</span><span>($300+)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="Check"/>Private Community Access</span><span>($497)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="Check"/>Live Q&A Sessions</span><span>($997+)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="Check"/>Lifetime Access</span><span>(priceless)</span></li>
+          <li><span><img src="img/checkmark.svg" alt="Check"/>30-Day Refund Policy</span></li>
+        </ul>
+        <div class="total-value"><span>Total Value:</span><span>$2,791+</span></div>
+        <div class="divider"></div>
+        <div class="order-summary-header">Order Summary:</div>
+        <div class="order-row"><span>Clarity Circle Membership <span class="trial-badge">FREE 14-DAY TRIAL</span></span><span id="order-price" class="cross">$97</span></div>
+        <div id="summary-note" class="order-note"></div>
+        <div id="discount-row" class="order-row" style="display:none;"><span>Discount Code Applied</span><span id="discount-amount" style="color:var(--accent)"></span></div>
+        <div class="divider"></div>
+        <div class="order-total"><strong>Due Today:</strong><span id="due-today">$0.00</span></div>
+        <div id="due-note" class="order-note"></div>
       </div>
-      <div id="summary-note" class="order-note"></div>
-      <div id="discount-row" class="order-row" style="display:none;">
-        <span>Discount Code Applied</span><span id="discount-amount" style="color:var(--accent)"></span>
-      </div>
-      <div class="divider"></div>
-      <div class="order-total"><strong>Due Today:</strong><span id="due-today">$0.00</span></div>
-      <div id="due-note" class="order-note"></div>
     </aside>
   </div>
-
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const stripe = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
-    const elements = stripe.elements();
-    const card = elements.create('card');
-    card.mount('#card-element');
+    document.addEventListener('DOMContentLoaded', () => {
+      const stripe = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
+      const elements = stripe.elements();
+      const card = elements.create('card');
+      card.mount('#card-element');
 
-    // UI elements
-    const planPicker = document.getElementById('plan-picker');
-    const couponIn = document.getElementById('coupon');
-    const applyBtn = document.getElementById('apply-coupon');
-    const couponMsg = document.getElementById('coupon-msg');
-    const orderPrice = document.getElementById('order-price');
-    const summaryNote = document.getElementById('summary-note');
-    const dueNote = document.getElementById('due-note');
-    const discountRow = document.getElementById('discount-row');
-    const discountAmount = document.getElementById('discount-amount');
+      const planPicker = document.getElementById('plan-picker');
+      const couponIn = document.getElementById('coupon');
+      const applyBtn = document.getElementById('apply-coupon');
+      const couponMsg = document.getElementById('coupon-msg');
+      const orderPrice = document.getElementById('order-price');
+      const summaryNote = document.getElementById('summary-note');
+      const dueNote = document.getElementById('due-note');
+      const discountRow = document.getElementById('discount-row');
+      const discountAmount = document.getElementById('discount-amount');
 
-    // Pricing & coupons
-    const BASE = { lifetime:97, monthly:17 };
-    const couponAll = { FREE100:100 };
-    const couponMonthly = { OFF50:50, OFF30:30 };
-    const couponLifetime = { OFF20L:20 };
-    function pct(plan, code) {
-      code = code.trim().toUpperCase();
-      return couponAll[code] || (plan==='monthly'?couponMonthly[code]:couponLifetime[code]) || 0;
-    }
-    function fmtDate(d) {
-      return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    }
+      const BASE = { lifetime:97, monthly:17 };
+      const couponAll = { FREE100:100 };
+      const couponMonthly = { OFF50:50, OFF30:30 };
+      const couponLifetime = { OFF20L:20 };
+      function pct(plan, code){ code=code.trim().toUpperCase(); return couponAll[code]||(plan==='monthly'?couponMonthly[code]:couponLifetime[code])||0; }
+      function fmtDate(d){ return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
 
-    // Update summary text & pricing
-    function updateSummary(plan) {
-      const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate()+14);
-      const discountPct = pct(plan, couponIn.value);
-      const base = BASE[plan];
-      const discounted = (base*(100-discountPct)/100).toFixed(2);
-
-      orderPrice.textContent = `$${base}${plan==='monthly'?'/mo':''}`;
-      orderPrice.classList.toggle('cross', discountPct>0);
-
-      summaryNote.textContent = plan==='monthly'
-        ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted}/mo.`
-        : `After your trial ends on ${fmtDate(trialEnd)}, you will be charged a one-time payment of $${discounted}.`;
-
-      dueNote.textContent = `Your free trial will end on ${fmtDate(trialEnd)}.`;
-
-      if(discountPct>0) {
-        discountRow.style.display = 'flex';
-        const diff = (base - discounted).toFixed(2);
-    // … your applyBtn listener above …
-
-    // Initial render of summary once everything’s wired up
-    updateSummary(document.querySelector('.single-plan.selected').dataset.plan);
-
-    // Handle Stripe card-element validation errors
-    card.on('change', e => {
-      document.getElementById('card-errors').textContent = e.error?.message || '';
-    });
-
-    // Final form submission (3-step flow)
-    document.getElementById('submit').addEventListener('click', async (e) => {
-      e.preventDefault();
-      const errorsEl = document.getElementById('card-errors');
-      errorsEl.textContent = '';
-
-      // Must accept terms
-      if (!document.getElementById('agree').checked) {
-        return alert('Please agree to the terms & conditions.');
+      function updateSummary(plan){
+        const trialEnd=new Date(); trialEnd.setDate(trialEnd.getDate()+14);
+        const discountPct=pct(plan,couponIn.value);
+        const base=BASE[plan];
+        const discounted=(base*(100-discountPct)/100).toFixed(2);
+        orderPrice.textContent=`$${base}${plan==='monthly'?'/mo':''}`;
+        orderPrice.classList.toggle('cross',discountPct>0);
+        summaryNote.textContent=plan==='monthly'
+          ?`After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted}/mo.`
+          :`After your trial ends on ${fmtDate(trialEnd)}, you will be charged a one-time payment of $${discounted}.`;
+        dueNote.textContent=`Your free trial will end on ${fmtDate(trialEnd)}.`;
+        if(discountPct>0){ discountRow.style.display='flex'; discountAmount.textContent=`- $${(base-discounted).toFixed(2)}`; }
+        else discountRow.style.display='none';
       }
-      const btn = document.getElementById('submit');
-      btn.disabled = true;
+      planPicker.querySelectorAll('.single-plan').forEach(el=>el.addEventListener('click',()=>{ planPicker.querySelectorAll('.single-plan').forEach(s=>s.classList.remove('selected')); el.classList.add('selected'); updateSummary(el.dataset.plan); }));
+      applyBtn.addEventListener('click',()=>{ const plan=document.querySelector('.single-plan.selected').dataset.plan; const p=pct(plan,couponIn.value); if(p>0){ couponMsg.textContent='This coupon has been applied to your order'; couponMsg.className='coupon-msg success'; } else{ couponMsg.textContent='The promotional code you entered is not valid.'; couponMsg.className='coupon-msg error'; } updateSummary(plan); });
 
-      // Collect form data
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName  = document.getElementById('lastName').value.trim();
-      const email     = document.getElementById('email').value.trim();
-      const plan      = document.querySelector('.single-plan.selected').dataset.plan;
-      const coupon    = document.getElementById('coupon').value.trim().toUpperCase();
+      updateSummary(document.querySelector('.single-plan.selected').dataset.plan);
+      card.on('change',e=>document.getElementById('card-errors').textContent=e.error?.message||'');
 
-      try {
-        // STEP 1 — Create SetupIntent + get customerId
-        const siResp = await fetch('/.netlify/functions/create-setup-intent', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ firstName, lastName, email, coupon })
-        });
-        const { clientSecret, customerId, error: siErr } = await siResp.json();
-        if (siErr) throw new Error(siErr);
-
-        // STEP 2 — Confirm card setup
-        const { error: confirmErr } = await stripe.confirmCardSetup(clientSecret, {
-          payment_method: {
-            card,
-            billing_details: { name:`${firstName} ${lastName}`, email }
-          }
-        });
-        if (confirmErr) throw new Error(confirmErr.message);
-
-        // STEP 3 — Create subscription
-        const subResp = await fetch('/.netlify/functions/start-subscription', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ customerId, plan, coupon })
-        });
-        const { error: subErr } = await subResp.json();
-        if (subErr) throw new Error(subErr);
-
-        // Success — redirect parent frame
-        window.parent.postMessage(
-          { type:'checkoutComplete', url:'https://mypartnerlab.co/checkout-thank-you' },
-          '*'
-        );
-
-      } catch (err) {
-        errorsEl.textContent = err.message;
-        btn.disabled = false;
-      }
+      document.getElementById('checkout-form').addEventListener('submit',async e=>{
+        e.preventDefault(); const errorsEl=document.getElementById('card-errors'); errorsEl.textContent='';
+        if(!document.getElementById('agree').checked) return alert('Please agree to the terms & conditions.');
+        const btn=document.getElementById('submit'); btn.disabled=true;
+        const firstName=document.getElementById('firstName').value.trim();
+        const lastName=document.getElementById('lastName').value.trim();
+        const email=document.getElementById('email').value.trim();
+        const plan=document.querySelector('.single-plan.selected').dataset.plan;
+        const coupon=document.getElementById('coupon').value.trim().toUpperCase();
+        try{
+          const siResp=await fetch('/.netlify/functions/create-setup-intent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName,lastName,email,coupon})});
+          const {clientSecret,customerId,error:siErr}=await siResp.json(); if(siErr) throw new Error(siErr);
+          const {error:confirmErr}=await stripe.confirmCardSetup(clientSecret,{ payment_method:{card,billing_details:{name:`${firstName} ${lastName}`,email}} }); if(confirmErr) throw new Error(confirmErr.message);
+          const subResp=await fetch('/.netlify/functions/start-subscription',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({customerId,plan,coupon})});
+          const {error:subErr}=await subResp.json(); if(subErr) throw new Error(subErr);
+          window.parent.postMessage({type:'checkoutComplete',url:'https://mypartnerlab.co/checkout-thank-you'},'*');
+        }catch(err){ errorsEl.textContent=err.message; btn.disabled=false; }
+      });
     });
-
-  });  // end DOMContentLoaded listener
   </script>
 </body>
 </html>
