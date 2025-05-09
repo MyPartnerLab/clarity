@@ -28,8 +28,9 @@
   display: flex;
   flex-wrap: wrap;                /* allow wrapping on narrow screens */
   justify-content: space-between; /* push the aside to the far right */
+  align-items: flex-start;        /* keep both columns top-aligned */
   gap: var(--gap);
-}  
+}
     @media(max-width:767px){ .checkout-wrapper{ flex-direction:column; }}
     /* Section panels */
     .panel {background:var(--form-bg); border-radius:var(--radius); box-shadow:0 6px 16px rgba(0,0,0,.06); padding:2rem;}
