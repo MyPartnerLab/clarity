@@ -579,21 +579,23 @@ Check this box to subscribe to The Partner Lab weekly newsletter.
 
   });
   </script>
-  <style>
-    /* target the iframe element in Squarespace by ID */
-    #checkout-frame {
-      width: 100%;
-      border: none;
-      /* default to desktop height */
-      height: 2200px;
-      overflow: hidden;
-    }
-    @media (max-width: 767px) {
-      /* mobile: shorter height so you’re not stuck with blank space */
-      #checkout-frame {
-        height: 1400px;
-      }
-    }
-  </style>
+<script>
+  // Send height to parent on load & whenever things change
+  function postMyHeight() {
+    const h = document.documentElement.scrollHeight;
+    window.parent.postMessage({
+      type: 'checkoutHeight',
+      height: h
+    }, '*');
+  }
+
+  // Once on load…
+  window.addEventListener('load', postMyHeight);
+
+  // …and again if the user resizes (e.g. rotates phone) or content changes size
+  window.addEventListener('resize', postMyHeight);
+
+  // Optional: if you dynamically show/hide things, call postMyHeight() after each change
+</script>
 </body>
 </html>
