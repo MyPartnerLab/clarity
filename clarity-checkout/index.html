@@ -469,9 +469,9 @@
   </div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const stripe = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
-  const elements = stripe.elements();
-  const card = elements.create('card');
+  const stripe      = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
+  const elements    = stripe.elements();
+  const card        = elements.create('card');
   card.mount('#card-element');
 
   const planEls        = document.querySelectorAll('.single-plan');
@@ -505,12 +505,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateSummary(plan){
     currentPlan = plan;
-    const trialEnd = new Date();
+    const trialEnd  = new Date();
     trialEnd.setDate(trialEnd.getDate() + 14);
 
     const discount   = pct(couponIn.value);
     const base       = BASE[plan];
-    const discounted = (base * (100 - discount) / 100).toFixed(2);
+    const discounted = (base * (100 - discount)/100).toFixed(2);
 
     orderPrice.textContent = `$${base}${plan==='monthly'?'/mo':''}`;
     orderPrice.classList.toggle('cross', discount > 0);
@@ -532,14 +532,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Plan selection
+  // Plan selector
   planEls.forEach(el => el.addEventListener('click', () => {
-    planEls.forEach(x => x.classList.remove('selected'));
+    planEls.forEach(x=>x.classList.remove('selected'));
     el.classList.add('selected');
     updateSummary(el.dataset.plan);
   }));
 
-  // Coupon application
+  // Coupon handler
   applyBtn.addEventListener('click', () => {
     const discount = pct(couponIn.value);
     if (discount > 0) {
@@ -552,19 +552,18 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSummary(currentPlan);
   });
 
-  // Initialize summary
+  // Initial render
   updateSummary(currentPlan);
 
-  // Card element errors
+  // Display card input errors
   card.on('change', e => {
     document.getElementById('card-errors').textContent = e.error?.message || '';
   });
 
-  // **Use the form’s submit event to prevent full-page reload**
+  // **KEY CHANGE**: listen on the form’s submit, not the button click
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    const errs = document.getElementById('card-errors');
-    errs.textContent = '';
+    document.getElementById('card-errors').textContent = '';
 
     if (!document.getElementById('agree').checked) {
       alert('Please agree to the terms & conditions.');
@@ -582,7 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      // Create SetupIntent
+      // STEP 1: Create SetupIntent
       const siResp = await fetch('/.netlify/functions/create-setup-intent', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
@@ -591,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const { clientSecret, customerId, error: siErr } = await siResp.json();
       if (siErr) throw new Error(siErr);
 
-      // Confirm Card Setup
+      // STEP 2: Confirm card setup
       const { error: confirmErr } = await stripe.confirmCardSetup(clientSecret, {
         payment_method: {
           card,
@@ -603,7 +602,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (confirmErr) throw new Error(confirmErr.message);
 
-      // Start Subscription
+      // STEP 3: Start subscription
       const subResp = await fetch('/.netlify/functions/start-subscription', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
@@ -616,19 +615,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const { error: subErr } = await subResp.json();
       if (subErr) throw new Error(subErr);
 
-      // Redirect parent frame to thank-you page
+      // Redirect parent to thank-you
       window.parent.postMessage({
         type: 'checkoutComplete',
         url:  'https://mypartnerlab.co/checkout-thank-you'
       }, '*');
 
     } catch(err) {
-      errs.textContent = err.message;
+      document.getElementById('card-errors').textContent = err.message;
       submitBtn.disabled = false;
     }
   });
 
-  // Send height to parent
+  // Auto post height
   function postMyHeight() {
     window.parent.postMessage({
       type: 'checkoutHeight',
