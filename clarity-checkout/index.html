@@ -13,138 +13,247 @@
 
   <style>
     :root {
-      --brand:#800f2f; --accent:#c9184a; --form-bg:#fff;
-      --summary-bg:#f4e8de; --radius:.75rem; --gap:1.5rem; --hl:#ffeb86;
-      --border:#e0e0e0;
+      --brand: #800f2f;
+      --accent: #c9184a;
+      --form-bg: #fff;
+      --summary-bg: #f4e8de;
+      --radius: .75rem;
+      --gap: 1.5rem;
+      --hl: #ffeb86;
     }
-    body { margin:0; padding:3rem 0; font-family:'Lato',sans-serif; background:#fdf8f5; }
-    .checkout-wrapper{ display:flex; max-width:1100px; margin:0 auto; gap:var(--gap); }
-    @media(max-width:767px){ .checkout-wrapper{ flex-direction:column } }
+    body {
+      margin: 0; padding: 3rem 0;
+      font-family: 'Lato', sans-serif;
+      background: #fdf8f5;
+    }
+    .checkout-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: var(--gap);
+    }
+    @media (max-width: 767px) {
+      .checkout-wrapper { flex-direction: column; }
+    }
 
-    /* ========== LEFT FORM PANEL ========== */
-    .checkout-form { flex:0 0 60%; }
-    .plan-picker { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:var(--gap); }
-    @media(max-width:575px){ .plan-picker{ flex-direction:column } }
+    /* ==== FORM PANEL ==== */
+    .checkout-form {
+      flex: 0 0 60%;
+      background: var(--form-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
+      padding: 2.25rem;
+    }
+    .plan-picker {
+      display: flex;
+      gap: var(--gap);
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width:575px) {
+      .plan-picker { flex-direction: column; }
+    }
     .single-plan {
-      border:1px solid #d7d7d7; border-radius:var(--radius);
-      background:#fff; padding:1.25rem; flex:1; cursor:pointer;
-      transition:border .15s; display:flex; flex-direction:column;
-      align-items:center;
+      position: relative;
+      border: 1px solid #d7d7d7;
+      border-radius: var(--radius);
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: border .15s;
+      z-index: 0;
     }
-    .single-plan:hover{ border-color:var(--brand) }
-    .single-plan input{ display:none }
-    .single-plan.selected{ border:2px solid var(--brand) }
-    .plan-badge {
-      background:var(--summary-bg); color:var(--brand);
-      font-size:.75rem; font-weight:700; border-radius:999px;
-      padding:.1rem .4rem; margin-bottom:.25rem;
+    .single-plan:hover { border-color: var(--brand); }
+    .single-plan input { display: none; }
+    .single-plan.selected {
+      border: 2px solid var(--brand);
+      background: #fff;
     }
-    .plan-title{ font-weight:700 }
-    .plan-sub{
-      font-style:italic; opacity:.75; font-size:.85rem;
-      text-align:center; line-height:1.2; margin-top:.1rem;
+    .single-plan .plan-badge {
+      background: var(--summary-bg);
+      color: var(--brand);
+      font-size: .75rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: .1rem .4rem;
+      margin-bottom: .25rem;
     }
-    .price{ font-size:1.3rem; font-weight:700; color:var(--brand); margin-top:.5rem; }
+    .single-plan .plan-title {
+      font-weight: 700;
+      margin-top: .25rem;
+    }
+    .single-plan .plan-sub {
+      font-style: italic;
+      opacity: .75;
+      font-size: .85rem;
+      text-align: center;
+      margin-top: .1rem;
+      line-height: 1.2;
+    }
+    .single-plan .price {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--brand);
+      margin-top: .5rem;
+    }
 
-    .section-box {
-      background:var(--form-bg); border:1px solid var(--border);
-      border-radius:var(--radius); padding:1.5rem; margin-bottom:var(--gap);
-    }
+    /* Form fields */
     h3 {
-      font-size:1.25em; font-weight:700; color:var(--brand);
-      margin-bottom:1rem;
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 1.25em;
+      font-weight: 700;
+      color: var(--brand);
     }
-    .form-row, label, input.form-control, .payment-label, .terms {
-      margin-bottom:.5rem;
+    .checkout-form .form-row,
+    .checkout-form input[type="email"],
+    .checkout-form .payment-label,
+    .checkout-form .terms,
+    .checkout-form .coupon-row {
+      margin-bottom: .5rem;
     }
     input.form-control {
-      border-radius:var(--radius); padding:1rem; min-height:2.8rem;
+      border-radius: var(--radius);
+      padding: 1rem;
+      min-height: 2.8rem;
+      font-size: 1rem;
     }
 
-    /* credit/debit header already updated below */
+    /* Card entry */
     .card-section {
-      display:flex; align-items:center; justify-content:space-between;
-      margin-bottom:.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .payment-label img{ height:18px; margin-left:4px }
-    .payment-label .and-more { font-size:.9rem; opacity:.75; margin-left:.5rem }
-    #card-element{
-      border:1px solid #ccc; border-radius:var(--radius);
-      padding:1rem; margin-bottom:.5rem;
+    .payment-label {
+      text-align: right;
     }
-    #card-errors{ color:#dc3545; font-size:.875rem; }
-    .secure-note{
-      display:flex; align-items:center; font-size:.85rem;
-      opacity:.7; margin-top:.75rem;
+    .card-logos img {
+      height: 24px;
+      margin-left: 4px;
+      vertical-align: middle;
     }
-    .secure-note img{ width:16px; margin-right:6px }
-    .terms{ margin-top:1rem }
-    #submit {
-      width:100%; background:var(--brand); color:#fff; border:none;
-      border-radius:var(--radius); padding:.85rem; font-weight:700;
+    .more-text {
+      font-size: .75rem;
+      opacity: .7;
+      margin-left: 4px;
+      vertical-align: middle;
     }
-    #submit:hover{ background:var(--accent) }
+    #card-element {
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin: .5rem 0;
+    }
+    #card-errors {
+      color: #dc3545;
+      font-size: .875rem;
+      margin-top: .5rem;
+    }
+    .secure-note {
+      text-align: center;
+      font-size: .85rem;
+      opacity: .7;
+      margin-top: .75rem;
+    }
 
-    /* ========== RIGHT SUMMARY PANEL ========== */
-    .checkout-summary { flex:0 0 40%; }
+    /* Buttons & checkboxes */
+    #submit {
+      width: 100%;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: .85rem;
+      font-weight: 700;
+      transition: background .25s;
+      z-index: 2;
+    }
+    #submit:hover { background: var(--accent); }
+    .terms, .newsletter {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    /* ==== SUMMARY PANEL ==== */
+    .checkout-summary {
+      flex: 0 0 40%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
     .summary-box {
-      background:var(--summary-bg); border-radius:var(--radius);
-      box-shadow:0 6px 16px rgba(0,0,0,.06);
-      padding:2rem; text-align:left;
+      background: var(--summary-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
+      padding: 2rem;
+      width: 100%;
+      text-align: left;
     }
     .summary-mockup {
-      width:100%; max-width:480px; margin-bottom:1.5rem;
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 1.5rem;
     }
-    .benefits{ list-style:none; padding:0; margin:0 0 1rem; font-size:.9rem }
-    .benefits li{
-      display:flex; justify-content:space-between; margin-bottom:.5rem
+    .divider {
+      border: none;
+      border-top: 1px solid var(--brand);
+      margin: 1rem 0;
     }
-    .benefits img{ width:18px; margin-right:.5rem }
-    .total-value{
-      display:flex; justify-content:space-between; font-weight:700;
-      margin-bottom:1rem;
+    .trial-badge {
+      background: var(--hl);
+      color: #000;
+      font-size: .65rem;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 1px 4px;
+      margin-left: 4px;
+      white-space: nowrap;
+      text-transform: uppercase;
     }
-    .divider{
-      height:1px; background:var(--brand); margin:1rem 0;
-      opacity:.4;
+    .cross {
+      text-decoration: line-through;
+      opacity: .6;
     }
-    .order-header{
-      font-weight:700; margin-bottom:.5rem;
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      line-height: 1.2;
     }
-    .order-row{
-      display:flex; justify-content:space-between; font-size:1rem
+    .order-note {
+      margin-top: .25rem;
+      font-style: italic;
+      opacity: .75;
+      font-size: .8rem;
     }
-    .trial-badge{
-      background:var(--hl); color:#000; font-size:.65rem;
-      font-weight:700; border-radius:4px; padding:1px 4px;
-      margin-left:4px; text-transform:uppercase;
-    }
-    .cross{ text-decoration:line-through; opacity:.6 }
-    .order-note{
-      font-style:italic; opacity:.75; font-size:.85rem; margin-top:.25rem
-    }
-    .promo-line{ color:var(--accent); font-size:.9rem; margin-top:.5rem }
-    .order-total{
-      display:flex; justify-content:space-between;
-      margin-top:1rem; font-size:1.25em;
-      font-weight:700; color:var(--brand)
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-size: 1.25em;
+      font-weight: 700;
+      color: var(--brand);
     }
   </style>
 </head>
 <body>
   <div class="checkout-wrapper">
-    <!-- LEFT PANEL -->
     <form id="checkout-form" class="checkout-form" novalidate>
-      <!-- PLAN PICKER -->
+      <!-- ===== PLAN PICKER ===== -->
       <div class="plan-picker">
-        <label class="single-plan" id="plan-lifetime">
+        <label class="single-plan flex-fill" id="plan-lifetime">
           <input type="radio" name="plan" value="lifetime" checked>
           <span class="plan-badge">Founding Member</span>
           <span class="plan-title">Lifetime Access</span>
           <span class="plan-sub">Includes 14-day free trial</span>
           <span class="price">$97</span>
         </label>
-        <label class="single-plan" id="plan-monthly">
+        <label class="single-plan flex-fill" id="plan-monthly">
           <input type="radio" name="plan" value="monthly">
           <span class="plan-badge">Monthly Subscription</span>
           <span class="plan-title">Monthly Access</span>
@@ -153,73 +262,74 @@
         </label>
       </div>
 
-      <!-- YOUR INFORMATION -->
-      <div class="section-box">
-        <h3>Your Information</h3>
-        <div class="form-row row">
-          <div class="col">
-            <label for="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" class="form-control" required>
-          </div>
-          <div class="col">
-            <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" class="form-control" required>
-          </div>
+      <!-- ===== YOUR INFORMATION ===== -->
+      <h3>Your Information</h3>
+      <div class="form-row">
+        <div class="col">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" name="firstName" class="form-control" required>
         </div>
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" class="form-control" required>
+        <div class="col">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" class="form-control" required>
+        </div>
+      </div>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" class="form-control" required>
 
-        <!-- moved coupon here -->
-        <label for="coupon" style="margin-top:.75rem;">
-          If you have one, enter your a gift card, voucher or promotional code here
-        </label>
-        <input type="text" id="coupon" class="form-control" placeholder="Enter code">
+      <!-- ===== COUPON ===== -->
+      <div class="coupon-row">
+        <label for="coupon">If you have one, enter your a gift card, voucher or promotional code here</label>
+        <div style="display:flex;gap:.5rem;align-items:flex-start;">
+          <input type="text" id="coupon" class="form-control" placeholder="Enter code">
+          <button type="button" id="apply-coupon" class="btn btn-secondary">Apply</button>
+        </div>
+        <div id="coupon-message" class="order-note"></div>
       </div>
 
-      <!-- CREDIT/DEBIT CARD -->
-      <div class="section-box">
-        <div class="card-section">
-          <h3>Credit/Debit Card</h3>
+      <!-- ===== PAYMENT INFO ===== -->
+      <div class="card-section" style="margin-top:2rem;">
+        <h3>Credit/Debit Card</h3>
+        <div class="payment-label">
+          <span class="card-logos">
+            <img src="img/visa_creditcard.png" alt="Visa">
+            <img src="img/mastercard_creditcard.png" alt="Mastercard">
+            <img src="img/amex_creditcard.png" alt="AMEX">
+            <img src="img/discover_creditcard.png" alt="Discover">
+            <span class="more-text">and more…</span>
+          </span>
         </div>
-        <div class="payment-label mb-2">
-          <img src="img/visa_creditcard.png" alt="Visa">
-          <img src="img/mastercard_creditcard.png" alt="Mastercard">
-          <img src="img/amex_creditcard.png" alt="AMEX">
-          <img src="img/discover_creditcard.png" alt="Discover">
-          <span class="and-more">and more…</span>
-        </div>
-
-        <div id="card-element"></div>
-        <div id="card-errors" role="alert"></div>
-        <div class="secure-note">
-          <img src="img/lock.svg" alt="">All payments secured by 256-bit encryption.
-        </div>
-        <div class="terms">
-          <input type="checkbox" name="agree" id="agree" required>
-          <label for="agree">I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms & conditions</a></label>
-        </div>
-        <button id="submit" type="submit">Secure My Spot</button>
       </div>
+      <div id="card-element"></div>
+      <div id="card-errors" role="alert"></div>
+      <div class="secure-note">All payments secured by 256-bit encryption.</div>
+
+      <!-- ===== TERMS & NEWSLETTER ===== -->
+      <div class="terms">
+        <input type="checkbox" name="agree" id="agree" required>
+        <label for="agree">I agree to the <a href="https://www.mypartnerlab.co/" target="_blank">terms & conditions</a></label>
+      </div>
+      <div class="newsletter">
+        <input type="checkbox" id="newsletter">
+        <label for="newsletter">To join our newsletter, simply check this box.</label>
+      </div>
+
+      <button id="submit" type="submit">Secure My Spot</button>
     </form>
 
-    <!-- RIGHT PANEL -->
+    <!-- ===== SUMMARY ===== -->
     <aside class="checkout-summary">
       <img src="img/mockup1.png" class="summary-mockup" alt="Program preview">
       <div class="summary-box">
         <h2>Join the Clarity Circle</h2>
-        <ul class="benefits">
-          <li><span><img src="img/checkmark.svg" alt="">Research-Backed Tools & Frameworks</span><span>($997+)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="">Unlimited Relationship Wellness Checkups</span><span>($300+)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="">Private Community Access</span><span>($497)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="">Live Q&A Sessions</span><span>($997+)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="">Lifetime Access</span><span>(priceless)</span></li>
-          <li><span><img src="img/checkmark.svg" alt="">30-Day Refund Policy</span></li>
-        </ul>
-        <div class="total-value">
-          <span>Total Value:</span><span>$2,791+</span>
+
+        <div class="order-row">
+          <strong>Total Value:</strong>
+          <span>$2,791+</span>
         </div>
         <div class="divider"></div>
-        <div class="order-header">Order Summary:</div>
+
+        <h4>Order Summary:</h4>
         <div class="order-row">
           <span>
             Clarity Circle Membership
@@ -227,10 +337,12 @@
           </span>
           <span id="order-price" class="cross">$97</span>
         </div>
+        <div id="discount-line" class="order-note"></div>
         <div id="summary-note" class="order-note"></div>
-        <div id="promo-line" class="promo-line"></div>
+
         <div class="order-total">
-          <strong>Due Today:</strong><span id="due-today">$0.00</span>
+          <strong>Due Today:</strong>
+          <span id="due-today">$0.00</span>
         </div>
         <div id="due-note" class="order-note"></div>
       </div>
@@ -238,7 +350,166 @@
   </div>
 
   <script>
-  /* — your existing JS (stripe, updateSummary, form submission, etc.) remains unchanged — */
+  document.addEventListener('DOMContentLoaded', () => {
+    // — Stripe init —
+    const stripe = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
+
+    // Form & controls
+    const form           = document.getElementById('checkout-form');
+    const btn            = document.getElementById('submit');
+    const errors         = document.getElementById('card-errors');
+    const couponIn       = document.getElementById('coupon');
+    const applyBtn       = document.getElementById('apply-coupon');
+    const couponMsg      = document.getElementById('coupon-message');
+
+    const priceEl        = document.getElementById('order-price');
+    const summaryNote    = document.getElementById('summary-note');
+    const dueNote        = document.getElementById('due-note');
+    const discountLine   = document.getElementById('discount-line');
+
+    // Base prices
+    const BASE = { lifetime: 97, monthly: 17 };
+    // Coupons map
+    const couponMapUniversal = { FREE100: 100 };
+    const couponMapMonthly   = { OFF50: 50, OFF30: 30 };
+    const couponMapLifetime  = { OFF20L: 20 };
+
+    function pctFor(plan, code) {
+      code = code.trim().toUpperCase();
+      return couponMapUniversal[code] ||
+             (plan === 'monthly' ? couponMapMonthly[code] : couponMapLifetime[code]) ||
+             0;
+    }
+
+    function fmtDate(d) {
+      return d.toLocaleDateString('en-US',{ month:'short', day:'numeric', year:'numeric' });
+    }
+
+    function updateSummary(plan) {
+      // trial end
+      const trialEnd = new Date();
+      trialEnd.setDate(trialEnd.getDate() + 14);
+
+      const discountPct = pctFor(plan, couponIn.value);
+      const base        = BASE[plan];
+      const discounted  = (base * (100 - discountPct)/100).toFixed(2);
+      const saved       = (base - discounted).toFixed(2);
+
+      // Price styling
+      priceEl.textContent = `$${base}${plan==='monthly'?'/mo':''}`;
+      if (discountPct > 0) priceEl.classList.add('cross');
+      else               priceEl.classList.remove('cross');
+
+      // Discount line
+      discountLine.textContent = discountPct > 0
+        ? `Discount applied: -$${saved}`
+        : '';
+
+      // After-trial note
+      summaryNote.textContent = plan === 'monthly'
+        ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted}/mo.`
+        : `After your trial ends on ${fmtDate(trialEnd)}, you will be charged a one-time payment of $${discounted}.`;
+
+      dueNote.textContent = `Your free trial will end on ${fmtDate(trialEnd)}.`;
+      document.getElementById('due-today').textContent = '$0.00';
+    }
+
+    // Plan picker
+    document.querySelectorAll('.single-plan').forEach(label => {
+      label.addEventListener('click', () => {
+        label.querySelector('input').checked = true;
+        document.querySelectorAll('.single-plan').forEach(l=>l.classList.remove('selected'));
+        label.classList.add('selected');
+        updateSummary(label.querySelector('input').value);
+      });
+    });
+    document.getElementById('plan-lifetime').classList.add('selected');
+    updateSummary('lifetime');
+
+    // Apply coupon
+    applyBtn.addEventListener('click', () => {
+      const plan = document.querySelector('input[name="plan"]:checked').value;
+      const pct  = pctFor(plan, couponIn.value);
+      if (pct > 0) {
+        couponMsg.className = 'order-note text-success';
+        couponMsg.textContent = 'This coupon has been applied to your order';
+      } else {
+        couponMsg.className = 'order-note text-danger';
+        couponMsg.textContent = 'The promotional code you entered is not valid.';
+      }
+      updateSummary(plan);
+    });
+
+    // Live card errors
+    card.on('change', e => { errors.textContent = e.error ? e.error.message : ''; });
+
+    // Form submit
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      errors.textContent = '';
+      if (!form.agree.checked) {
+        return alert('Please agree to the terms & conditions.');
+      }
+      btn.disabled = true;
+
+      const firstName = form.firstName.value.trim();
+      const lastName  = form.lastName.value.trim();
+      const email     = form.email.value.trim();
+      const plan      = document.querySelector('input[name="plan"]:checked').value;
+
+      // 1 — Create SetupIntent
+      const siResp = await fetch('/.netlify/functions/create-setup-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email })
+      });
+      const { clientSecret, customerId, error: siErr } = await siResp.json();
+      if (siErr) {
+        btn.disabled = false;
+        errors.textContent = siErr;
+        return;
+      }
+
+      // 2 — Confirm card setup
+      const { error: confirmErr } = await stripe.confirmCardSetup(clientSecret, {
+        payment_method: { card, billing_details: { name:`${firstName} ${lastName}`, email } }
+      });
+      if (confirmErr) {
+        btn.disabled = false;
+        errors.textContent = confirmErr.message;
+        return;
+      }
+
+      // 3 — Start subscription (with coupon)
+      const subResp = await fetch('/.netlify/functions/start-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customerId, plan, coupon: couponIn.value })
+      });
+      const { error: subErr } = await subResp.json();
+      if (subErr) {
+        btn.disabled = false;
+        errors.textContent = subErr;
+        return;
+      }
+
+      // Success
+      window.parent.postMessage(
+        { type:'checkoutComplete', url:'https://mypartnerlab.co/checkout-thank-you' },
+        '*'
+      );
+    });
+
+    // Auto-resize iframe
+    function reportHeight(){
+      window.parent.postMessage({ type:'checkoutHeight', height:document.body.scrollHeight }, '*');
+    }
+    window.addEventListener('load', reportHeight);
+    new MutationObserver(reportHeight).observe(document.body, { childList:true, subtree:true });
+  });
   </script>
 </body>
 </html>
