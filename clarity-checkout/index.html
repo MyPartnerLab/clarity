@@ -169,6 +169,7 @@
       background: #fff;
       text-align: center;
       border-radius: var(--radius);
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
       padding: 1.5rem;
       cursor: pointer;
     }
@@ -508,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
     orderPrice.textContent = `$${base}${plan==='monthly'?'/mo':''}`;
     orderPrice.classList.toggle('cross', discount > 0);
     summaryNote.textContent = plan==='monthly'
-      ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted}/mo.`
+      ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted} per month.`
       : `After your trial ends on ${fmtDate(trialEnd)}, you will be charged a one-time payment of $${discounted}.`;
 
     if (discount > 0) {
@@ -533,10 +534,10 @@ document.addEventListener('DOMContentLoaded', () => {
   applyBtn.addEventListener('click', () => {
     const discount = pct(couponIn.value);
     if (discount > 0) {
-      couponMsg.textContent = 'This coupon has been applied to your order';
+      couponMsg.textContent = 'Your coupon has been applied to your order';
       couponMsg.className   = 'coupon-msg success';
     } else {
-      couponMsg.textContent = 'The promotional code you entered is not valid.';
+      couponMsg.textContent = 'The promo code you entered is not valid.';
       couponMsg.className   = 'coupon-msg error';
     }
     updateSummary(currentPlan);
