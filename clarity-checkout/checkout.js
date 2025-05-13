@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // — initialize Stripe Elements —
-  const stripe = Stripe('pk_live_51QxWEI…'); // your key
+  const stripe = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA'); 
   const elements = stripe.elements();
   const card = elements.create('card');
   card.mount('#card-element');
@@ -54,12 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const trialEnd = new Date();
     trialEnd.setDate(trialEnd.getDate() + 14);
     summaryNote.textContent = plan==='monthly'
-      ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted}/mo.`
+      ? `After your trial ends on ${fmtDate(trialEnd)}, you will be charged $${discounted} per month.`
       : `After your trial ends on ${fmtDate(trialEnd)}, you will be charged a one-time payment of $${discounted}.`;
 
     // discount row
     if (discount > 0) {
-      discountLabel.textContent  = `Discount code: ${code}.`;
+      discountLabel.textContent  = `Coupon applied: ${code}.`;
       discountAmount.textContent = `$${(base - discounted).toFixed(2)} off`;
       discountRow.style.display  = 'flex';
     } else {
@@ -79,10 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
   applyBtn.addEventListener('click', () => {
     const discount = pct(couponIn.value);
     if (discount > 0) {
-      couponMsg.textContent = '🎉 Coupon applied!';
+      couponMsg.textContent = '🎉 Your coupon has been applied!';
       couponMsg.className   = 'coupon-msg success';
     } else {
-      couponMsg.textContent = '❌ Invalid promo code';
+      couponMsg.textContent = 'This promo code is not valid';
       couponMsg.className   = 'coupon-msg error';
     }
     updateSummary(currentPlan);
@@ -90,6 +90,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // initial render
   updateSummary(currentPlan);
+
+  //accept terms
+  const agreeError = document.getElementById('agree-error');
+
+submitBtn.addEventListener('click', async e => {
+  e.preventDefault();
+  agreeError.textContent = '';              // clear any old message
+  if (!document.getElementById('agree').checked) {
+    agreeError.textContent = 'Please agree to our terms & conditions before clicking, "Secure My Spot".';
+    submitBtn.disabled = false;
+    return;
+  }
 
   // stripe card errors
   card.on('change', e => {
