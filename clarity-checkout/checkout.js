@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('✅ checkout.js up and running!');
+const OP = document.getElementById('order-price');
+console.log('order-price element is', OP);
   console.log({
   orderPrice:    document.getElementById('order-price'),
   summaryNote:   document.getElementById('summary-note'),
