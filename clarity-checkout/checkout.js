@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+  console.log({
+  orderPrice:    document.getElementById('order-price'),
+  summaryNote:   document.getElementById('summary-note'),
+  discountRow:   document.getElementById('discount-row'),
+  discountAmount:document.getElementById('discount-amount'),
+  submitBtn:     document.getElementById('submit'),
+});
   const stripe      = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
   const elements    = stripe.elements();
   const card        = elements.create('card');
