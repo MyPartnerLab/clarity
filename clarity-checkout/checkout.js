@@ -1,4 +1,3 @@
-<script>
 document.addEventListener('DOMContentLoaded', () => {
   const stripe      = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
   const elements    = stripe.elements();
@@ -150,4 +149,3 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('load',   postMyHeight);
   window.addEventListener('resize', postMyHeight);
 });
-</script>
