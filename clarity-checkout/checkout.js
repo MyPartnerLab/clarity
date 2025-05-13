@@ -2,55 +2,54 @@
 console.log('✅ checkout.js loaded');
 
 document.addEventListener('DOMContentLoaded', () => {
-  // — grab every DOM node up front —
+  // — cache DOM nodes —
+  const form           = document.getElementById('checkout-form');
   const orderPrice     = document.getElementById('order-price');
   const summaryNote    = document.getElementById('summary-note');
   const discountRow    = document.getElementById('discount-row');
-  const discountLabel  = discountRow.querySelector('span');      // first <span>
+  const discountLabel  = discountRow.querySelector('span:first-child');
   const discountAmount = document.getElementById('discount-amount');
   const planEls        = document.querySelectorAll('.single-plan');
   const couponIn       = document.getElementById('coupon');
   const applyBtn       = document.getElementById('apply-coupon');
   const couponMsg      = document.getElementById('coupon-msg');
   const submitBtn      = document.getElementById('submit');
-  console.log({orderPrice, summaryNote, discountRow, discountLabel, discountAmount, submitBtn});
+  const agreeError     = document.getElementById('agree-error');
+  const cardErrors     = document.getElementById('card-errors');
 
-  // — basic config —
-  const BASE = { lifetime: 97, monthly: 17 };
+  console.log({ orderPrice, summaryNote, discountRow, discountLabel, discountAmount, submitBtn });
+
+  // — config & helpers —
+  const BASE      = { lifetime: 97, monthly: 17 };
   const couponMap = { LIVEFREE: 100, BOGO50: 50, SAVE20: 20 };
-  function pct(code = '') {
-    return couponMap[ code.trim().toUpperCase() ] || 0;
-  }
-  function fmtDate(d) {
-    return d.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
-  }
+  const pct = code => couponMap[ code.trim().toUpperCase() ] || 0;
+  const fmtDate = d => d.toLocaleDateString('en-US', {
+    month:'short', day:'numeric', year:'numeric'
+  });
 
-  // — initialize Stripe Elements —
-  const stripe = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA'); 
+  // — Stripe setup —
+  const stripe  = Stripe('pk_live_51QxWEIKnSVoS1s5BDLXFPd5RF5JEG5pX5CODPpc9tRpcPoHMe9DQ5Nbr02OB0o9FIst1bzhjRWIVtnuvmq6JJ3N60082ykCDzA');
   const elements = stripe.elements();
-  const card = elements.create('card');
+  const card     = elements.create('card');
   card.mount('#card-element');
+  card.on('change', e => {
+    cardErrors.textContent = e.error?.message || '';
+  });
 
-  // — summary logic —
+  // — update the summary panel —
   let currentPlan = 'lifetime';
   function updateSummary(plan) {
     currentPlan = plan;
     console.log('🔄 updateSummary', plan);
 
-    const code     = couponIn.value.trim().toUpperCase();
-    const discount = pct(code);
-    const base     = BASE[plan];
+    // compute discounts
+    const code       = couponIn.value;
+    const discount   = pct(code);
+    const base       = BASE[plan];
     const discounted = (base * (100 - discount) / 100).toFixed(2);
 
-    if (!orderPrice || !summaryNote || !discountLabel || !discountAmount) {
-      console.error('Missing an element in updateSummary, aborting.');
-      return;
-    }
-
-    // base price display
+    // price & trial note
     orderPrice.textContent = `$${base}${plan==='monthly'?'/mo':''}`;
-
-    // trial note
     const trialEnd = new Date();
     trialEnd.setDate(trialEnd.getDate() + 14);
     summaryNote.textContent = plan==='monthly'
@@ -59,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // discount row
     if (discount > 0) {
-      discountLabel.textContent  = `Coupon applied: ${code}.`;
+      discountLabel.textContent  = `Coupon applied: ${code.trim().toUpperCase()}.`;
       discountAmount.textContent = `$${(base - discounted).toFixed(2)} off`;
       discountRow.style.display  = 'flex';
     } else {
@@ -67,115 +66,103 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // — UI hooks —
-  planEls.forEach(el => {
-    el.addEventListener('click', () => {
-      planEls.forEach(x => x.classList.remove('selected'));
-      el.classList.add('selected');
-      updateSummary(el.dataset.plan);
-    });
-  });
+  // — plan selector UI —
+  planEls.forEach(el => el.addEventListener('click', () => {
+    planEls.forEach(x => x.classList.remove('selected'));
+    el.classList.add('selected');
+    updateSummary(el.dataset.plan);
+  }));
 
+  // — coupon handler —
   applyBtn.addEventListener('click', () => {
-    const discount = pct(couponIn.value);
+    const code     = couponIn.value;
+    const discount = pct(code);
     if (discount > 0) {
       couponMsg.textContent = '🎉 Your coupon has been applied!';
       couponMsg.className   = 'coupon-msg success';
     } else {
-      couponMsg.textContent = 'This promo code is not valid';
+      couponMsg.textContent = 'This promo code is not valid.';
       couponMsg.className   = 'coupon-msg error';
     }
     updateSummary(currentPlan);
   });
 
-  // initial render
+  // first render
   updateSummary(currentPlan);
 
-  //accept terms
-  const agreeError = document.getElementById('agree-error');
-
-submitBtn.addEventListener('click', async e => {
-  e.preventDefault();
-  agreeError.textContent = '';              // clear any old message
-  if (!document.getElementById('agree').checked) {
-    agreeError.textContent = 'Please agree to our terms & conditions before clicking, "Secure My Spot".';
-    submitBtn.disabled = false;
-    return;
-  }
-
-  // stripe card errors
-  card.on('change', e => {
-    document.getElementById('card-errors').textContent = e.error?.message || '';
-  });
-
-  // — submit handler —
-  submitBtn.addEventListener('click', async e => {
+  // — form submission —  
+  form.addEventListener('submit', async e => {
     e.preventDefault();
-    console.log('🔔 submit clicked');
-    document.getElementById('card-errors').textContent = '';
+    agreeError.textContent = '';
+    cardErrors.textContent = '';
 
-    if (!document.getElementById('agree').checked) {
-      return alert('Please agree to the terms & conditions.');
+    // inline terms error
+    if (!form.agree.checked) {
+      agreeError.textContent = 'Please agree to the terms & conditions before continuing.';
+      return;
     }
-    submitBtn.disabled = true;
 
+    submitBtn.disabled = true;
+    console.log('🔔 submit clicked');
+
+    // gather data
     const data = {
-      firstName: document.getElementById('firstName').value.trim(),
-      lastName:  document.getElementById('lastName').value.trim(),
-      email:     document.getElementById('email').value.trim(),
+      firstName: form.firstName.value.trim(),
+      lastName:  form.lastName.value.trim(),
+      email:     form.email.value.trim(),
       plan:      currentPlan,
       coupon:    couponIn.value.trim().toUpperCase()
     };
 
     try {
-      // 1) create SetupIntent
+      // 1) Create SetupIntent
       const siResp = await fetch('/.netlify/functions/create-setup-intent', {
         method: 'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(data)
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(data)
       });
       const { clientSecret, customerId, error: siErr } = await siResp.json();
       if (siErr) throw new Error(siErr);
 
-      // 2) confirm card
+      // 2) Confirm Card
       const { error: confirmErr } = await stripe.confirmCardSetup(clientSecret, {
-        payment_method:{
+        payment_method: {
           card,
-          billing_details:{
-            name: `${data.firstName} ${data.lastName}`,
+          billing_details: {
+            name:  `${data.firstName} ${data.lastName}`,
             email: data.email
           }
         }
       });
       if (confirmErr) throw new Error(confirmErr.message);
 
-      // 3) start subscription
+      // 3) Start Subscription
       const subResp = await fetch('/.netlify/functions/start-subscription', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({customerId,plan:data.plan,coupon:data.coupon})
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ customerId, plan: data.plan, coupon: data.coupon })
       });
       const { error: subErr } = await subResp.json();
       if (subErr) throw new Error(subErr);
 
       // on success, redirect parent
       window.parent.postMessage({
-        type:'checkoutComplete',
-        url:'https://mypartnerlab.co/checkout-thank-you'
+        type: 'checkoutComplete',
+        url:  'https://mypartnerlab.co/checkout-thank-you'
       }, '*');
 
     } catch(err) {
       console.error(err);
-      document.getElementById('card-errors').textContent = err.message;
+      cardErrors.textContent = err.message;
       submitBtn.disabled = false;
     }
   });
 
-  // tell parent frame our height
-  function postMyHeight(){
+  // — let parent frame know our height —
+  function postMyHeight() {
     window.parent.postMessage({
-      type:'checkoutHeight',
-      height:document.documentElement.scrollHeight
+      type:   'checkoutHeight',
+      height: document.documentElement.scrollHeight
     }, '*');
   }
   window.addEventListener('load',   postMyHeight);
