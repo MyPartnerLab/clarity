@@ -92,6 +92,7 @@ console.log('order-price element is', OP);
 
   // **Use button‐click instead of form submit**
   submitBtn.addEventListener('click', async e => {
+      console.log('🔔 submit clicked');
     e.preventDefault();
     document.getElementById('card-errors').textContent = '';
     if (!document.getElementById('agree').checked) {
