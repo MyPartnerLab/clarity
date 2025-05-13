@@ -149,12 +149,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const { error: subErr } = await subResp.json();
       if (subErr) throw new Error(subErr);
 
-      // success → notify parent
-      console.log('✅ subscription started, sending checkoutComplete');
-      window.parent.postMessage({
-        type:'checkoutComplete',
-        url:'https://mypartnerlab.co/checkout-thank-you'
-      }, '*');
+  // on success, redirect the whole page:
+  console.log('✅ subscription started, redirecting top window');
+  window.top.location.href = 'https://mypartnerlab.co/checkout-thank-you';
+
 
     } catch(err) {
       console.error('❌ checkout error:', err);
