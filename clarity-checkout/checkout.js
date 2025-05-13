@@ -94,6 +94,22 @@ console.log('order-price element is', OP);
   submitBtn.addEventListener('click', async e => {
       console.log('🔔 submit clicked');
     e.preventDefault();
+     try {
+    if (!document.getElementById('agree').checked) {
+      return alert('Please agree to the terms & conditions.');
+    }
+    console.log('✅ agree box is checked');
+    submitBtn.disabled = true;
+
+    console.log('…about to fetch setup-intent');
+    const siResp = await fetch('/api/create-setup-intent', { /* … */ });
+    console.log('🔁 got setup-intent response', siResp);
+    // … the rest of your logic
+  } catch (err) {
+    console.error('🔥 error inside submit handler', err);
+    submitBtn.disabled = false;
+  }
+});
     document.getElementById('card-errors').textContent = '';
     if (!document.getElementById('agree').checked) {
       return alert('Please agree to the terms & conditions.');
