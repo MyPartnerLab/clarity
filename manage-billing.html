@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Billing</title>
+  <style>
+    body { font-family: system-ui, sans-serif; text-align:center; margin-top:40px; }
+    button { padding:12px 24px; font-size:1rem; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <h2>Update your payment details</h2>
+  <p>Click the button below and we’ll email you a secure billing link.</p>
+
+  <button id="billingBtn">Send Me the Link</button>
+  <p id="status" style="margin-top:1rem;color:#26a269;"></p>
+
+<script>
+const zapURL   = "https://hooks.zapier.com/hooks/catch/5520364/2ja09he/";  // ← YOUR Catch-Hook
+const mnSdkURL = "https://cdn.mightynetworks.com/sdk/mn-sdk-latest.min.js"; // Mighty public SDK
+
+// --- get current member info via Mighty’s SDK ---
+(async () => {
+  await import(mnSdkURL);
+  const member = await MN.api.member.getCurrentMember();
+  window.memberEmail  = member.email;
+  window.stripeId     = member.customFields?.stripeId || "";
+})();
+
+document.getElementById("billingBtn").onclick = async () => {
+  if (!window.stripeId) {
+    document.getElementById("status").textContent =
+      "Sorry, we couldn’t find your subscription ID. Please contact support.";
+    return;
+  }
+  const qs = `?customer_id=${encodeURIComponent(window.stripeId)}&email=${encodeURIComponent(window.memberEmail)}`;
+  fetch(zapURL + qs, { mode:"no-cors" });
+  document.getElementById("status").textContent =
+      "Done! Check your inbox in a few seconds.";
+};
+</script>
+</body>
+</html>
